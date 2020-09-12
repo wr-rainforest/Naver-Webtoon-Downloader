@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using WRforest.NWD.Key;
 
 namespace WRforest.NWD.DataType
 {
@@ -16,48 +17,48 @@ namespace WRforest.NWD.DataType
         /// 웹툰 제목
         /// </summary>
         [JsonProperty(PropertyName = "webtoon_title")]
-        public string Title { get; private set; }
+        public string WebtoonTitle { get; private set; }
 
         /// <summary>
         /// 웹툰 id입니다.
         /// </summary>
         [JsonProperty(PropertyName = "webtoon_titleId")]
-        public string TitleId { get; private set; }
+        public string WebtoonTitleId { get; private set; }
 
         /// <summary>
         /// 웹툰 장르입니다.
         /// </summary>
         [JsonProperty(PropertyName = "webtoon_genre")]
-        public string Genre { get; private set; }
+        public string WebtoonGenre { get; private set; }
 
         /// <summary>
         /// 웹툰 설명입니다.
         /// </summary>
         [JsonProperty(PropertyName = "webtoon_description")]
-        public string Description { get; private set; }
+        public string WebtoonDescription { get; private set; }
 
         /// <summary>
         /// 웹툰작가 닉네임입니다.
         /// </summary>
         [JsonProperty(PropertyName = "webtoon_writer")]
-        public string Writer { get; private set; }
+        public string WebtoonWriter { get; private set; }
 
         /// <summary>
         /// 웹툰 회차 목록입니다.
         /// </summary>
         [JsonProperty(PropertyName = "webtoon_episodes")]
-        public List<EpisodeInfo> Episodes { get; private set; }
+        public Dictionary<int, EpisodeInfo> WebtoonEpisodes { get; private set; }
 
         /// <summary>
         /// <seealso cref="WebtoonInfo"/>의 새 인스턴스를 초기화합니다.
         /// </summary>
         /// <param name="title"></param>
         /// <param name="titleId"></param>
-        public WebtoonInfo(string title, string titleId)
+        public WebtoonInfo(WebtoonKey webtoonKey, string title)
         {
-            Title = title;
-            TitleId = titleId;
-            Episodes = new List<EpisodeInfo>();
+            WebtoonTitle = title;
+            WebtoonTitleId = webtoonKey.TitleId;
+            WebtoonEpisodes = new Dictionary<int, EpisodeInfo>();
         }
         /// <summary>
         /// <seealso cref="EpisodeInfo"/>
@@ -65,7 +66,11 @@ namespace WRforest.NWD.DataType
         /// <param name="item">추가할 회차입니다.</param>
         public void AddEpisodeInfo(EpisodeInfo item)
         {
-            Episodes.Add(item);
+            WebtoonEpisodes.Add(item.EpisodeNo, item);
+        }
+        public int GetLastEpisodeNo()
+        {
+            return WebtoonEpisodes.Keys.Max();
         }
     }
 }
