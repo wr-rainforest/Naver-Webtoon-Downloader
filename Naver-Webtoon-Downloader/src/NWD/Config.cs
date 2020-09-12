@@ -86,7 +86,7 @@ namespace WRforest.NWD
         [JsonIgnore]
         private string webtoonDirectoryNameFormat;
         /// <summary>
-        /// 저장할 회차의 폴더 이름 포맷을 설정합니다. {0~1}은 중복되거나 누락시킬 수 있습니다. {0~1}이외의 다른 숫자는 올 수 없습니다.
+        /// 저장할 웹툰의 폴더 이름 포맷을 설정합니다. {0~1}은 중복되거나 누락시킬 수 있습니다. {0~1}이외의 다른 숫자는 올 수 없습니다.
         /// <code>포맷 : {0}-{1}</code>
         /// <code>기본값 : {1}</code>
         /// <c>{0} : 웹툰의 titleId 입니다.</c>
