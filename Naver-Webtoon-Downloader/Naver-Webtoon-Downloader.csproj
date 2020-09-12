@@ -19,7 +19,7 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DefineConstants>TRACE;DEBUG;Console</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
@@ -60,6 +60,7 @@
     <Compile Include="src\NWD\Key\EpisodeKey.cs" />
     <Compile Include="src\NWD\Key\ImageKey.cs" />
     <Compile Include="src\NWD\Key\WebtoonKey.cs" />
+    <Compile Include="src\NWD\NaverWebtoonDownloader.cs" />
     <Compile Include="src\NWD\Parser\Agent.cs" />
     <Compile Include="src\NWD\Parser\Parser.cs" />
     <Compile Include="src\NWD\Parser\XPath.cs" />

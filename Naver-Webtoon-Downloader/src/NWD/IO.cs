@@ -18,21 +18,22 @@ namespace WRforest.NWD
 #endif
     class IO
     {
+#if WPF
         /// <summary>
         /// 기본 출력 델리게이트
         /// </summary>
         public static PrintDelegate Print;
+#endif
         /// <summary>
         /// 기본 로그 델리게이트
         /// </summary>
         public static LogDelegate Log;
 
 #if Console
-        public static void Write(string msg, ConsoleColor foreground)
+        public static void Print(string msg)
         {
-            Console.ForegroundColor = foreground;
-            Console.Write(msg);
-            Console.ForegroundColor = ConsoleColor.Black;
+                Console.WriteLine(DateTime.Now.ToString("[yyyy-MM-dd hh:mm:ss] : ")+msg);
+                
         }
 #endif
 

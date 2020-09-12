@@ -4,12 +4,19 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Naver_Webtoon_Downloader
+namespace WRforest.NWD
 {
     class Program
     {
         static void Main(string[] args)
         {
+            Console.WriteLine("program");
+            IO.Log = Log;
+            NaverWebtoonDownloader nwd = new NaverWebtoonDownloader();
+        }
+        static void Log(string msg)
+        {
+
         }
     }
 }
