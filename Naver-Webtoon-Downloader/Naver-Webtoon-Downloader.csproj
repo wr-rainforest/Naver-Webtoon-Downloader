@@ -59,6 +59,7 @@
     <Compile Include="src\NWD\Key\ImageKey.cs" />
     <Compile Include="src\NWD\Key\WebtoonKey.cs" />
     <Compile Include="src\NWD\Parser\Agent.cs" />
+    <Compile Include="src\NWD\Parser\XPath.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
