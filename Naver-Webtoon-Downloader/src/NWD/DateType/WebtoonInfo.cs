@@ -21,7 +21,7 @@ namespace WRforest.NWD.DataType
         /// <summary>
         /// 웹툰 id입니다.
         /// </summary>
-        [JsonProperty(PropertyName = "webtoon_titleid")]
+        [JsonProperty(PropertyName = "webtoon_titleId")]
         public string TitleId { get; private set; }
 
         /// <summary>
