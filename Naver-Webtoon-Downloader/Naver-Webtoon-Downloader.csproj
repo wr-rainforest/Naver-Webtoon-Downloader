@@ -53,6 +53,7 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="src\NWD\Key\EpisodeKey.cs" />
+    <Compile Include="src\NWD\Key\ImageKey.cs" />
     <Compile Include="src\NWD\Key\WebtoonKey.cs" />
   </ItemGroup>
   <ItemGroup>
