@@ -1,5 +1,4 @@
-﻿#define Console
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -29,9 +28,11 @@ namespace WRforest.NWD
         public static LogDelegate Log;
 
 #if Console
-        public static void Write(string msg, ConsoleColor consoleColor)
+        public static void Write(string msg, ConsoleColor foreground)
         {
-
+            Console.ForegroundColor = foreground;
+            Console.Write(msg);
+            Console.ForegroundColor = ConsoleColor.Black;
         }
 #endif
 
