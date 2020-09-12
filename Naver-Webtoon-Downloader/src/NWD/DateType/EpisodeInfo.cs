@@ -49,5 +49,6 @@ namespace WRforest.NWD.DataType
             EpisodeImageUrls = imageUrls;
             EpisodeDate = date;
         }
+        public EpisodeInfo() { }
     }
 }

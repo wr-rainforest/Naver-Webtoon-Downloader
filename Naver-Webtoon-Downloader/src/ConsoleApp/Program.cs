@@ -10,9 +10,12 @@ namespace WRforest.NWD
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("program");
+            if (args.Length == 0)
+                return;
+            Console.WriteLine("Program Start");
             IO.Log = Log;
             NaverWebtoonDownloader nwd = new NaverWebtoonDownloader();
+            nwd.Download(args[0]);
         }
         static void Log(string msg)
         {

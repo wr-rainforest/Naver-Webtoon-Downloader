@@ -58,15 +58,16 @@ namespace WRforest.NWD.DataType
         {
             WebtoonTitle = title;
             WebtoonTitleId = webtoonKey.TitleId;
-            WebtoonEpisodes = new Dictionary<int, EpisodeInfo>();
+            Episodes = new Dictionary<int, EpisodeInfo>();
         }
+        public WebtoonInfo() { }
         /// <summary>
         /// <seealso cref="EpisodeInfo"/>
         /// </summary>
         /// <param name="item">추가할 회차입니다.</param>
         public void AddEpisodeInfo(EpisodeInfo item)
         {
-            WebtoonEpisodes.Add(item.EpisodeNo, item);
+            Episodes.Add(item.EpisodeNo, item);
         }
         /// <summary>
         /// 인스턴스의 가장 마지막 회차 번호를 반환합니다.
@@ -74,15 +75,15 @@ namespace WRforest.NWD.DataType
         /// <returns></returns>
         public int GetLastEpisodeNo()
         {
-            return WebtoonEpisodes.Keys.Max();
+            return Episodes.Keys.Max();
         }
         public int GetImageCount()
         {
             int imageCount = 0;
-            int[] episodeNoList = WebtoonEpisodes.Keys.ToArray();
+            int[] episodeNoList = Episodes.Keys.ToArray();
             for(int i = 0; i < episodeNoList.Length; i++)
             {
-                imageCount += WebtoonEpisodes[episodeNoList[i]].EpisodeImageUrls.Length;
+                imageCount += Episodes[episodeNoList[i]].EpisodeImageUrls.Length;
             }
             return imageCount;
         }

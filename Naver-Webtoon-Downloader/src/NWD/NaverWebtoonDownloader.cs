@@ -49,9 +49,22 @@ namespace WRforest.NWD
         public void Download(string titleId)
         {
             WebtoonKey webtoonKey = new WebtoonKey(titleId);
+            if(IO.Exists("data\\webtoons", webtoonKey.TitleId + ".json"))
+            {
+                var webtoonInfo = LoadWebtoonInfo(webtoonKey);
+                UpdateWebtoonInfo(webtoonInfo);
+                webtoons.Add(titleId, webtoonInfo);
+                SaveWebtoonInfo(webtoonInfo);
+            }
+            else
+            {
+                var webtoonInfo = BuildWebtoonInfo(webtoonKey);
+                webtoons.Add(titleId, webtoonInfo);
+                SaveWebtoonInfo(webtoonInfo);
+            }
             int webtoonImageCount = webtoons[webtoonKey.TitleId].GetImageCount();
-            int episodeCount = webtoons[webtoonKey.TitleId].Episodes.Count;
             int downloadedWebtoonImageCount = GetDownloadedImageCount(webtoonKey);
+            int episodeCount = webtoons[webtoonKey.TitleId].Episodes.Count;
             int currentImageCount = 0;
 
             for (int episodeNo = 1; episodeNo <= episodeCount; episodeNo++)
@@ -61,16 +74,25 @@ namespace WRforest.NWD
                 string[] imageUrls = webtoons[webtoonKey.TitleId].Episodes[episodeNo].EpisodeImageUrls;
                 for (int imageIndex = 0; imageIndex < imageUrls.Length; imageIndex++)
                 {
-                    currentImageCount++;
+                    
                     ImageKey imageKey = new ImageKey(titleId, episodeNo, imageIndex);
                     if (ExistsImageFile(imageKey))
                     {
                         continue;
                     }
-                    downloadedWebtoonImageCount++;
                     agent.SetHeader("Referer", episodeKey.BuildUrl());
                     byte[] buff = agent.DownloadData(imageUrls[imageIndex]);
                     SaveImageFile(imageKey, buff);
+                    currentImageCount++;
+                    Console.Write("\r" + new string(' ', Console.BufferWidth - 1) + "\r");
+                    Console.Write(string.Format("\"{0}\" [{1}/{2}] ({3:P}) {4} - {5}",
+                        webtoons[titleId].WebtoonTitle,
+                        (currentImageCount+downloadedWebtoonImageCount).ToString("D"+webtoonImageCount.ToString().Length.ToString()),
+                        webtoonImageCount,
+                        (decimal)(currentImageCount + downloadedWebtoonImageCount)/ webtoonImageCount,
+                        webtoons[titleId].Episodes[episodeNo].EpisodeTitle,
+                        imageIndex));
+
                 }
             }
         }
@@ -79,19 +101,20 @@ namespace WRforest.NWD
         /// 
         /// </summary>
         /// <param name="webtoonKey"></param>
-        public void UpdateWebtoonInfo(WebtoonKey webtoonKey)
+        private void UpdateWebtoonInfo(WebtoonInfo webtoonInfo)
         {
+            WebtoonKey webtoonKey = new WebtoonKey(webtoonInfo.WebtoonTitleId);
             //comic.naver.com에서 최신 회차의 EpisodeNo를 불러옵니다.
             agent.LoadPage(webtoonKey.BuildUrl());
             int latestEpisodeNo = int.Parse(parser.GetLatestEpisodeNo());
-            //로컬에 저장된 메타데이터중 가장 마지막 회차의 EpisodeNo를 불러옵니다.
-            int lastEpisodeNo = webtoons[webtoonKey.TitleId].GetLastEpisodeNo();
+            //webtoonInfo중 가장 마지막 회차의 EpisodeNo를 불러옵니다.
+            int lastEpisodeNo = webtoonInfo.GetLastEpisodeNo();
             //마지막 회차가 최신 회차면 업데이트하지 않습니다.
             if (latestEpisodeNo == lastEpisodeNo)
             {
                 return;
             }
-            //로컬에 저장된 웹툰 정보를 업데이트합니다.
+            //웹툰 정보를 업데이트합니다.
             for (int episodeNo = lastEpisodeNo + 1; episodeNo <= latestEpisodeNo; episodeNo++)
             {
                 EpisodeKey episodeKey = new EpisodeKey(webtoonKey.TitleId, episodeNo);
@@ -99,33 +122,50 @@ namespace WRforest.NWD
                 string episodeTitle = parser.GetEpisodeTitle();
                 string episodeDate = parser.GetEpisodeDate();
                 string[] imageUrls = parser.GetComicContentImageUrls();
-                webtoons[webtoonKey.TitleId].Episodes.Add(episodeNo, new EpisodeInfo(episodeKey, episodeTitle, imageUrls, episodeDate));
+                webtoonInfo.Episodes.Add(episodeNo, new EpisodeInfo(episodeKey, episodeTitle, imageUrls, episodeDate));
             }
-            SaveWebtoonInfo(webtoonKey);
         }
+        private WebtoonInfo BuildWebtoonInfo(WebtoonKey webtoonKey)
+        {
+            agent.LoadPage(webtoonKey.BuildUrl());
+            int latestEpisodeNo = int.Parse(parser.GetLatestEpisodeNo());
+            string webtoonTitle = parser.GetWebtoonTitle();
+            WebtoonInfo webtoonInfo = new WebtoonInfo(webtoonKey, webtoonTitle);
+            for (int episodeNo = 1; episodeNo <= latestEpisodeNo; episodeNo++)
+            {
+                EpisodeKey episodeKey = new EpisodeKey(webtoonKey.TitleId, episodeNo);
+                agent.LoadPage(episodeKey.BuildUrl());
+                string episodeTitle = parser.GetEpisodeTitle();
+                string episodeDate = parser.GetEpisodeDate();
+                string[] imageUrls = parser.GetComicContentImageUrls();
+                webtoonInfo.Episodes.Add(episodeNo, new EpisodeInfo(episodeKey, episodeTitle, imageUrls, episodeDate));
+            }
+            return webtoonInfo;
+        }
+
 #endif
 
 #if WPF
 #endif
 
         /// <summary>
-        /// <paramref name="webtoonKey"/>가 지정하는 <seealso cref="webtoons"/>의 <seealso cref="WebtoonInfo"/>를 로컬에 저장합니다.
+        /// <paramref name="webtoonInfo"/>를 로컬에 저장합니다.
         /// </summary>
         /// <param name="webtoonInfo"></param>
-        private void SaveWebtoonInfo(WebtoonKey webtoonKey)
+        private void SaveWebtoonInfo(WebtoonInfo webtoonInfo)
         {
-            string json = JsonConvert.SerializeObject(webtoons[webtoonKey.TitleId]);
-            IO.WriteTextFile("data\\webtoons", webtoonKey.TitleId + ".json", json);
+            string json = JsonConvert.SerializeObject(webtoonInfo);
+            IO.WriteTextFile("data\\webtoons", webtoonInfo.WebtoonTitleId + ".json", json);
         }
         /// <summary>
-        /// 로컬에서<paramref name="webtoonKey"/>가 지정한 웹툰의 <seealso cref="WebtoonInfo"/>를 불러와 <seealso cref="webtoons"/>에 추가합니다.
+        /// 로컬에서<paramref name="webtoonKey"/>가 지정한 웹툰의 <seealso cref="WebtoonInfo"/>를 불러옵니다.
         /// </summary>
         /// <param name="webtoonKey"></param>
         /// <returns></returns>
-        private void LoadWebtoonInfo(WebtoonKey webtoonKey)
+        private WebtoonInfo LoadWebtoonInfo(WebtoonKey webtoonKey)
         {
             string json = IO.ReadTextFile("data\\webtoons", webtoonKey.TitleId + ".json");
-            webtoons.Add(webtoonKey.TitleId, JsonConvert.DeserializeObject<WebtoonInfo>(json));
+            return JsonConvert.DeserializeObject<WebtoonInfo>(json);
         }
         /// <summary>
         /// <paramref name="webtoonKey"/>가 지정한 웹툰의 다운로드된 이미지 갯수를 불러옵니다.
