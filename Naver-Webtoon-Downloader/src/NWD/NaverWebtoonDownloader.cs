@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -40,14 +41,7 @@ namespace WRforest.NWD
                 xPath = new Parser.XPath();
                 IO.WriteTextFile("data\\configs", "xpath_config.json", xPath.ToJsonString());
             }
-            if (IO.Exists("data", "webtoon_metadata.json"))
-            {
-                naverWebtoon = new DataType.NaverWebtoon(IO.ReadTextFile("data", "webtoon_metadata.json"));
-            }
-            else
-            {
-                naverWebtoon = new DataType.NaverWebtoon();
-            }
+            webtoons = new Dictionary<string, WebtoonInfo>();
             agent = new Parser.Agent();
             parser = new Parser.Parser(agent, xPath);
         }
@@ -55,25 +49,20 @@ namespace WRforest.NWD
         public void Download(string titleId)
         {
             WebtoonKey webtoonKey = new WebtoonKey(titleId);
-            if (!naverWebtoon.Contains(webtoonKey))
-            {
-                naverWebtoon.AddWebtoon(webtoonKey,)
-            }
-            UpdateWebtoonInfo(webtoonKey);
-            int webtoonImageCount = naverWebtoon.GetWebtoonImageCount(webtoonKey);
-            int episodeCount = naverWebtoon.GetEpisodeCount(webtoonKey);
-            int downloadedWebtoonImageCount = 0;
+            int webtoonImageCount = webtoons[webtoonKey.TitleId].GetImageCount();
+            int episodeCount = webtoons[webtoonKey.TitleId].Episodes.Count;
+            int downloadedWebtoonImageCount = GetDownloadedImageCount(webtoonKey);
             int currentImageCount = 0;
 
-            for (int no = 1; no <= episodeCount; no++)
+            for (int episodeNo = 1; episodeNo <= episodeCount; episodeNo++)
             {
-                EpisodeKey episodeKey = new EpisodeKey(titleId, no);
+                EpisodeKey episodeKey = new EpisodeKey(titleId, episodeNo);
                 agent.AddHeader("Referer", episodeKey.BuildUrl());
-                string[] imageUrls = naverWebtoon.GetEpisodeImageUrls(episodeKey);
+                string[] imageUrls = webtoons[webtoonKey.TitleId].Episodes[episodeNo].EpisodeImageUrls;
                 for (int imageIndex = 0; imageIndex < imageUrls.Length; imageIndex++)
                 {
                     currentImageCount++;
-                    ImageKey imageKey = new ImageKey(titleId, no, imageIndex);
+                    ImageKey imageKey = new ImageKey(titleId, episodeNo, imageIndex);
                     if (ExistsImageFile(imageKey))
                     {
                         continue;
@@ -96,7 +85,7 @@ namespace WRforest.NWD
             agent.LoadPage(webtoonKey.BuildUrl());
             int latestEpisodeNo = int.Parse(parser.GetLatestEpisodeNo());
             //로컬에 저장된 메타데이터중 가장 마지막 회차의 EpisodeNo를 불러옵니다.
-            int lastEpisodeNo = naverWebtoon.GetEpisodeCount(webtoonKey);
+            int lastEpisodeNo = webtoons[webtoonKey.TitleId].GetLastEpisodeNo();
             //마지막 회차가 최신 회차면 업데이트하지 않습니다.
             if (latestEpisodeNo == lastEpisodeNo)
             {
@@ -110,22 +99,47 @@ namespace WRforest.NWD
                 string episodeTitle = parser.GetEpisodeTitle();
                 string episodeDate = parser.GetEpisodeDate();
                 string[] imageUrls = parser.GetComicContentImageUrls();
-                naverWebtoon.AddEpisode(episodeKey, episodeTitle, imageUrls, episodeDate);
+                webtoons[webtoonKey.TitleId].Episodes.Add(episodeNo, new EpisodeInfo(episodeKey, episodeTitle, imageUrls, episodeDate));
             }
-            IO.WriteTextFile("data", "webtoon_metadata.json", naverWebtoon.ToJsonString());
+            SaveWebtoonInfo(webtoonKey);
         }
 #endif
 
 #if WPF
 #endif
+
+        /// <summary>
+        /// <paramref name="webtoonKey"/>가 지정하는 <seealso cref="webtoons"/>의 <seealso cref="WebtoonInfo"/>를 로컬에 저장합니다.
+        /// </summary>
+        /// <param name="webtoonInfo"></param>
+        private void SaveWebtoonInfo(WebtoonKey webtoonKey)
+        {
+            string json = JsonConvert.SerializeObject(webtoons[webtoonKey.TitleId]);
+            IO.WriteTextFile("data\\webtoons", webtoonKey.TitleId + ".json", json);
+        }
+        /// <summary>
+        /// 로컬에서<paramref name="webtoonKey"/>가 지정한 웹툰의 <seealso cref="WebtoonInfo"/>를 불러와 <seealso cref="webtoons"/>에 추가합니다.
+        /// </summary>
+        /// <param name="webtoonKey"></param>
+        /// <returns></returns>
+        private void LoadWebtoonInfo(WebtoonKey webtoonKey)
+        {
+            string json = IO.ReadTextFile("data\\webtoons", webtoonKey.TitleId + ".json");
+            webtoons.Add(webtoonKey.TitleId, JsonConvert.DeserializeObject<WebtoonInfo>(json));
+        }
+        /// <summary>
+        /// <paramref name="webtoonKey"/>가 지정한 웹툰의 다운로드된 이미지 갯수를 불러옵니다.
+        /// </summary>
+        /// <param name="webtoonKey"></param>
+        /// <returns></returns>
         private int GetDownloadedImageCount(WebtoonKey webtoonKey)
         {
             int count = 0;
-            int episodeCount = naverWebtoon.GetEpisodeCount(webtoonKey);
-            for (int episodeNo = 1; episodeNo <= episodeCount; episodeNo++)
+            int lastEpisode = webtoons[webtoonKey.TitleId].GetLastEpisodeNo();
+            for (int episodeNo = 1; episodeNo <= lastEpisode; episodeNo++)
             {
                 EpisodeKey episodeKey = new EpisodeKey(webtoonKey.TitleId, episodeNo);
-                int imageCount = naverWebtoon.GetEpisodeImageUrls(episodeKey).Length;
+                int imageCount = webtoons[episodeKey.TitleId].Episodes[episodeKey.EpisodeNo].EpisodeImageUrls.Length;
                 for (int imageIndex = 0; imageIndex < imageCount; imageIndex++)
                 {
                     ImageKey imageKey = new ImageKey(episodeKey.TitleId, episodeKey.EpisodeNo, imageIndex);
@@ -137,7 +151,6 @@ namespace WRforest.NWD
             }
             return count;
         }
-
 
         /// <summary>
         /// <paramref name="imageKey"/>가 지정하는 이미지 파일 경로에 <paramref name="data"/>를 저장합니다
@@ -162,7 +175,7 @@ namespace WRforest.NWD
         /// <returns></returns>
         private bool ExistsImageFile(ImageKey imageKey)
         {
-            return IO.Exists(BuildImageFileFullDirectory(imageKey));
+            return IO.Exists(BuildImageFileFullDirectory(imageKey),BuildImageFileName(imageKey));
         }
 
         /// <summary>
@@ -175,8 +188,7 @@ namespace WRforest.NWD
             string directory =
                 config.DefaultDownloadDirectory + "\\" +
                 BuildWebtoonDirectoryName(imageKey) + "\\" +
-                BuildEpisodeDirectoryName(imageKey) + "\\" +
-                BuildImageFileName(imageKey);
+                BuildEpisodeDirectoryName(imageKey);
             return directory;
         }
 
@@ -190,8 +202,8 @@ namespace WRforest.NWD
             string titleId = imageKey.TitleId;
             int episodeNo = imageKey.EpisodeNo;
             int ImageIndex = imageKey.ImageIndex;
-            string webtoonTitle = naverWebtoon.GetWebtoonTitle(imageKey);
-            string episoneTitle = naverWebtoon.GetEpisodeTitle(imageKey);
+            string webtoonTitle = webtoons[imageKey.TitleId].WebtoonTitle;
+            string episoneTitle = webtoons[imageKey.TitleId].Episodes[imageKey.EpisodeNo].EpisodeTitle;
             return string.Format(config.ImageFileNameFormat,
                 titleId,
                 episodeNo,
@@ -209,9 +221,9 @@ namespace WRforest.NWD
         {
             string titleId = episodeKey.TitleId;
             int episodeNo = episodeKey.EpisodeNo;
-            string date = naverWebtoon.GetEpisodeDate(episodeKey);
-            string webtoonTitle = naverWebtoon.GetWebtoonTitle(episodeKey);
-            string episodeTitle = naverWebtoon.GetEpisodeTitle(episodeKey);
+            string date = webtoons[episodeKey.TitleId].Episodes[episodeKey.EpisodeNo].EpisodeDate;
+            string webtoonTitle = webtoons[episodeKey.TitleId].WebtoonTitle;
+            string episodeTitle = webtoons[episodeKey.TitleId].Episodes[episodeKey.EpisodeNo].EpisodeTitle;
             return string.Format(config.EpisodeDirectoryNameFormat,
                 titleId,
                 episodeNo,
@@ -228,7 +240,7 @@ namespace WRforest.NWD
         private string BuildWebtoonDirectoryName(WebtoonKey episodeKey)
         {
             string titleId = episodeKey.TitleId;
-            string webtoonTitle = naverWebtoon.GetWebtoonTitle(episodeKey);
+            string webtoonTitle = webtoons[episodeKey.TitleId].WebtoonTitle;
             return string.Format(config.WebtoonDirectoryNameFormat,
                 titleId,
                 ReplaceFileName(webtoonTitle));

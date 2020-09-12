@@ -47,7 +47,7 @@ namespace WRforest.NWD.DataType
         /// 웹툰 회차 목록입니다.
         /// </summary>
         [JsonProperty(PropertyName = "webtoon_episodes")]
-        public Dictionary<int, EpisodeInfo> WebtoonEpisodes { get; private set; }
+        public Dictionary<int, EpisodeInfo> Episodes { get; private set; }
 
         /// <summary>
         /// <seealso cref="WebtoonInfo"/>의 새 인스턴스를 초기화합니다.
@@ -68,9 +68,23 @@ namespace WRforest.NWD.DataType
         {
             WebtoonEpisodes.Add(item.EpisodeNo, item);
         }
+        /// <summary>
+        /// 인스턴스의 가장 마지막 회차 번호를 반환합니다.
+        /// </summary>
+        /// <returns></returns>
         public int GetLastEpisodeNo()
         {
             return WebtoonEpisodes.Keys.Max();
+        }
+        public int GetImageCount()
+        {
+            int imageCount = 0;
+            int[] episodeNoList = WebtoonEpisodes.Keys.ToArray();
+            for(int i = 0; i < episodeNoList.Length; i++)
+            {
+                imageCount += WebtoonEpisodes[episodeNoList[i]].EpisodeImageUrls.Length;
+            }
+            return imageCount;
         }
     }
 }

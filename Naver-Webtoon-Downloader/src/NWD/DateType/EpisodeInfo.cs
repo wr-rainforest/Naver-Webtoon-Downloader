@@ -41,13 +41,13 @@ namespace WRforest.NWD.DataType
         /// <param name="title">회차 제목</param>
         /// <param name="episodeNo">에피소드 번호</param>
         /// <param name="imageUrls"></param>
-        /// <param name="date">웹툰 업로드 날짜</param>
+        /// <param name="date">웹툰 등록일</param>
         public EpisodeInfo(EpisodeKey episodeKey,string title, string[] imageUrls, string date)
         {
-            this.EpisodeTitle = title;
-            this.EpisodeNo = episodeKey.EpisodeNo;
-            this.EpisodeImageUrls = imageUrls;
-            this.EpisodeDate = date;
+            EpisodeTitle = title;
+            EpisodeNo = episodeKey.EpisodeNo;
+            EpisodeImageUrls = imageUrls;
+            EpisodeDate = date;
         }
     }
 }
