@@ -22,16 +22,17 @@ namespace WRforest.NWD.DataType
         public int EpisodeNo { get; private set; }
 
         /// <summary>
+        /// 웹툰 등록일(yyyy.MM.dd)입니다.
+        /// </summary>
+        [JsonProperty(PropertyName = "episode_date")]
+        public string Date { get; private set; }
+
+        /// <summary>
         /// 웹툰 이미지 Url 목록입니다.
         /// </summary>
         [JsonProperty(PropertyName = "episode_image_urls")]
         public string[] ImageUrls { get; private set; }
 
-        /// <summary>
-        /// 웹툰 등록일(yyyy.MM.dd)입니다.
-        /// </summary>
-        [JsonProperty(PropertyName = "episode_date")]
-        public string Date { get; private set; }
 
         /// <summary>
         /// <seealso cref="EpisodeInfo"/>의 새 인스턴스를 초기화합니다.
