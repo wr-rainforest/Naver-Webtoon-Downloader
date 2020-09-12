@@ -44,7 +44,7 @@ namespace WRforest.NWD.DataType
         /// </summary>
         /// <param name="webtoonKey">지정한 웹툰</param>
         /// <returns><seealso cref="bool"/></returns>
-        public bool Exists(WebtoonKey webtoonKey)
+        public bool Contains(WebtoonKey webtoonKey)
         {
             return webtoons.ContainsKey(webtoonKey.TitleId);
         }
