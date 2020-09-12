@@ -58,6 +58,7 @@
     <Compile Include="src\NWD\Key\EpisodeKey.cs" />
     <Compile Include="src\NWD\Key\ImageKey.cs" />
     <Compile Include="src\NWD\Key\WebtoonKey.cs" />
+    <Compile Include="src\NWD\Parser\Agent.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
