@@ -56,6 +56,7 @@
     <Compile Include="src\NWD\DateType\EpisodeInfo.cs" />
     <Compile Include="src\NWD\DateType\NaverWebtoon.cs" />
     <Compile Include="src\NWD\DateType\WebtoonInfo.cs" />
+    <Compile Include="src\NWD\IO.cs" />
     <Compile Include="src\NWD\Key\EpisodeKey.cs" />
     <Compile Include="src\NWD\Key\ImageKey.cs" />
     <Compile Include="src\NWD\Key\WebtoonKey.cs" />
