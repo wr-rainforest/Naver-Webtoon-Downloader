@@ -1,4 +1,5 @@
-﻿using System;
+﻿#define Console
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -8,8 +9,14 @@ using System.Threading.Tasks;
 
 namespace WRforest.NWD
 {
+#if Console
     public delegate void PrintDelegate(string msg);
     public delegate void LogDelegate(string msg);
+#endif
+#if WPF
+    public delegate void PrintDelegate(string msg);
+    public delegate void LogDelegate(string msg);
+#endif
     class IO
     {
         /// <summary>
@@ -20,6 +27,14 @@ namespace WRforest.NWD
         /// 기본 로그 델리게이트
         /// </summary>
         public static LogDelegate Log;
+
+#if Console
+        public static void Write(string msg, ConsoleColor consoleColor)
+        {
+
+        }
+#endif
+
         public static string ReadTextFile(string directory, string filename)
         {
             string buff;
