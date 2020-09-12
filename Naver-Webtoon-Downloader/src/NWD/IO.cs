@@ -30,10 +30,32 @@ namespace WRforest.NWD
         public static LogDelegate Log;
 
 #if Console
-        public static void Print(string msg)
+        public static void Print(string msg, bool newline=true)
         {
+            if(newline)
                 Console.WriteLine(DateTime.Now.ToString("[yyyy-MM-dd hh:mm:ss] : ")+msg);
-                
+            else
+                Console.Write(DateTime.Now.ToString("[yyyy-MM-dd hh:mm:ss] : ") + msg);
+        }
+        public static void Write(string msg, ConsoleColor color)
+        {
+            Console.ForegroundColor = color;
+            Console.Write(msg);
+            Console.ResetColor();
+        }
+        public static void WriteLine(string msg, ConsoleColor color)
+        {
+            Console.ForegroundColor = color;
+            Console.WriteLine(msg);
+            Console.ResetColor();
+        }
+        public static void Write(string msg)
+        {
+            Console.Write(msg);
+        }
+        public static void WriteLine(string msg)
+        {
+            Console.WriteLine(msg);
         }
 #endif
 

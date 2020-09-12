@@ -48,13 +48,18 @@ namespace WRforest.NWD
 #if Console
         public void Download(string titleId)
         {
+            agent.LoadPage(string.Format("https://comic.naver.com/webtoon/list.nhn?titleId={0}", titleId));
+            var webtoonTitle = parser.GetWebtoonTitle();
+            IO.Print(string.Format("{0}({1}) 다운로드를 시작합니다.",webtoonTitle, titleId));
             WebtoonKey webtoonKey = new WebtoonKey(titleId);
             if(IO.Exists("data\\webtoons", webtoonKey.TitleId + ".json"))
             {
                 var webtoonInfo = LoadWebtoonInfo(webtoonKey);
+                IO.Print(string.Format("{0}({1}) 캐시파일을 불러왔습니다.", webtoonTitle, titleId));
                 UpdateWebtoonInfo(webtoonInfo);
                 webtoons.Add(titleId, webtoonInfo);
                 SaveWebtoonInfo(webtoonInfo);
+
             }
             else
             {
@@ -67,6 +72,7 @@ namespace WRforest.NWD
             int episodeCount = webtoons[webtoonKey.TitleId].Episodes.Count;
             int currentImageCount = 0;
 
+            IO.Print(string.Format("{0}({1}) 이미지 다운로드를 시작합니다.", webtoonTitle, titleId));
             for (int episodeNo = 1; episodeNo <= episodeCount; episodeNo++)
             {
                 EpisodeKey episodeKey = new EpisodeKey(titleId, episodeNo);
@@ -85,16 +91,22 @@ namespace WRforest.NWD
                     SaveImageFile(imageKey, buff);
                     currentImageCount++;
                     Console.Write("\r" + new string(' ', Console.BufferWidth - 1) + "\r");
-                    Console.Write(string.Format("\"{0}\" [{1}/{2}] ({3:P}) {4} - {5}",
+                    IO.Print(string.Format("{0}({7}) [{1}/{2}] ({3:P}) [{4}] {5} - {6}",
                         webtoons[titleId].WebtoonTitle,
                         (currentImageCount+downloadedWebtoonImageCount).ToString("D"+webtoonImageCount.ToString().Length.ToString()),
                         webtoonImageCount,
                         (decimal)(currentImageCount + downloadedWebtoonImageCount)/ webtoonImageCount,
+                        webtoons[titleId].Episodes[episodeNo].EpisodeDate,
                         webtoons[titleId].Episodes[episodeNo].EpisodeTitle,
-                        imageIndex));
+                        imageIndex,
+                        webtoons[titleId].WebtoonTitleId),false);
 
                 }
             }
+            Console.WriteLine();
+            IO.Print(string.Format("{0}({1}) 이미지 다운로드를 완료하였습니다.", webtoonTitle, titleId));
+            IO.Print(string.Format("{0}({1}) 다운로드 완료.", webtoonTitle, titleId));
+
         }
 
         /// <summary>
@@ -103,6 +115,7 @@ namespace WRforest.NWD
         /// <param name="webtoonKey"></param>
         private void UpdateWebtoonInfo(WebtoonInfo webtoonInfo)
         {
+            IO.Print(string.Format("{0}({1}) 업데이트를 확인합니다..", webtoonInfo.WebtoonTitle, webtoonInfo.WebtoonTitleId));
             WebtoonKey webtoonKey = new WebtoonKey(webtoonInfo.WebtoonTitleId);
             //comic.naver.com에서 최신 회차의 EpisodeNo를 불러옵니다.
             agent.LoadPage(webtoonKey.BuildUrl());
@@ -112,18 +125,37 @@ namespace WRforest.NWD
             //마지막 회차가 최신 회차면 업데이트하지 않습니다.
             if (latestEpisodeNo == lastEpisodeNo)
             {
+                IO.Print(string.Format("{0}({1}) 업데이트된 회차가 없습니다.", webtoonInfo.WebtoonTitle, webtoonInfo.WebtoonTitleId));
+                IO.Print(string.Format("{0}({1}) 최신 회차 : [{2}] {3}.", 
+                    webtoonInfo.WebtoonTitle, 
+                    webtoonInfo.WebtoonTitleId,
+                    webtoonInfo.Episodes[latestEpisodeNo].EpisodeDate,
+                    webtoonInfo.Episodes[latestEpisodeNo].EpisodeTitle
+                    ));
                 return;
             }
             //웹툰 정보를 업데이트합니다.
             for (int episodeNo = lastEpisodeNo + 1; episodeNo <= latestEpisodeNo; episodeNo++)
             {
+                IO.Print(string.Format("{0}({1}) 캐시를 업데이트합니다.", webtoonInfo.WebtoonTitle, webtoonInfo.WebtoonTitleId));
                 EpisodeKey episodeKey = new EpisodeKey(webtoonKey.TitleId, episodeNo);
                 agent.LoadPage(episodeKey.BuildUrl());
                 string episodeTitle = parser.GetEpisodeTitle();
                 string episodeDate = parser.GetEpisodeDate();
                 string[] imageUrls = parser.GetComicContentImageUrls();
                 webtoonInfo.Episodes.Add(episodeNo, new EpisodeInfo(episodeKey, episodeTitle, imageUrls, episodeDate));
+                Console.Write("\r" + new string(' ', Console.BufferWidth - 1) + "\r");
+                IO.Print(string.Format("{0}({1}) [{2}/{3}] ({4:P}) [{5}]",
+                               webtoonInfo.WebtoonTitle,
+                               webtoonInfo.WebtoonTitleId,
+                              (episodeNo).ToString("D" + latestEpisodeNo.ToString().Length.ToString()),
+                             latestEpisodeNo,
+                             (decimal)(episodeNo) / latestEpisodeNo,
+                             webtoonInfo.Episodes[episodeNo].EpisodeDate,
+                             webtoonInfo.Episodes[episodeNo].EpisodeTitle),false);
             }
+            Console.WriteLine();
+            IO.Print(string.Format("{0}({1}) 캐시를 업데이트하였습니다.", webtoonInfo.WebtoonTitle, webtoonInfo.WebtoonTitleId));
         }
         private WebtoonInfo BuildWebtoonInfo(WebtoonKey webtoonKey)
         {
@@ -131,6 +163,7 @@ namespace WRforest.NWD
             int latestEpisodeNo = int.Parse(parser.GetLatestEpisodeNo());
             string webtoonTitle = parser.GetWebtoonTitle();
             WebtoonInfo webtoonInfo = new WebtoonInfo(webtoonKey, webtoonTitle);
+            IO.Print(string.Format("{0}({1}) 캐시를 생성합니다.", webtoonInfo.WebtoonTitle, webtoonInfo.WebtoonTitleId));
             for (int episodeNo = 1; episodeNo <= latestEpisodeNo; episodeNo++)
             {
                 EpisodeKey episodeKey = new EpisodeKey(webtoonKey.TitleId, episodeNo);
@@ -139,7 +172,18 @@ namespace WRforest.NWD
                 string episodeDate = parser.GetEpisodeDate();
                 string[] imageUrls = parser.GetComicContentImageUrls();
                 webtoonInfo.Episodes.Add(episodeNo, new EpisodeInfo(episodeKey, episodeTitle, imageUrls, episodeDate));
+                Console.Write("\r" + new string(' ', Console.BufferWidth - 1) + "\r");
+                IO.Print(string.Format("{0}({1}) [{2}/{3}] ({4:P}) [{5}]",
+                               webtoonInfo.WebtoonTitle,
+                               webtoonInfo.WebtoonTitleId,
+                              (episodeNo).ToString("D" + latestEpisodeNo.ToString().Length.ToString()),
+                             latestEpisodeNo,
+                             (decimal)(episodeNo) / latestEpisodeNo,
+                             webtoonInfo.Episodes[episodeNo].EpisodeDate,
+                             webtoonInfo.Episodes[episodeNo].EpisodeTitle), false);
             }
+            Console.WriteLine();
+            IO.Print(string.Format("{0}({1}) 캐시를 생성하였습니다.", webtoonInfo.WebtoonTitle, webtoonInfo.WebtoonTitleId));
             return webtoonInfo;
         }
 
