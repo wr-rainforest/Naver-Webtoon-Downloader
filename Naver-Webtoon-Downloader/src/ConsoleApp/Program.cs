@@ -12,18 +12,46 @@ namespace WRforest.NWD
     class Program
     {
         public static int cursorPosition;
+        public static int mainPageCursorPosition;
         static void Main(string[] args)
         {
             IO.Log = Log;
-            Command command = new Command();
-            NaverWebtoonDownloader nwd = new NaverWebtoonDownloader();
-            ConsolePage.PrintLine();
-            ConsolePage.PrintMainPage("v0.3.0-alpha", ConsoleColor.Red);
-            ConsolePage.PrintLine();
-            ConsolePage.PrintConfigInfoPage(ConsoleColor.Cyan);
-            ConsolePage.PrintLine();
-            ConsolePage.PrintCommandInfoPage();
-            ConsolePage.PrintLine();
+            Parser.XPath xPath;
+            Config config;
+            if (IO.Exists("data\\configs", "config.json"))
+            {
+                config = new Config(IO.ReadTextFile("data\\configs", "config.json"));
+            }
+            else
+            {
+                config = new Config();
+                IO.WriteTextFile("data\\configs", "config.json", config.ToJsonString());
+            }
+            if (IO.Exists("data\\configs", "xpath_config.json"))
+            {
+                xPath = new Parser.XPath(IO.ReadTextFile("data\\configs", "xpath_config.json"));
+            }
+            else
+            {
+                xPath = new Parser.XPath();
+                IO.WriteTextFile("data\\configs", "xpath_config.json", xPath.ToJsonString());
+            }
+            Parser.Agent agent = new Agent();
+            Parser.Parser parser = new Parser.Parser(agent, xPath);
+            NaverWebtoonDownloader nwd = new NaverWebtoonDownloader(agent, parser, config, xPath);
+            ConsolePage ConsolePage = new ConsolePage(agent, parser);
+            Command command = new Command(agent, parser, nwd, ConsolePage);
+
+            ConsoleColor lineColor = ConsoleColor.Gray;
+            int lineCharCount = 100;
+            //ConsolePage.PrintLine('',lineCharCount, lineColor);
+            ConsolePage.PrintMainPage(System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString(), ConsoleColor.Blue);
+            ConsolePage.PrintLine('-',lineCharCount, lineColor);
+            mainPageCursorPosition = Console.CursorTop;
+            ConsolePage.PrintConfigInfoPage(ConsoleColor.Yellow);
+            ConsolePage.PrintLine('-',lineCharCount, lineColor);
+            ConsolePage.PrintCommandInfoPage(ConsoleColor.Yellow, ConsoleColor.Green);
+            ConsolePage.PrintLine('-',lineCharCount, lineColor);
             cursorPosition = Console.CursorTop;
             int positionCount = 0;
             Console.SetCursorPosition(0, cursorPosition);
@@ -31,7 +59,7 @@ namespace WRforest.NWD
             Console.SetCursorPosition(0, cursorPosition);
             while (true)
             {
-                Console.Write(" Command : ");
+                Console.Write("[Command] : ");
                 string userInput = Console.ReadLine();
                 positionCount++;
                 if (string.IsNullOrWhiteSpace(userInput))
@@ -52,11 +80,6 @@ namespace WRforest.NWD
                     ConsolePage.Error("존재하지 않는 명령어입니다.");
                 }
             }
-            Console.Clear();
-            ConsolePage.PrintMainPage("v0.3.0-alpha", ConsoleColor.Red);
-            //nwd.Download(titleId);
-            Console.WriteLine("종료하려면 아무 키나 누르십시오 . . .");
-            Console.ReadKey();
         }
         static void Log(string msg)
         {

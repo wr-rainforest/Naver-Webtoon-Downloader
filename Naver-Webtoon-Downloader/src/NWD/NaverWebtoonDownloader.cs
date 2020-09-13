@@ -15,45 +15,18 @@ namespace WRforest.NWD
     {
         private Parser.Agent agent;
         private Parser.Parser parser;
-        private Parser.XPath xPath;
         private Dictionary<string, WebtoonInfo> webtoons;
         private Config config;
         /// <summary>
         /// <seealso cref="NaverWebtoonDownloader"/>의 새 인스턴스를 초기화합니다. 
         /// </summary>
-        public NaverWebtoonDownloader()
+        public NaverWebtoonDownloader(Parser.Agent agent, Parser.Parser parser, Config config, Parser.XPath xPath)
         {
-            IO.Log("<NaverWebtoonDownloader.ctor()>");
-            if (IO.Exists("data\\configs", "config.json"))
-            {
-                IO.Log("NaverWebtoonDownloader.ctor config.json Exist");
-                config = new Config(IO.ReadTextFile("data\\configs", "config.json"));
-                IO.Log("NaverWebtoonDownloader.ctor load config.json fin");
-            }
-            else
-            {
-                IO.Log("NaverWebtoonDownloader.ctor config.json !Exist");
-                config = new Config();
-                IO.WriteTextFile("data\\configs", "config.json", config.ToJsonString());
-                IO.Log("NaverWebtoonDownloader.ctor gen config.json fin");
 
-            }
-            if (IO.Exists("data\\configs", "xpath_config.json"))
-            {
-                IO.Log("NaverWebtoonDownloader.ctor xpath_config.json Exist");
-                xPath = new Parser.XPath(IO.ReadTextFile("data\\configs", "xpath_config.json"));
-                IO.Log("NaverWebtoonDownloader.ctor load xpath_config.json fin");
-            }
-            else
-            {
-                IO.Log("NaverWebtoonDownloader.ctor xpath_config.json !Exist");
-                xPath = new Parser.XPath();
-                IO.WriteTextFile("data\\configs", "xpath_config.json", xPath.ToJsonString());
-                IO.Log("NaverWebtoonDownloader.ctor gen xpath_config.json fin");
-            }
             webtoons = new Dictionary<string, WebtoonInfo>();
-            agent = new Parser.Agent();
-            parser = new Parser.Parser(agent, xPath);
+            this.agent = agent;
+            this.parser = parser;
+            this.config = config;
             IO.Log("</NaverWebtoonDownloader.ctor()>");
         }
 #if Console
@@ -62,9 +35,15 @@ namespace WRforest.NWD
             //IO.Log(string.Format("<NaverWebtoonDownloader.Download({0})>",titleId));
             agent.LoadPage(string.Format("https://comic.naver.com/webtoon/list.nhn?titleId={0}", titleId));
             var webtoonTitle = parser.GetWebtoonTitle();
-            IO.Print(string.Format("{0}({1}) 다운로드를 시작합니다.",webtoonTitle, titleId));
+            //IO.Print(string.Format("{0}({1}) 다운로드를 시작합니다.",webtoonTitle, titleId));
             WebtoonKey webtoonKey = new WebtoonKey(titleId);
-            if(IO.Exists("data\\webtoons", webtoonKey.TitleId + ".json"))
+            if(webtoons.ContainsKey(titleId))
+            {
+                var webtoonInfo = webtoons[titleId];
+                UpdateWebtoonInfo(webtoonInfo);
+                SaveWebtoonInfo(webtoonInfo);
+            }
+            else if(IO.Exists("data\\webtoons", webtoonKey.TitleId + ".json"))
             {
                 var webtoonInfo = LoadWebtoonInfo(webtoonKey);
                 IO.Print(string.Format("{0}({1}) 캐시파일을 불러왔습니다.", webtoonTitle, titleId));
@@ -72,7 +51,6 @@ namespace WRforest.NWD
                 UpdateWebtoonInfo(webtoonInfo);
                 webtoons.Add(titleId, webtoonInfo);
                 SaveWebtoonInfo(webtoonInfo);
-
             }
             else
             {
@@ -118,7 +96,7 @@ namespace WRforest.NWD
             }
             Console.WriteLine();
             IO.Print(string.Format("{0}({1}) 이미지 다운로드를 완료하였습니다.", webtoonTitle, titleId));
-            IO.Print(string.Format("{0}({1}) 다운로드 완료.", webtoonTitle, titleId));
+            //IO.Print(string.Format("{0}({1}) 다운로드 완료.", webtoonTitle, titleId));
 
         }
 

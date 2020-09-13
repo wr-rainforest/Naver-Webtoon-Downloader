@@ -10,11 +10,20 @@ namespace WRforest.NWD
     {
         private delegate void CommandDelegate(params string[] args);
         Dictionary<string, CommandDelegate> commandDictionary;
-        public Command()
+        NaverWebtoonDownloader nwd;
+        Parser.Agent agent;
+        Parser.Parser parser;
+        ConsolePage ConsolePage;
+        public Command(Parser.Agent agent, Parser.Parser parser,NaverWebtoonDownloader nwd, ConsolePage consolePage)
         {
+            this.agent = agent;
+            this.parser = parser;
+            this.nwd = nwd;
+            this.ConsolePage = consolePage;
             commandDictionary = new Dictionary<string, CommandDelegate>();
             commandDictionary.Add("get", Get);
             commandDictionary.Add("clear", Clear);
+            commandDictionary.Add("download", Download);
         }
         public bool Contains(string commandName)
         {
@@ -39,6 +48,7 @@ namespace WRforest.NWD
                 return;
             }
             ConsolePage.PrintWebtoonListPage(args[0]);
+            Console.WriteLine();
         }
         private void Clear(params string[] args)
         {
@@ -46,6 +56,29 @@ namespace WRforest.NWD
             Console.SetCursorPosition(0, Program.cursorPosition);
             Console.Write(new string(' ', (Console.BufferWidth - 1) * (currentPosition-Program.cursorPosition)));
             Console.SetCursorPosition(0, Program.cursorPosition);
+        }
+        private void Download(params string[] args)
+        {
+            if (args.Length == 0)
+            {
+                ConsolePage.Error("titleId를 입력해주세요.");
+                return;
+            }
+            string titleId = args[0];
+            if (!int.TryParse(titleId, out _))
+            {
+                ConsolePage.Error("titleId는 숫자입니다.");
+                return;
+            }
+            agent.LoadPage(string.Format("https://comic.naver.com/webtoon/list.nhn?titleId={0}", titleId));
+            var node = agent.Page.DocumentNode.SelectSingleNode("//*[@property=\"og:title\"]");
+            if (node.Attributes["content"].Value == "네이버 웹툰")
+            {
+                ConsolePage.Error("존재하지 않는 titleId입니다.");
+                return;
+            }
+            nwd.Download(titleId);
+            Console.WriteLine();
         }
     }
 }

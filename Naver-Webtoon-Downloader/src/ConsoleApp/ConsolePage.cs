@@ -9,29 +9,55 @@ namespace WRforest.NWD
 {
     class ConsolePage
     {
-        public static void PrintMainPage(string version, ConsoleColor versioncolor)
+        Agent agent;
+        Parser.Parser parser;
+        public ConsolePage(Agent agent, Parser.Parser parser)
         {
-            Console.Write(" *Naver-Webtoon-Downloader ");
-            WriteLine(version, versioncolor);
-            Console.Write(" *Release : ");
-            WriteLine("https://github.com/wr-rainforest/Naver-Webtoon-Downloader/releases", ConsoleColor.Cyan);
-            Console.Write(" *Source  : ");
-            WriteLine("https://github.com/wr-rainforest/Naver-Webtoon-Downloader", ConsoleColor.Cyan);
-            Console.Write(" *E-mail  : ");
-            WriteLine("contact@wrforest.com", ConsoleColor.Cyan);
+            this.agent = agent;
+            this.parser = parser;
+        }
+        public void PrintMainPage(string version, ConsoleColor versioncolor)
+        {
+            string latestVersion;
+            try
+            {
+                agent.LoadPage("https://wr-rainforest.github.io/Naver-Webtoon-Downloader/info/latest_version.html");
+                latestVersion=agent.Page.DocumentNode.SelectSingleNode("/html/body").InnerText;
+            }
+            catch
+            {
+                latestVersion = "v*.*.*";
+            }
+            Write(" *");
+            Write("Naver-Webtoon-Downloader", ConsoleColor.Blue);
+            Write(" [Version : ");
+            Write(version, versioncolor);
+            Write(" ] [Latest : ");
+            Write(latestVersion, versioncolor);
+            WriteLine(" ]");
+            Console.Write(" -Release : ");
+            WriteLine("https://github.com/wr-rainforest/Naver-Webtoon-Downloader/releases");
+            Console.Write(" -Source  : ");
+            WriteLine("https://github.com/wr-rainforest/Naver-Webtoon-Downloader");
+            Console.Write(" -E-mail  : ");
+            WriteLine("contact@wrforest.com");
         }
 
-        public static void PrintConfigInfoPage(ConsoleColor color)
+        public void PrintConfigInfoPage(ConsoleColor color)
         {
-            Console.WriteLine(" *설정(/Data/configs/config.json)");
+            Write(" *");
+            Write("설정", ConsoleColor.Cyan);
+            Write("(");
+            Write("/Data/configs/config.json", ConsoleColor.Green);
+            WriteLine(")");
             var config = new Config(IO.ReadTextFile("data\\configs", "config.json"));
-            Console.Write(" *기본 다운로드 폴더 : ");
+            Console.Write(" -기본 다운로드 폴더 : ");
             WriteLine(config.DefaultDownloadDirectory, color);
-            Console.Write(" *웹툰 폴더명 포맷   : ");
+            Console.Write(" -웹툰 폴더명 포맷   : ");
             WriteLine(string.Format(config.WebtoonDirectoryNameFormat, "\"titleId\"", "\"웹툰 제목\""), color);
-            Console.Write(" *회차 폴더명 포맷   : ");
+            Console.Write(" -회차 폴더명 포맷   : ");
             WriteLine(string.Format(config.EpisodeDirectoryNameFormat, "\"titleId\"", "\"회차 번호\"", "\"회차 날짜\"", "\"웹툰 제목\"", "\"회차 제목\""), color);
-            Console.Write(" *이미지 파일명 포맷 : ");
+            Console.Write(" -이미지 파일명 포맷 : ");
             WriteLine(string.Format(config.ImageFileNameFormat, "\"titleId\"", "\"회차 번호\"", "\"이미지 인덱스\"", "\"웹툰 제목\"", "\"회차 제목\""), color);
             /*Console.Write("\r\n 웹툰 폴더명 예시   : ");
             WriteLine(string.Format(config.WebtoonDirectoryNameFormat, "748105", "독립일기"));
@@ -41,9 +67,9 @@ namespace WRforest.NWD
             Console.Write(" 이미지 파일명 예시 : ");
             WriteLine(string.Format(config.ImageFileNameFormat, "748105", "0004", "0002", "독립일기", "3화 이사 첫날"));*/
         }
-        public static void PrintLine() => Console.WriteLine("------------------------------------------------------------------------");
+        public void PrintLine(char c, int count, ConsoleColor color) => WriteLine(new string(c, count), color);
 
-        /*public static string ReadTitleId()//[--]  - 
+        /*public  string ReadTitleId()//[--]  - 
         {
             string titleId;
             Agent agent = new Agent();
@@ -74,7 +100,7 @@ namespace WRforest.NWD
                 {
                     Error("titleId는 숫자입니다.");
                     continue;
-                }
+                }s
                 agent.LoadPage(string.Format("https://comic.naver.com/webtoon/list.nhn?titleId={0}", titleId));
                 var node = agent.Page.DocumentNode.SelectSingleNode("//*[@property=\"og:title\"]");
                 if (node.Attributes["content"].Value == "네이버 웹툰")
@@ -91,10 +117,8 @@ namespace WRforest.NWD
             return titleId;
         }
        */
-        public static void PrintWebtoonListPage(string weekDay)
+        public void PrintWebtoonListPage(string weekDay)
         {
-            Agent agent = new Agent();
-            Parser.Parser parser = new Parser.Parser(agent, new XPath());
             agent.LoadPage("https://comic.naver.com/webtoon/weekday.nhn");
             var t =parser.GetWebtoonList(weekDay);
             int maxByteLength=0;
@@ -106,7 +130,8 @@ namespace WRforest.NWD
                     maxByteLength = byteLength;
                 }
             }
-            WriteLine("요일별 웹툰 : " + weekDay);
+            WriteLine("\r\n요일별 웹툰 : " + weekDay);
+            WriteLine("");
             for (int i = 0, j = 0; i < t.Length; i++, j++)
             {
                 Write(t[i].title);
@@ -128,10 +153,37 @@ namespace WRforest.NWD
             WriteLine("");
         }
         
-        public static void PrintCommandInfoPage()
+        public void PrintCommandInfoPage(ConsoleColor function, ConsoleColor option)
         {
-            WriteLine("웹툰 titleid 목록 불러오기 : get [mom/tue/wed/thu/fri/sat/sun]");
-            WriteLine("예                         : get mon");
+            WriteLine(" *명령어 정보 : ",ConsoleColor.Cyan);
+            Write(" ");
+            Write("get       ",function);
+            Write(" : ");
+            Write("get", function);
+            Write(" [");
+            Write("weekday", option);
+            Write("]      /       ");
+            Write("weekday", option);
+            WriteLine(" : 요일입니다. (mon/tue/wed/thu/fri/sat/sun)");
+            WriteLine("   선택한 요일의 웹툰 목록을 가져옵니다.");
+
+            Write(" ");
+            Write("download  ", function);
+            Write(" : ");
+            Write("download", function);
+            Write(" [");
+            Write("titleId", option);
+            Write("] /       ");
+            Write("titleId", option);
+            WriteLine(" : 다운로드할 웹툰의 titleId 입니다.");
+            WriteLine("   선택한 웹툰을 다운로드합니다.");
+            
+
+            Write(" ");
+            Write("clear     ", function);
+            Write(" : ");
+            WriteLine("clear", function);
+            WriteLine("   콘솔을 비웁니다.");
         }
         
         
@@ -139,7 +191,7 @@ namespace WRforest.NWD
         
         
         
-        private static int GetByteLength(string text)
+        private int GetByteLength(string text)
         {
             return Encoding.Default.GetBytes(text).Length;
         }
@@ -147,29 +199,30 @@ namespace WRforest.NWD
 
 
 
-        public static void Write(string msg, ConsoleColor color)
+        public  void Write(string msg, ConsoleColor color)
         {
             Console.ForegroundColor = color;
             Console.Write(msg);
             Console.ResetColor();
         }
-        public static void WriteLine(string msg, ConsoleColor color)
+        public  void WriteLine(string msg, ConsoleColor color)
         {
             Console.ForegroundColor = color;
             Console.WriteLine(msg);
             Console.ResetColor();
         }
-        public static void Write(string msg)
+        public  void Write(string msg)
         {
             Console.Write(msg);
         }
-        public static void WriteLine(string msg)
+        public  void WriteLine(string msg)
         {
             Console.WriteLine(msg);
         }
-        public static void Error(string msg)
+        public  void Error(string msg)
         {
             WriteLine("Error : " + msg, ConsoleColor.Red);
+            Console.WriteLine();
         }
     }
 }
