@@ -68,7 +68,8 @@ namespace WRforest.NWD
                     positionCount++;
                     continue;
                 }
-                string[] split = userInput.Trim().Split(' ');
+                
+                string[] split = userInput.Split(new char[]{' '},StringSplitOptions.RemoveEmptyEntries);
                 List<string> list = new List<string>(split);
                 if(command.Contains(list[0]))
                 {

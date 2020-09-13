@@ -64,20 +64,27 @@ namespace WRforest.NWD
                 ConsolePage.Error("titleId를 입력해주세요.");
                 return;
             }
-            string titleId = args[0];
-            if (!int.TryParse(titleId, out _))
+
+            for (int i = 0; i < args.Length; i++)
             {
-                ConsolePage.Error("titleId는 숫자입니다.");
-                return;
+                if (!int.TryParse(args[0], out _))
+                {
+                    ConsolePage.Error("titleId는 숫자입니다. : " + args[i]);
+                    return;
+                }
+                agent.LoadPage(string.Format("https://comic.naver.com/webtoon/list.nhn?titleId={0}", args[i]));
+                var node = agent.Page.DocumentNode.SelectSingleNode("//*[@property=\"og:title\"]");
+                if (node.Attributes["content"].Value == "네이버 웹툰")
+                {
+                    ConsolePage.Error("존재하지 않는 titleId입니다. : " + args[i]);
+                    return;
+                }
+                ConsolePage.WriteLine(string.Format("{0}({1})", node.Attributes["content"].Value, args[i]));
             }
-            agent.LoadPage(string.Format("https://comic.naver.com/webtoon/list.nhn?titleId={0}", titleId));
-            var node = agent.Page.DocumentNode.SelectSingleNode("//*[@property=\"og:title\"]");
-            if (node.Attributes["content"].Value == "네이버 웹툰")
+            for (int i = 0; i < args.Length; i++)
             {
-                ConsolePage.Error("존재하지 않는 titleId입니다.");
-                return;
+                nwd.Download(args[i]);
             }
-            nwd.Download(titleId);
             Console.WriteLine();
         }
     }
