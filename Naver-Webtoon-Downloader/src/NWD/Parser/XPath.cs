@@ -109,6 +109,22 @@ namespace WRforest.NWD.Parser
                 date = value;
             }
         }
+
+        private string webtoonList;
+        [JsonProperty(PropertyName = "mainpage_webtoon_list")]
+        public string WebtoonList
+        {
+            get
+            {
+                if (string.IsNullOrWhiteSpace(webtoonList))
+                    webtoonList = "//a[@class=\"title\"]";
+                return webtoonList;
+            }
+            set
+            {
+                webtoonList = value;
+            }
+        }
         /// <summary>
         ///<seealso cref="XPath"/>를 초기화합니다. 하드코딩된 설정이 적용됩니다.
         /// </summary>

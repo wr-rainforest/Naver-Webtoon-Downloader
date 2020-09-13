@@ -114,7 +114,29 @@ namespace WRforest.NWD.Parser
         {
             throw new NotImplementedException();//todo
         }
-
+        /// <summary>
+        /// https://comic.naver.com/webtoon/weekday.nhn
+        /// </summary>
+        /// <returns></returns>
+        public string[] GetWebtoonList()
+        {
+            List<string> list = new List<string>();
+            HtmlNodeCollection htmlNodes = Page.DocumentNode.SelectNodes(XPath.WebtoonList);
+            for (int i = 0; i < htmlNodes.Count; i++)
+            {
+                string href = htmlNodes[i].Attributes["href"].Value;
+                Uri myUri = new Uri("https://comic.naver.com" + href);
+                var titleId = HttpUtility.ParseQueryString(myUri.Query).Get("titleId");
+                var title = htmlNodes[i].Attributes["title"].Value;
+                var item = string.Format("{0}({1})", title, titleId);
+                if (list.Contains(item))
+                {
+                    continue;
+                }
+                list.Add(item);
+            }
+            return list.ToArray();
+        }
     }
 
 }
