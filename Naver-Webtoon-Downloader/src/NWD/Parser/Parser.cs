@@ -115,23 +115,33 @@ namespace WRforest.NWD.Parser
             throw new NotImplementedException();//todo
         }
         /// <summary>
-        /// https://comic.naver.com/webtoon/weekday.nhn
+        /// https://comic.naver.com/webtoon/weekday.nhn 에서 <paramref name="weekDay"/>가 지정하는 요일의 웹툰 목록을 파싱하여 튜플 리스트를 반환합니다.
         /// </summary>
         /// <returns></returns>
-        public string[] GetWebtoonList()
+        public (string title, string titleId)[] GetWebtoonList(string weekDay)
         {
-            List<string> list = new List<string>();
+            //반환할 배열 초기화
+            List<(string title, string titleId)> list = new List<(string title, string titleId)>();
+            //웹툰 노드 선택
             HtmlNodeCollection htmlNodes = Page.DocumentNode.SelectNodes(XPath.WebtoonList);
             for (int i = 0; i < htmlNodes.Count; i++)
             {
+                //노드의 href 태그에서 url 가져옴.
                 string href = htmlNodes[i].Attributes["href"].Value;
                 Uri myUri = new Uri("https://comic.naver.com" + href);
+                //url에서titleId, weekday 추출
                 var titleId = HttpUtility.ParseQueryString(myUri.Query).Get("titleId");
+                var day = HttpUtility.ParseQueryString(myUri.Query).Get("weekday");
+                if(weekDay!=day)
+                {
+                    //weekday가 지정한 요일과 다르면 건너뜀
+                    continue;
+                }
                 var title = htmlNodes[i].Attributes["title"].Value;
-                var item = string.Format("{0}({1})", title, titleId);
+                var item = (title, titleId);
                 if (list.Contains(item))
                 {
-                    continue;
+                    continue;//이미 포함된 튜플은 추가하지 않음(중복된게 어디서 나오는지?)
                 }
                 list.Add(item);
             }

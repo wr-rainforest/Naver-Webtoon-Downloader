@@ -6,7 +6,7 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{C15F9A2B-E0D0-4CE4-8D2D-7D0CAC5A58C3}</ProjectGuid>
     <OutputType>Exe</OutputType>
-    <RootNamespace>Naver_Webtoon_Downloader</RootNamespace>
+    <RootNamespace>WRforest.NWD</RootNamespace>
     <AssemblyName>Naver-Webtoon-Downloader</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
@@ -50,6 +50,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="src\ConsoleApp\Command.cs" />
+    <Compile Include="src\ConsoleApp\ConsolePage.cs" />
     <Compile Include="src\ConsoleApp\Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="src\NWD\Config.cs" />

@@ -23,31 +23,43 @@ namespace WRforest.NWD
         /// </summary>
         public NaverWebtoonDownloader()
         {
+            IO.Log("<NaverWebtoonDownloader.ctor()>");
             if (IO.Exists("data\\configs", "config.json"))
             {
+                IO.Log("NaverWebtoonDownloader.ctor config.json Exist");
                 config = new Config(IO.ReadTextFile("data\\configs", "config.json"));
+                IO.Log("NaverWebtoonDownloader.ctor load config.json fin");
             }
             else
             {
+                IO.Log("NaverWebtoonDownloader.ctor config.json !Exist");
                 config = new Config();
                 IO.WriteTextFile("data\\configs", "config.json", config.ToJsonString());
+                IO.Log("NaverWebtoonDownloader.ctor gen config.json fin");
+
             }
             if (IO.Exists("data\\configs", "xpath_config.json"))
             {
+                IO.Log("NaverWebtoonDownloader.ctor xpath_config.json Exist");
                 xPath = new Parser.XPath(IO.ReadTextFile("data\\configs", "xpath_config.json"));
+                IO.Log("NaverWebtoonDownloader.ctor load xpath_config.json fin");
             }
             else
             {
+                IO.Log("NaverWebtoonDownloader.ctor xpath_config.json !Exist");
                 xPath = new Parser.XPath();
                 IO.WriteTextFile("data\\configs", "xpath_config.json", xPath.ToJsonString());
+                IO.Log("NaverWebtoonDownloader.ctor gen xpath_config.json fin");
             }
             webtoons = new Dictionary<string, WebtoonInfo>();
             agent = new Parser.Agent();
             parser = new Parser.Parser(agent, xPath);
+            IO.Log("</NaverWebtoonDownloader.ctor()>");
         }
 #if Console
         public void Download(string titleId)
         {
+            //IO.Log(string.Format("<NaverWebtoonDownloader.Download({0})>",titleId));
             agent.LoadPage(string.Format("https://comic.naver.com/webtoon/list.nhn?titleId={0}", titleId));
             var webtoonTitle = parser.GetWebtoonTitle();
             IO.Print(string.Format("{0}({1}) 다운로드를 시작합니다.",webtoonTitle, titleId));
@@ -56,6 +68,7 @@ namespace WRforest.NWD
             {
                 var webtoonInfo = LoadWebtoonInfo(webtoonKey);
                 IO.Print(string.Format("{0}({1}) 캐시파일을 불러왔습니다.", webtoonTitle, titleId));
+                //IO.Log(string.Format("NaverWebtoonDownloader.Download load cache fin"));
                 UpdateWebtoonInfo(webtoonInfo);
                 webtoons.Add(titleId, webtoonInfo);
                 SaveWebtoonInfo(webtoonInfo);
