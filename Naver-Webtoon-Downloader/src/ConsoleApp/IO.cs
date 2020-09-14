@@ -10,12 +10,63 @@ namespace WRforest.NWD
 {
     class IO
     {
-        public static void Print(string msg, bool newline=true)
+        private static Dictionary<string, ConsoleColor> Color;
+        static IO()
         {
-            if(newline)
-                Console.WriteLine(DateTime.Now.ToString("[yyyy-MM-dd hh:mm:ss] : ")+msg);
-            else
-                Console.Write(DateTime.Now.ToString("[yyyy-MM-dd hh:mm:ss] : ") + msg);
+            Color = new Dictionary<string, ConsoleColor>();
+            Color.Add("black", ConsoleColor.Black);
+            Color.Add("darkblue", ConsoleColor.DarkBlue);
+            Color.Add("darkgreen", ConsoleColor.DarkGreen);
+            Color.Add("darkcyan", ConsoleColor.DarkCyan);
+            Color.Add("darkred", ConsoleColor.DarkRed);
+            Color.Add("darkmagenta", ConsoleColor.DarkMagenta);
+            Color.Add("darkyellow", ConsoleColor.DarkYellow);
+            Color.Add("gray", ConsoleColor.Gray);
+            Color.Add("darkgray", ConsoleColor.DarkGray);
+            Color.Add("blue", ConsoleColor.Blue);
+            Color.Add("green", ConsoleColor.Green);
+            Color.Add("cyan", ConsoleColor.Cyan);
+            Color.Add("red", ConsoleColor.Red);
+            Color.Add("magenta", ConsoleColor.Magenta);
+            Color.Add("yellow", ConsoleColor.Yellow);
+            Color.Add("white", ConsoleColor.White);
+
+        }
+        /// <summary>
+        /// $$텍스트$색$  = >  텍스트를 지정한 색으로 출력합니다.
+        /// </summary>
+        /// <param name="msg"></param>
+        /// <param name="newline"></param>
+        /// <param name="timeStamp"></param>
+        public static void Print(string msg, bool newline=true, bool timeStamp=true)
+        {
+            if (timeStamp)
+                Console.Write(DateTime.Now.ToString("[yyyy-MM-dd hh:mm:ss] : "));
+
+            string[] split = msg.Split('$');
+
+            if(split.Length<=1)
+            {
+                if (newline)
+                    Console.WriteLine(msg);
+                else
+                    Console.Write(msg);
+                return;
+            }
+            for (int i = 0; i < split.Length; i++)
+            {
+                if (string.IsNullOrEmpty(split[i]) && ((i + 2) < split.Length&& Color.ContainsKey(split[i + 2])))
+                {
+                    Console.ForegroundColor = Color[split[i + 2]];
+                    Console.Write(split[i + 1]);
+                    Console.ResetColor();
+                    i += 2;
+                    continue;
+                }
+                Console.Write(split[i]);
+            }
+            if (newline)
+                Console.WriteLine();
         }
         public static void Write(string msg)
         {

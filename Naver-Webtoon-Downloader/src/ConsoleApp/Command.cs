@@ -10,16 +10,11 @@ namespace WRforest.NWD
     {
         private delegate void CommandDelegate(params string[] args);
         Dictionary<string, CommandDelegate> commandDictionary;
-        NaverWebtoonDownloader nwd;
         Parser.Agent agent;
         Parser.Parser parser;
         ConsolePage ConsolePage;
-        public Command(Parser.Agent agent, Parser.Parser parser,NaverWebtoonDownloader nwd, ConsolePage consolePage)
+        public Command()
         {
-            this.agent = agent;
-            this.parser = parser;
-            this.nwd = nwd;
-            this.ConsolePage = consolePage;
             commandDictionary = new Dictionary<string, CommandDelegate>();
             commandDictionary.Add("get", Get);
             commandDictionary.Add("clear", Clear);
@@ -32,28 +27,6 @@ namespace WRforest.NWD
         public void Start(string commandName, params string[] args)
         {
             commandDictionary[commandName](args);
-        }
-
-        string[] days = { "mon", "tue", "wed", "thu", "fri", "sat", "sun" };
-        private void Get(params string[] args)
-        {
-            if (args.Length==0)
-            {
-                IO.PrintError("요일을 지정해주세요. (예 : get mon)");
-                return;
-            }
-            if (!days.Contains(args[0]))
-            {
-                 IO.PrintError("입력된 문자열은 요일이 아닙니다.");
-                return;
-            }
-        }
-        private void Clear(params string[] args)
-        {
-/*            int currentPosition = Console.CursorTop;
-            Console.SetCursorPosition(0, Program.cursorPosition);
-            Console.Write(new string(' ', (Console.BufferWidth - 1) * (currentPosition-Program.cursorPosition)));
-            Console.SetCursorPosition(0, Program.cursorPosition);*/
         }
         private void Download(params string[] args)
         {
@@ -78,6 +51,27 @@ namespace WRforest.NWD
                     return;
                 }
             }
+        }
+        string[] days = { "mon", "tue", "wed", "thu", "fri", "sat", "sun" };
+        private void Get(params string[] args)
+        {
+            if (args.Length == 0)
+            {
+                IO.PrintError("요일을 지정해주세요. (예 : get mon)");
+                return;
+            }
+            if (!days.Contains(args[0]))
+            {
+                IO.PrintError("입력된 문자열은 요일이 아닙니다.");
+                return;
+            }
+        }
+        private void Clear(params string[] args)
+        {
+            /*            int currentPosition = Console.CursorTop;
+                        Console.SetCursorPosition(0, Program.cursorPosition);
+                        Console.Write(new string(' ', (Console.BufferWidth - 1) * (currentPosition-Program.cursorPosition)));
+                        Console.SetCursorPosition(0, Program.cursorPosition);*/
         }
     }
 }
