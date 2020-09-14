@@ -78,7 +78,7 @@ namespace WRforest.NWD
                     webtoonInfo = new WebtoonInfo(keys[i], titles[i]);
                     Downloader.BuildWebtoonInfo(webtoonInfo, null);
                 }
-                ImageKey[] imageKeys = Downloader.BuildImageKeysToDown(webtoonInfo, null);
+                ImageKey[] imageKeys = Downloader.BuildImageKeysToDown(webtoonInfo);
                 Downloader.Download(webtoonInfo, imageKeys, null);
             }
             
