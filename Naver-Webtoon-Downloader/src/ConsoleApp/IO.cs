@@ -55,9 +55,9 @@ namespace WRforest.NWD
             }
             for (int i = 0; i < split.Length; i++)
             {
-                if (string.IsNullOrEmpty(split[i]) && ((i + 2) < split.Length&& Color.ContainsKey(split[i + 2])))
+                if (string.IsNullOrEmpty(split[i]) && ((i + 2) < split.Length&& Color.ContainsKey(split[i + 2].ToLower())))
                 {
-                    Console.ForegroundColor = Color[split[i + 2]];
+                    Console.ForegroundColor = Color[split[i + 2].ToLower()];
                     Console.Write(split[i + 1]);
                     Console.ResetColor();
                     i += 2;

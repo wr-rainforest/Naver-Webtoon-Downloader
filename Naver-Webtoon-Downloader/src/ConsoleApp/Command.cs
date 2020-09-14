@@ -1,8 +1,11 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using WRforest.NWD.DataType;
+using WRforest.NWD.Key;
 
 namespace WRforest.NWD
 {
@@ -32,10 +35,13 @@ namespace WRforest.NWD
         {
             if (args.Length == 0)
             {
-                IO.PrintError("titleId를 입력해주세요.");
+                IO.PrintError("titleId를 입력해주세요");
+                IO.Print("$$download$yellow$ [$$titleId$cyan$] / [$$titleId$Cyan$] : 다운로드할 웹툰의 $$titleId$cyan$입니다.");
+                IO.Print("                      : 예) $$download$yellow$ $$733766$cyan$ ", true, false);
                 return;
             }
-
+            List<WebtoonKey> keys = new List<WebtoonKey>();
+            List<string> titles = new List<string>();
             for (int i = 0; i < args.Length; i++)
             {
                 if (!int.TryParse(args[0], out _))
@@ -44,13 +50,38 @@ namespace WRforest.NWD
                     return;
                 }
                 agent.LoadPage(string.Format("https://comic.naver.com/webtoon/list.nhn?titleId={0}", args[i]));
-                var node = agent.Page.DocumentNode.SelectSingleNode("//*[@property=\"og:title\"]");
-                if (node.Attributes["content"].Value == "네이버 웹툰")
+                string title = parser.GetWebtoonTitle();
+                if (title == "네이버 웹툰")
                 {
                     IO.PrintError("존재하지 않는 titleId입니다. : " + args[i]);
                     return;
                 }
+                IO.Print(string.Format("{0} : {0}($${1}$cyan$)", args[i], title));
+                titles.Add(title);
+                keys.Add(new WebtoonKey(args[i]));
             }
+            for(int i=0; i < keys.Count; i++)
+            {
+                WebtoonInfo webtoonInfo;
+                if(IO.Exists("Cache", keys[i].TitleId + ".json"))
+                {
+                    webtoonInfo = JsonConvert.DeserializeObject<WebtoonInfo>(IO.ReadTextFile("Cache", keys[i].TitleId + ".json"));
+                    int latest = int.Parse(parser.GetLatestEpisodeNo());
+                    int last = webtoonInfo.GetLastEpisodeNo();
+                    if(latest!=last)
+                    {
+                        Downloader.UpdateWebtoonInfo(webtoonInfo,null);
+                    }
+                }
+                else
+                {
+                    webtoonInfo = new WebtoonInfo(keys[i], titles[i]);
+                    Downloader.BuildWebtoonInfo(webtoonInfo, null);
+                }
+                ImageKey[] imageKeys = Downloader.BuildImageKeysToDown(webtoonInfo, null);
+                Downloader.Download(webtoonInfo, imageKeys, null);
+            }
+            
         }
         string[] days = { "mon", "tue", "wed", "thu", "fri", "sat", "sun" };
         private void Get(params string[] args)

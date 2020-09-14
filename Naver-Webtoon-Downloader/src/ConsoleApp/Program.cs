@@ -13,7 +13,11 @@ namespace WRforest.NWD
     {
         static void Main(string[] args)
         {
-            IO.Print("테스트 문자열 ($$파란색$blue$) ($$초록색$green$) n$$ew&$green$line tt$$g$green$");
+            Downloader.SetProgressDelegate(PrintProgess);
+        }
+        public static void PrintProgess(string ProgressText)
+        {
+
         }
     }
 }
