@@ -2,7 +2,7 @@
 [![GitHub release (latest by date)](https://img.shields.io/github/v/release/wr-rainforest/Naver-Webtoon-Downloader?label=latest&style=flat-square)](https://github.com/wr-rainforest/Naver-Webtoon-Downloader/releases/latest)
 [![GitHub All Releases](https://img.shields.io/github/downloads/wr-rainforest/Naver-Webtoon-Downloader/total?label=Downloades&style=flat-square)](https://github.com/wr-rainforest/Naver-Webtoon-Downloader/releases)
      
-[v1.0 브랜치](https://github.com/wr-rainforest/Naver-Webtoon-Downloader/tree/v1.0)
+[v1.0 브랜치](https://github.com/wr-rainforest/Naver-Webtoon-Downloader/tree/v1.0)     
 [v0.3.0.34414 다운로드](https://github.com/wr-rainforest/Naver-Webtoon-Downloader/releases/download/v0.3.0.34414/Naver-Webtoon-Downloader.v0.3.0.34414.zip)
   
 네이버 웹툰 다운로더입니다.   
