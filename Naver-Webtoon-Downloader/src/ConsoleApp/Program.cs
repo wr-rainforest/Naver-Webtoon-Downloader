@@ -36,9 +36,9 @@ namespace WRforest.NWD
                 xPath = new Parser.XPath();
                 IO.WriteTextFile("data\\configs", "xpath_config.json", xPath.ToJsonString());
             }
-            Parser.Agent agent = new Agent();
-            Parser.Parser parser = new Parser.Parser(agent, xPath);
-            NaverWebtoonDownloader nwd = new NaverWebtoonDownloader(agent, parser, config, xPath);
+            //Parser.Agent agent = new Agent();
+            Parser.Parser parser = Parser.Parser.Instance;
+            NaverWebtoonDownloader nwd = new NaverWebtoonDownloader(config, xPath);
             ConsolePage ConsolePage = new ConsolePage(agent, parser);
             Command command = new Command(agent, parser, nwd, ConsolePage);
 

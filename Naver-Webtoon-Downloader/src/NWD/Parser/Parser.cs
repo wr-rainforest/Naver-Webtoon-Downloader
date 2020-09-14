@@ -17,15 +17,32 @@ namespace WRforest.NWD.Parser
         /// 생성자 매개변수인 <seealso cref="Agent"/>의 <seealso cref="Agent.Page"/> 객체 참조입니다.
         /// </summary>
         private HtmlDocument Page { get; set; }
+
+        private static Parser instance;
+        public static Parser Instance
+        {
+            get
+            {
+                if(instance==null)
+                {
+                    instance = new Parser();
+                }
+                return instance;
+            }
+            private set
+            {
+                instance = value;
+            }
+        }
         private XPath XPath;
         /// <summary>
         /// <seealso cref="Agent.Page"/>를 파싱하는 Parser 객체를 생성합니다.
         /// </summary>
         /// <param name="Page">파싱할 Page를 가진 Agent 인스턴스입니다.</param>
-        public Parser(Agent agent, XPath xPath)
+        private Parser()
         {
-            Page = agent.Page;
-            XPath = xPath;
+            Page = Agent.Instance.Page;
+            XPath = new XPath();
         }
         /// <summary>
         /// 현재 로딩된 페이지에서 가장 최신 회차의 번호를 파싱합니다. 로딩된 페이지가 webtoon/list.nhn?titleId={0}가 아닐 경우 원하는 동작을 하지 않을 수 있습니다.
@@ -146,6 +163,11 @@ namespace WRforest.NWD.Parser
                 list.Add(item);
             }
             return list.ToArray();
+        }
+
+        public void SetXPath(XPath xPath)
+        {
+            XPath = xPath;
         }
     }
 
