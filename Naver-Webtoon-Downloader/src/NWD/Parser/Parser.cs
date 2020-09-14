@@ -42,7 +42,6 @@ namespace WRforest.NWD.Parser
         private Parser()
         {
             Page = Agent.Instance.Page;
-            XPath = new XPath();
         }
         /// <summary>
         /// 현재 로딩된 페이지에서 가장 최신 회차의 번호를 파싱합니다. 로딩된 페이지가 webtoon/list.nhn?titleId={0}가 아닐 경우 원하는 동작을 하지 않을 수 있습니다.

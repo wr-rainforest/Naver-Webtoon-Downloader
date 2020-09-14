@@ -15,9 +15,10 @@ namespace WRforest.NWD
         Dictionary<string, CommandDelegate> commandDictionary;
         Parser.Agent agent;
         Parser.Parser parser;
-        ConsolePage ConsolePage;
         public Command()
         {
+            agent = Parser.Agent.Instance;
+            parser = Parser.Parser.Instance;
             commandDictionary = new Dictionary<string, CommandDelegate>();
             commandDictionary.Add("get", Get);
             commandDictionary.Add("clear", Clear);
@@ -56,7 +57,7 @@ namespace WRforest.NWD
                     IO.PrintError("존재하지 않는 titleId입니다. : " + args[i]);
                     return;
                 }
-                IO.Print(string.Format("{0} : {0}($${1}$cyan$)", args[i], title));
+                IO.Print(string.Format("{1}($${0}$cyan$)", args[i], title));
                 titles.Add(title);
                 keys.Add(new WebtoonKey(args[i]));
             }
@@ -68,18 +69,36 @@ namespace WRforest.NWD
                     webtoonInfo = JsonConvert.DeserializeObject<WebtoonInfo>(IO.ReadTextFile("Cache", keys[i].TitleId + ".json"));
                     int latest = int.Parse(parser.GetLatestEpisodeNo());
                     int last = webtoonInfo.GetLastEpisodeNo();
-                    if(latest!=last)
+                    IO.Print(string.Format("{0}($${1}$cyan$) 메타데이터 캐시를 불러왔습니다.", webtoonInfo.WebtoonTitle, keys[i].TitleId));
+                    IO.Print(string.Format("{0}($${1}$cyan$) 업데이트된 회차를 확인합니다.. ", webtoonInfo.WebtoonTitle, keys[i].TitleId));
+                    if (latest!=last)
                     {
-                        Downloader.UpdateWebtoonInfo(webtoonInfo,null);
+                        IO.Print(string.Format("{0}($${1}$cyan$) 메타데이터 캐시를 업데이트합니다.. [no($${2}$cyan$) ~ no($${3}$cyan$)]", webtoonInfo.WebtoonTitle, keys[i].TitleId, last+1,latest));
+                        Downloader.UpdateWebtoonInfo(webtoonInfo, "{0}($${1}$cyan$) [{2}/{3}] ($${4:P}$green$) [{5}]");
+                        IO.Print(string.Format("{0}($${1}$cyan$) 메타데이터 캐시에 업데이트된 회차를 추가하였습니다.", webtoonInfo.WebtoonTitle, keys[i].TitleId));
+                    }
+                    else
+                    {
+                        IO.Print(string.Format("{0}($${1}$cyan$) 업데이트된 회차가 없습니다. ", webtoonInfo.WebtoonTitle, keys[i].TitleId));
+                    }
+                    var tuple = Downloader.GetDownloadedImagesInformation(webtoonInfo);
+                    IO.Print(string.Format("{0}($${1}$cyan$) 다운로드를 시작합니다. ", webtoonInfo.WebtoonTitle, keys[i].TitleId));
+                    if (tuple.downloadedImageCount != 0)
+                    {
+                        IO.Print(string.Format("{0}($${1}$cyan$) 이미 다운로드된 이미지 $${2}$cyan$장 ($${3:0.00}$blue$ MB)  ", webtoonInfo.WebtoonTitle, keys[i].TitleId, tuple.downloadedImageCount, (double)tuple.downloadedImagesSize/1048576));
                     }
                 }
                 else
                 {
                     webtoonInfo = new WebtoonInfo(keys[i], titles[i]);
-                    Downloader.BuildWebtoonInfo(webtoonInfo, null);
+                    IO.Print(string.Format("{0}($${1}$cyan$) 메타데이터 캐시를 생성합니다.", webtoonInfo.WebtoonTitle, keys[i].TitleId));
+                    Downloader.BuildWebtoonInfo(webtoonInfo, "{0}($${1}$cyan$) [{2}/{3}] ($${4:P}$green$) [{5}]");
+                    IO.Print(string.Format("{0}($${1}$cyan$) 메타데이터 캐시를 생성하였습니다..", webtoonInfo.WebtoonTitle, keys[i].TitleId));
                 }
+                IO.WriteTextFile("Cache", keys[i].TitleId + ".json", JsonConvert.SerializeObject(webtoonInfo));
+
                 ImageKey[] imageKeys = Downloader.BuildImageKeysToDown(webtoonInfo);
-                Downloader.Download(webtoonInfo, imageKeys, null);
+                Downloader.Download(webtoonInfo, imageKeys, "{0}($${1}$cyan$) [{2}/{3}] ($${9:0.00}$blue$ MB) ($${4:P}$green$) [{5}] {6}");
             }
             
         }
@@ -96,13 +115,41 @@ namespace WRforest.NWD
                 IO.PrintError("입력된 문자열은 요일이 아닙니다.");
                 return;
             }
+            agent.LoadPage("https://comic.naver.com/webtoon/weekday.nhn");
+            var t = parser.GetWebtoonList(args[0]);
+            int maxByteLength = 0;
+            for (int i = 0; i < t.Length; i++)
+            {
+                int byteLength = Encoding.Default.GetBytes(string.Format("{0}({1})", t[i].title, t[i].titleId)).Length;
+                if (byteLength > maxByteLength)
+                {
+                    maxByteLength = byteLength;
+                }
+            }
+            for (int i = 0, j = 0; i < t.Length; i++, j++)
+            {
+                IO.Print(string.Format("{0}($${1}$cyan$)", t[i].title, t[i].titleId),false,false);
+                if (j == 3)
+                {
+                    Console.WriteLine("");
+                    Console.WriteLine("");
+                    j = -1;
+                }
+                else
+                {
+                    int byteLength = Encoding.Default.GetBytes(string.Format("{0}({1})", t[i].title, t[i].titleId)).Length;
+                    Console.Write("".PadRight(maxByteLength - byteLength + 1, ' '));
+
+                }
+            }
+            Console.WriteLine("");
         }
         private void Clear(params string[] args)
         {
-            /*            int currentPosition = Console.CursorTop;
-                        Console.SetCursorPosition(0, Program.cursorPosition);
-                        Console.Write(new string(' ', (Console.BufferWidth - 1) * (currentPosition-Program.cursorPosition)));
-                        Console.SetCursorPosition(0, Program.cursorPosition);*/
+            int currentPosition = Console.CursorTop;
+            Console.SetCursorPosition(0, Program.cursorPosition);
+            Console.Write(new string(' ', (Console.BufferWidth - 1) * (currentPosition - Program.cursorPosition)));
+            Console.SetCursorPosition(0, Program.cursorPosition); 
         }
     }
 }

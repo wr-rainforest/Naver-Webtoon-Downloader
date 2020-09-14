@@ -16,10 +16,6 @@ namespace WRforest.NWD
         public delegate void ProgressDelegate(string progress);
         private static ProgressDelegate PrintProgress;
         private static Config config;
-        static Downloader()
-        {
-            config = new Config();
-        }
         public static void SetProgressDelegate(ProgressDelegate progressDelegate)
         {
             PrintProgress = progressDelegate;
@@ -67,6 +63,7 @@ namespace WRforest.NWD
                              webtoonInfo.Episodes[episodeNo].EpisodeDate,
                              webtoonInfo.Episodes[episodeNo].EpisodeTitle));
             }
+            Console.WriteLine();
         }
 
         /// <summary>
@@ -106,6 +103,7 @@ namespace WRforest.NWD
                              webtoonInfo.Episodes[episodeNo].EpisodeDate,
                              webtoonInfo.Episodes[episodeNo].EpisodeTitle));
             }
+            Console.WriteLine();
         }
         public static ImageKey[] BuildImageKeysToDown(WebtoonInfo webtoonInfo)
         {
@@ -150,6 +148,8 @@ namespace WRforest.NWD
             long size = 0;
             for(int i=0; i<imageKeys.Length; i++)
             {
+                EpisodeKey episodeKey = new EpisodeKey(imageKeys[i].TitleId, imageKeys[i].EpisodeNo);
+                agent.SetHeader("Referer", episodeKey.BuildUrl());
                 byte[] buff = agent.DownloadData(webtoonInfo.Episodes[imageKeys[i].EpisodeNo].EpisodeImageUrls[imageKeys[i].ImageIndex]);
                 IO.WriteAllBytes(
                     BuildImageFileFullDirectory(webtoonInfo, imageKeys[i]),
@@ -166,9 +166,34 @@ namespace WRforest.NWD
                     webtoonInfo.Episodes[imageKeys[i].EpisodeNo].EpisodeTitle,
                     imageKeys[i].ImageIndex,
                     BuildImageFileName(webtoonInfo, imageKeys[i]),
-                    size/1048576
+                    (double)size/1048576
                     ));
             }
+            Console.WriteLine();
+        }
+        public static (int downloadedImageCount, long downloadedImagesSize) GetDownloadedImagesInformation(WebtoonInfo webtoonInfo)
+        {
+            WebtoonKey webtoonKey = new WebtoonKey(webtoonInfo.WebtoonTitleId);
+            int count = 0;
+            long size = 0;
+            int lastEpisode = webtoonInfo.GetLastEpisodeNo();
+            for (int episodeNo = 1; episodeNo <= lastEpisode; episodeNo++)
+            {
+                if (!webtoonInfo.Episodes.ContainsKey(episodeNo))
+                    continue;
+                EpisodeInfo episodeInfo = webtoonInfo.Episodes[episodeNo];
+                string[] imageUrls = episodeInfo.EpisodeImageUrls;
+                for (int imageIndex = 0; imageIndex < imageUrls.Length; imageIndex++)
+                {
+                    ImageKey imageKey = new ImageKey(webtoonInfo.WebtoonTitleId, episodeNo, imageIndex);
+                    if (IO.Exists(BuildImageFileFullDirectory(webtoonInfo, imageKey), BuildImageFileName(webtoonInfo, imageKey)))
+                    {
+                        count++;
+                        size += new FileInfo(BuildImageFileFullDirectory(webtoonInfo, imageKey) +"\\"+ BuildImageFileName(webtoonInfo, imageKey)).Length;
+                    }
+                }
+            }
+            return (count, size);
         }
 
 

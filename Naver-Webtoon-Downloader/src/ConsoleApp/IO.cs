@@ -84,6 +84,7 @@ namespace WRforest.NWD
         {
             Console.ForegroundColor = ConsoleColor.Red;
             Console.WriteLine("Error : " + msg);
+            Console.ResetColor();
             Console.WriteLine();
         }
 
