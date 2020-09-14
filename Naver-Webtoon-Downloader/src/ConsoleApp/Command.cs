@@ -39,29 +39,27 @@ namespace WRforest.NWD
         {
             if (args.Length==0)
             {
-                ConsolePage.Error("요일을 지정해주세요. (get mon)");
+                IO.PrintError("요일을 지정해주세요. (예 : get mon)");
                 return;
             }
             if (!days.Contains(args[0]))
             {
-                ConsolePage.Error("입력된 문자열은 요일이 아닙니다.");
+                 IO.PrintError("입력된 문자열은 요일이 아닙니다.");
                 return;
             }
-            ConsolePage.PrintWebtoonListPage(args[0]);
-            Console.WriteLine();
         }
         private void Clear(params string[] args)
         {
-            int currentPosition = Console.CursorTop;
+/*            int currentPosition = Console.CursorTop;
             Console.SetCursorPosition(0, Program.cursorPosition);
             Console.Write(new string(' ', (Console.BufferWidth - 1) * (currentPosition-Program.cursorPosition)));
-            Console.SetCursorPosition(0, Program.cursorPosition);
+            Console.SetCursorPosition(0, Program.cursorPosition);*/
         }
         private void Download(params string[] args)
         {
             if (args.Length == 0)
             {
-                ConsolePage.Error("titleId를 입력해주세요.");
+                IO.PrintError("titleId를 입력해주세요.");
                 return;
             }
 
@@ -69,23 +67,17 @@ namespace WRforest.NWD
             {
                 if (!int.TryParse(args[0], out _))
                 {
-                    ConsolePage.Error("titleId는 숫자입니다. : " + args[i]);
+                    IO.PrintError("titleId는 숫자입니다. : " + args[i]);
                     return;
                 }
                 agent.LoadPage(string.Format("https://comic.naver.com/webtoon/list.nhn?titleId={0}", args[i]));
                 var node = agent.Page.DocumentNode.SelectSingleNode("//*[@property=\"og:title\"]");
                 if (node.Attributes["content"].Value == "네이버 웹툰")
                 {
-                    ConsolePage.Error("존재하지 않는 titleId입니다. : " + args[i]);
+                    IO.PrintError("존재하지 않는 titleId입니다. : " + args[i]);
                     return;
                 }
-                ConsolePage.WriteLine(string.Format("{0}({1})", node.Attributes["content"].Value, args[i]));
             }
-            for (int i = 0; i < args.Length; i++)
-            {
-                nwd.Download(args[i]);
-            }
-            Console.WriteLine();
         }
     }
 }

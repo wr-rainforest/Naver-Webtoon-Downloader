@@ -8,28 +8,8 @@ using System.Threading.Tasks;
 
 namespace WRforest.NWD
 {
-#if Console
-    public delegate void PrintDelegate(string msg);
-    public delegate void LogDelegate(string msg);
-#endif
-#if WPF
-    public delegate void PrintDelegate(string msg);
-    public delegate void LogDelegate(string msg);
-#endif
     class IO
     {
-#if WPF
-        /// <summary>
-        /// 기본 출력 델리게이트
-        /// </summary>
-        public static PrintDelegate Print;
-#endif
-        /// <summary>
-        /// 기본 로그 델리게이트
-        /// </summary>
-        public static LogDelegate Log;
-
-#if Console
         public static void Print(string msg, bool newline=true)
         {
             if(newline)
@@ -37,27 +17,24 @@ namespace WRforest.NWD
             else
                 Console.Write(DateTime.Now.ToString("[yyyy-MM-dd hh:mm:ss] : ") + msg);
         }
-        public static void Write(string msg, ConsoleColor color)
-        {
-            Console.ForegroundColor = color;
-            Console.Write(msg);
-            Console.ResetColor();
-        }
-        public static void WriteLine(string msg, ConsoleColor color)
-        {
-            Console.ForegroundColor = color;
-            Console.WriteLine(msg);
-            Console.ResetColor();
-        }
         public static void Write(string msg)
         {
             Console.Write(msg);
+        }
+        public static void WriteLine()
+        {
+            Console.WriteLine();
         }
         public static void WriteLine(string msg)
         {
             Console.WriteLine(msg);
         }
-#endif
+        public static void PrintError(string msg)
+        {
+            Console.ForegroundColor = ConsoleColor.Red;
+            Console.WriteLine("Error : " + msg);
+            Console.WriteLine();
+        }
 
         public static string ReadTextFile(string directory, string filename)
         {
