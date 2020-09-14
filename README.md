@@ -2,6 +2,7 @@
 [![GitHub release (latest by date)](https://img.shields.io/github/v/release/wr-rainforest/Naver-Webtoon-Downloader?label=latest&style=flat-square)](https://github.com/wr-rainforest/Naver-Webtoon-Downloader/releases/latest)
 [![GitHub All Releases](https://img.shields.io/github/downloads/wr-rainforest/Naver-Webtoon-Downloader/total?label=Downloades&style=flat-square)](https://github.com/wr-rainforest/Naver-Webtoon-Downloader/releases)
      
+[v1.0 브랜치](https://github.com/wr-rainforest/Naver-Webtoon-Downloader/tree/v1.0)
 [v0.3.0.34414 다운로드](https://github.com/wr-rainforest/Naver-Webtoon-Downloader/releases/download/v0.3.0.34414/Naver-Webtoon-Downloader.v0.3.0.34414.zip)
   
 네이버 웹툰 다운로더입니다.   
@@ -58,7 +59,6 @@
 
 - __v0.3.0.34414__
   - 특이사항
-    - 마지막 pre-Release입니다.
     - 버전 명명규칙이 변경되었습니다.
     - 이번 버전은 하드코딩된 문자열이 많습니다. 추후 제대로 동작하지 않을 가능성이 상당히 높습니다.
   - 업데이트 내용
@@ -67,7 +67,7 @@
     - 웹툰의 titleId 목록을 불러오는 get 커맨드가 추가되었습니다.
   - 버그
     - 스페이스를 두개 이상 붙여서 입력할 시 커맨드 옵션을 인식하지 못합니다
-    - 회차 제목의 끝이 온점이나 스페이스로 끝날 경우 " 경로의 일부를 찾을 수 없습니다." 에러가 발생합니다.
+    - 회차 제목의 끝이 온점이나 스페이스로 끝날 경우 " 경로의 일부를 찾을 수 없습니다." 에러가 발생합니다.(v1.0)
 
 
 
