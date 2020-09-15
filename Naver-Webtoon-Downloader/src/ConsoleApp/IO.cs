@@ -38,7 +38,7 @@ namespace WRforest.NWD
         /// <param name="msg"></param>
         /// <param name="newline"></param>
         /// <param name="timeStamp"></param>
-        public static void Print(string msg, bool newline=true, bool timeStamp=true)
+        public static void Print(string msg, bool newline=true, bool timeStamp=false)
         {
             if (timeStamp)
                 Console.Write(DateTime.Now.ToString("[yyyy-MM-dd hh:mm:ss] : "));
