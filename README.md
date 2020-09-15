@@ -11,7 +11,7 @@
 개발자 연락처 : contact@wrforest.com
 
 .Net Frmamework 4.7.2 이상 버전에서 동작합니다.    
-윈도우10 2018년 4월 업데이트(버전 1803) 이후 버전에서는 런타임 추가 설치 없이도 실행이 가능합니다.   
+윈도우 2018년 4월 업데이트(버전 1803) 이후 버전에서는 런타임 추가 설치 없이도 실행이 가능합니다.   
 [.Net Frmamework 4.7.2 다운로드](https://dotnet.microsoft.com/download/dotnet-framework/net472)
 # 개요
 - 네이버 웹툰 서버에서 로컬 다운로드 폴더로의 단방향 동기화 개념으로 작동합니다.    

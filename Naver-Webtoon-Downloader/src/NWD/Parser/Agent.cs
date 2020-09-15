@@ -17,10 +17,27 @@ namespace WRforest.NWD.Parser
         /// </summary>
         public HtmlDocument Page { get; private set; }
 
+        private static Agent instance;
+        public static Agent Instance
+        {
+            get
+            {
+                if (instance == null)
+                {
+                    instance = new Agent();
+                }
+                return instance;
+            }
+            private set
+            {
+                instance = value;
+            }
+        }
+
         /// <summary>
         /// <seealso cref="Agent"/> 클래스의 새 인스턴스를 초기화합니다.
         /// </summary>
-        public Agent()
+        private Agent()
         {
             Page = new HtmlDocument();
             client = new WebClient();
