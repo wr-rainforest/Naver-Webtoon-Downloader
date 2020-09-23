@@ -42,13 +42,14 @@ namespace WRforest.NWD
         /// <code>{2} : 이미지 인덱스(imageIndex)입니다. / ":Dn" : n자리수가 되도록 0을 패딩합니다.(imageIndex = 3, n = 3 => ex:003)</code>
         /// <code>{3} : 웹툰 제목(title)입니다.</code>
         /// <code>{4} : 회차 제목(episodeTitle)입니다.</code>
+        /// /// <code>{5} : (episodeDate)입니다.</code>
         /// </summary>
         public string ImageFileNameFormat
         {
             get
             {
                 if (string.IsNullOrWhiteSpace(imageFileNameFormat))
-                    imageFileNameFormat = "[{0}-{1:D4}-{2:D4}] {3} - {4}.jpg";
+                    imageFileNameFormat = "[{5}] {3} - {4} ({2:D3}).jpg";
                 return imageFileNameFormat;
             }
             set

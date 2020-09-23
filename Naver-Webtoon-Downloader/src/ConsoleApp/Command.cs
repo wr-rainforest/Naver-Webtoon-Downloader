@@ -41,8 +41,6 @@ namespace WRforest.NWD
             if (args.Length == 0)
             {
                 IO.PrintError("titleId를 입력해주세요");
-                IO.Print("$$download$yellow$ [$$titleId$cyan$] / [$$titleId$Cyan$] : 다운로드할 웹툰의 $$titleId$cyan$입니다.", true, true);
-                IO.Print("                      : 예) $$download$yellow$ $$733766$cyan$ ", true, false);
                 return;
             }
             List<WebtoonKey> keys = new List<WebtoonKey>();
@@ -61,32 +59,33 @@ namespace WRforest.NWD
                     IO.PrintError("존재하지 않는 titleId입니다. : " + args[i]);
                     return;
                 }
-                IO.Print(string.Format("{1}($${0}$cyan$)", args[i], title),true,true);
+                IO.Print(string.Format("{2}. {1}($${0}$cyan$) 대기..", args[i], title ,i+1),true,true);
                 titles.Add(title);
                 keys.Add(new WebtoonKey(args[i]));
             }
             for(int i=0; i < keys.Count; i++)
             {
+
                 WebtoonInfo webtoonInfo;
                 if(IO.Exists("Cache", keys[i].TitleId + ".json"))
                 {
                     webtoonInfo = JsonConvert.DeserializeObject<WebtoonInfo>(IO.ReadTextFile("Cache", keys[i].TitleId + ".json"));
                     int latest = int.Parse(parser.GetLatestEpisodeNo());
                     int last = webtoonInfo.GetLastEpisodeNo();
-                    IO.Print(string.Format("{0}($${1}$cyan$) 메타데이터 캐시를 불러왔습니다.", webtoonInfo.WebtoonTitle, keys[i].TitleId),true,true);
+                    IO.Print(string.Format("{0}($${1}$cyan$) URl 캐시를 불러왔습니다.", webtoonInfo.WebtoonTitle, keys[i].TitleId),true,true);
                     IO.Print(string.Format("{0}($${1}$cyan$) 업데이트된 회차를 확인합니다.. ", webtoonInfo.WebtoonTitle, keys[i].TitleId), true, true);
                     if (latest!=last)
                     {
-                        IO.Print(string.Format("{0}($${1}$cyan$) 메타데이터 캐시를 업데이트합니다.. [no($${2}$cyan$) ~ no($${3}$cyan$)]", webtoonInfo.WebtoonTitle, keys[i].TitleId, last+1,latest), true, true);
+                        IO.Print(string.Format("{0}($${1}$cyan$) URl 캐시를 업데이트합니다.. [no($${2}$cyan$) ~ no($${3}$cyan$)]", webtoonInfo.WebtoonTitle, keys[i].TitleId, last+1,latest), true, true);
                         Downloader.UpdateWebtoonInfo(webtoonInfo, "{0}($${1}$cyan$) [{2}/{3}] ($${4:P}$green$) [{5}]");
-                        IO.Print(string.Format("{0}($${1}$cyan$) 메타데이터 캐시에 업데이트된 회차를 추가하였습니다.", webtoonInfo.WebtoonTitle, keys[i].TitleId), true, true);
+                        IO.Print(string.Format("{0}($${1}$cyan$) URl 캐시에 업데이트된 회차를 추가하였습니다.", webtoonInfo.WebtoonTitle, keys[i].TitleId), true, true);
                     }
                     else
                     {
                         IO.Print(string.Format("{0}($${1}$cyan$) 업데이트된 회차가 없습니다. ", webtoonInfo.WebtoonTitle, keys[i].TitleId), true, true);
                     }
                     var tuple = Downloader.GetDownloadedImagesInformation(webtoonInfo);
-                    IO.Print(string.Format("{0}($${1}$cyan$) 다운로드를 시작합니다. ", webtoonInfo.WebtoonTitle, keys[i].TitleId), true, true);
+                    
                     if (tuple.downloadedImageCount != 0)
                     {
                         IO.Print(string.Format("{0}($${1}$cyan$) 이미 다운로드된 이미지 $${2}$cyan$장 ($${3:0.00}$blue$ MB)  ", webtoonInfo.WebtoonTitle, keys[i].TitleId, tuple.downloadedImageCount, (double)tuple.downloadedImagesSize/1048576), true, true);
@@ -95,14 +94,28 @@ namespace WRforest.NWD
                 else
                 {
                     webtoonInfo = new WebtoonInfo(keys[i], titles[i]);
-                    IO.Print(string.Format("{0}($${1}$cyan$) 메타데이터 캐시를 생성합니다.", webtoonInfo.WebtoonTitle, keys[i].TitleId), true, true);
+                    IO.Print(string.Format("{0}($${1}$cyan$) URl 캐시를 생성합니다.", webtoonInfo.WebtoonTitle, keys[i].TitleId), true, true);
                     Downloader.BuildWebtoonInfo(webtoonInfo, "{0}($${1}$cyan$) [{2}/{3}] ($${4:P}$green$) [{5}]");
-                    IO.Print(string.Format("{0}($${1}$cyan$) 메타데이터 캐시를 생성하였습니다..", webtoonInfo.WebtoonTitle, keys[i].TitleId), true, true);
+                    IO.Print(string.Format("{0}($${1}$cyan$) URl 캐시를 생성하였습니다..", webtoonInfo.WebtoonTitle, keys[i].TitleId), true, true);
                 }
                 IO.WriteTextFile("Cache", keys[i].TitleId + ".json", JsonConvert.SerializeObject(webtoonInfo));
 
                 ImageKey[] imageKeys = Downloader.BuildImageKeysToDown(webtoonInfo);
-                Downloader.Download(webtoonInfo, imageKeys, "{0}($${1}$cyan$) [{2}/{3}] ($${9:0.00}$blue$ MB) ($${4:P}$green$) [{5}] {6}");
+                if(imageKeys.Length==0)
+                {
+                    IO.Print(string.Format("{0}($${1}$cyan$) 모든 이미지가 다운로드되었습니다..추가로 다운로드할 이미지가 존재하지 않습니다.", webtoonInfo.WebtoonTitle, keys[i].TitleId), true, true);
+                    return;
+                }
+                IO.Print(string.Format("{0}($${1}$cyan$) 다운로드를 시작합니다. ", webtoonInfo.WebtoonTitle, keys[i].TitleId), true, true);
+                try
+                {
+                    Downloader.Download(webtoonInfo, imageKeys, "{0}($${1}$cyan$) [{2}/{3}] ($${9:0.00}$blue$ MB) ($${4:P}$green$) [{5}]");
+                    IO.Print(string.Format("{0}($${1}$cyan$) 다운로드 완료", webtoonInfo.WebtoonTitle, keys[i].TitleId),true,true);
+                }
+                catch(Exception e)
+                {
+                    IO.PrintError(e.Message);
+                }
             }
             
         }
@@ -111,7 +124,7 @@ namespace WRforest.NWD
         {
             if (args.Length == 0)
             {
-                IO.PrintError("요일을 지정해주세요. (예 : get mon)");
+                IO.PrintError("요일을 지정해주세요. ");
                 return;
             }
             if (!days.Contains(args[0]))

@@ -86,13 +86,29 @@ namespace WRforest.NWD.Parser
         {
             List<string> urls = new List<string>();
             HtmlNodeCollection htmlNodes = Page.DocumentNode.SelectNodes(XPath.ComicContent);
-            if (htmlNodes.Count == 0)
+            if (htmlNodes == null)
+            {
+                Console.WriteLine(Page.DocumentNode.InnerHtml);
                 throw new Exception("웹툰 이미지 목록을 불러올 수 없습니다.");
+            }
+                
             for (int i = 0; i < htmlNodes.Count; i++)
             {
                 urls.Add(htmlNodes[i].Attributes["src"].Value);
             }
             return urls.ToArray();
+        }
+        /// <summary>
+        /// 현재 로딩된 회차 페이지에서 회차 번호를 파싱합니다.
+        /// </summary>
+        /// <code> PageInfo : https://comic.naver.com/webtoon/detail.nhn?titleId={0} no={1} </code>
+        public string GetCurrentEpisodeNo()
+        {
+            string href = Page.DocumentNode.SelectSingleNode("//*[@property=\"og:url\"]").Attributes["content"].Value;
+            var url = href.Replace("amp;", "&");
+            Uri myUri = new Uri(url);
+            return HttpUtility.ParseQueryString(myUri.Query).Get("no");
+            //HttpUtility => system.Web 참조 추가
         }
         /// <summary>
         /// 웹툰작가 이름을 불러옵니다. 아직 구현되지 않았습니다.

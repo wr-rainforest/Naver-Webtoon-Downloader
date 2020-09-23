@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace WRforest.NWD
@@ -118,9 +119,25 @@ namespace WRforest.NWD
         {
             if (!Directory.Exists(directory))
                 Directory.CreateDirectory(directory);
-            using (FileStream fs = new FileStream(string.Format("{0}\\{1}", directory, filename), FileMode.Create, FileAccess.Write))
+            //File.WriteAllBytes(string.Format("{0}\\{1}", directory, filename), data);
+            fileQueue.Enqueue((string.Format("{0}\\{1}", directory, filename), data));
+
+        }
+        public static bool taskEnd;
+        static Queue<(string path, byte[] data)> fileQueue = new Queue<(string path, byte[] data)>();
+        public static void SaveFileAsync()
+        {
+            while (true)
             {
-                fs.Write(data, 0, data.Length);
+                if(fileQueue.Count==0)
+                {
+                    if (taskEnd)
+                        break;
+                    Thread.Sleep(500);
+                    continue;
+                }
+                var t = fileQueue.Dequeue();
+                File.WriteAllBytes(t.path,t.data);
             }
         }
         public static void AppendToFile(string directory, string filename, string text)

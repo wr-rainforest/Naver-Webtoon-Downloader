@@ -42,7 +42,7 @@ namespace WRforest.NWD.Parser
             Page = new HtmlDocument();
             client = new WebClient();
             client.Encoding = Encoding.UTF8;
-            AddHeader("User-Agent", "Mozilla / 5.0(Windows NT 10.0) AppleWebKit / 537.36(KHTML, like Gecko) Chrome / 85.0.4183.102 Safari / 537.36");
+            
         }
 
         /// <summary>
@@ -51,6 +51,7 @@ namespace WRforest.NWD.Parser
         /// <param name="url"></param>
         public void LoadPage(string url)
         {
+            AddHeader("User-Agent", "Mozilla / 5.0(Windows NT 10.0) AppleWebKit / 537.36(KHTML, like Gecko) Chrome / 85.0.4183.102 Safari / 537.36");
             Page.LoadHtml(client.DownloadString(url));
         }
 
@@ -61,6 +62,7 @@ namespace WRforest.NWD.Parser
         /// <returns><seealso cref="byte[]"/>data</returns>
         public byte[] DownloadData(string url)
         {
+            AddHeader("User-Agent", "Mozilla / 5.0(Windows NT 10.0) AppleWebKit / 537.36(KHTML, like Gecko) Chrome / 85.0.4183.102 Safari / 537.36");
             return client.DownloadData(url);//
         }
 

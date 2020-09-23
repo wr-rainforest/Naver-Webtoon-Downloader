@@ -13,10 +13,28 @@ namespace WRforest.NWD
     {
         public static int cursorPosition;
         static void Main(string[] args)
-        {
+        { 
             string configFolderPath = "config";
             string configFileName = "config.json";
             string xPathConfigFileName = "xpath.json";
+
+
+            string assemblyVersion = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString();
+            string[] assemsplit = assemblyVersion.Split('.');
+            var version = $"{assemsplit[0]}.{assemsplit[1]}";
+            var build = $"{assemsplit[2]}.{assemsplit[3]}";
+            var Title = $"네이버 웹툰 다운로더 v{version} ({build})";
+            Console.Title = Title;
+            IO.Print($"네이버 웹툰 다운로더 v{version} (빌드 {build})");
+
+
+            CheckUpdate(assemsplit);
+
+            IO.Print($" 홈페이지 : https://nwd.wrforest.com/");
+            IO.Print($" 소스코드 : https://github.com/wr-rainforest/Naver-Webtoon-Downloader");
+            IO.Print($" 연락처   : contact@wrforest.com");
+            
+            IO.Print(new string('-',100));
 
             Parser.XPath xPath;
             Config config;
@@ -45,78 +63,75 @@ namespace WRforest.NWD
             Command command = new Command();
             var commands = command.GetCommandList(); ;
             cursorPosition = Console.CursorTop;
-
+            IO.Print(" 명령어   : download [$$titleId$green$] 웹툰을 다운로드합니다. / [$$titleId$green$] : 다운로드할 웹툰의 $$titleId$green$입니다. ");
+            IO.Print("            예) download $$20853$green$ ");
+            IO.Print("                download $$183559$green$ $$20853$green$ $$703846$green$ ");
+            IO.Print("");
+            IO.Print("            get [$$weekday$green$] 선택한 요일(mon/tue/wed/thu/fri/sat/sun)의 웹툰 목록을 불러옵니다.");
+            IO.Print("            예) get $$mon$green$ ");
+            IO.Print(" \r\n 키보드의 ↑ ↓ 버튼으로 이전에 입력했던 명령어를 불러올 수 있습니다. ");
+            IO.Print(new string('-', 100));
+            cursorPosition = Console.CursorTop;
             while (true)
             {
-                IO.Print("[$$Command$cyan$] : ",false);
-                int startPosition = Console.CursorLeft;
-                int functionCommandTextEndPosition=0;
-                bool functionCommandTextEnd=false;
-                string userInput;
-                List<char> list = new List<char>();
-                Console.ForegroundColor = ConsoleColor.Yellow;
-                while (true)
-                {
-                    var key = Console.ReadKey(true);
-                    if (key.KeyChar == '\r')
-                    {
-                        Console.WriteLine();
-                        break;
-                    }
-                    else if (key.KeyChar == '\b')
-                    {
-                        if (Console.CursorLeft == startPosition)
-                            continue;
-                        list.RemoveAt(list.Count - 1);
-                        Console.Write("\b \b");
-                        if (functionCommandTextEndPosition >= Console.CursorLeft)
-                        {
-                            Console.ForegroundColor = ConsoleColor.Yellow;
-                            functionCommandTextEnd = false;
-                            functionCommandTextEndPosition = 0;
-                        }
-                        continue;
-                    }
-                    else if (key.KeyChar == ' ' && !functionCommandTextEnd && !string.IsNullOrWhiteSpace(new string(list.ToArray()))) 
-                    {
-                        functionCommandTextEndPosition = Console.CursorLeft;
-                        functionCommandTextEnd = true;
-                        Console.ForegroundColor = ConsoleColor.Green;
-                        list.Add(' ');
-                        Console.Write(' ');
-                    }
-                    else
-                    {
-                        list.Add(key.KeyChar);
-                        Console.Write(key.KeyChar);
-                    }
-                }
-                userInput = new string(list.ToArray());
-                Console.ResetColor();
-
-                //userInput = Console.ReadLine();
+                Console.Write("[Command] : ");
+                string userInput = Console.ReadLine();
                 if (string.IsNullOrWhiteSpace(userInput))
                 {
                     IO.PrintError("명령어를 입력해주세요.");
                     continue;
                 }
                 string[] split = userInput.Trim().Split(' ');
-                List<string> argslist = new List<string>(split);
-                if (command.Contains(argslist[0]))
+                List<string> list = new List<string>(split);
+                if (command.Contains(list[0]))
                 {
-                    argslist.RemoveAt(0);
-                    command.Start(split[0], argslist.ToArray());
+                    list.RemoveAt(0);
+                    command.Start(split[0], list.ToArray());
                 }
                 else
                 {
-                    IO.PrintError(string.Format("존재하지 않는 명령어입니다. : \"{0}\"", userInput));
+                    IO.PrintError("존재하지 않는 명령어입니다.");
                 }
+            }
+        }
+        public static void CheckUpdate(string[] assemsplit)
+        {
+            try
+            {
+                WebClient webClient = new WebClient();
+                HtmlAgilityPack.HtmlDocument document = new HtmlAgilityPack.HtmlDocument();
+                document.LoadHtml(webClient.DownloadString("https://wr-rainforest.github.io/Naver-Webtoon-Downloader/info/latest_version.html"));
+                string latestVersion = document.DocumentNode.SelectSingleNode("/html/body").InnerText;
+
+                string[] ltsplit = latestVersion.Split('.');
+                var version = $"{ltsplit[0]}.{ltsplit[1]}";
+                var build = $"{ltsplit[2]}.{ltsplit[3]}";
+                if (int.Parse(ltsplit[0]) <= int.Parse(assemsplit[0]))
+                {
+                    return;
+                }
+                if (int.Parse(ltsplit[1]) <= int.Parse(assemsplit[1]))
+                {
+                    return;
+                }
+                if (int.Parse(ltsplit[2]) <= int.Parse(assemsplit[2]))
+                {
+                    return;
+                }
+                IO.Print("");
+                IO.Print($"*$$새로운 버전이 출시되었습니다. v{version} (빌드 {build})$cyan$");
+                IO.Print($"*$$업데이트 다운로드 : https://github.com/wr-rainforest/Naver-Webtoon-Downloader/releases/tag/v{latestVersion}$cyan$");
+                IO.Print("");
+            }
+            catch
+            {
+                IO.Print(" $$버전 업데이트를 확인할 수 없습니다.$red$");
             }
         }
         public static void PrintProgess(string ProgressText)
         {
-            Console.Write("\r" + new string(' ', Console.BufferWidth - 1) + "\r");
-            IO.Print(ProgressText, false, true);
+                Console.Write("\r" + new string(' ', Console.WindowWidth - 1) + "\r");
+                IO.Print(ProgressText, false, true);//i = 0;
         }
     }
 }
