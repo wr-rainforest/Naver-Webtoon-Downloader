@@ -25,7 +25,7 @@ namespace WRforest.NWD
             var build = $"{assemsplit[2]}.{assemsplit[3]}";
             var Title = $"네이버 웹툰 다운로더 v{version} ({build})";
             Console.Title = Title;
-            IO.Print($"네이버 웹툰 다운로더 v{version} (빌드 {build})");
+            IO.Print($" 네이버 웹툰 다운로더 v{version} (빌드 {build})");
 
 
             CheckUpdate(assemsplit);
@@ -130,8 +130,12 @@ namespace WRforest.NWD
         }
         public static void PrintProgess(string ProgressText)
         {
-                Console.Write("\r" + new string(' ', Console.WindowWidth - 1) + "\r");
-                IO.Print(ProgressText, false, true);//i = 0;
+            int currentPosition = Console.CursorTop;
+            Console.SetCursorPosition(0, currentPosition);
+            Console.Write("\r" + new string(' ', Console.BufferWidth - 1) + "\r");
+            
+            IO.Print(ProgressText, false, true);//i = 0;
+            Console.SetCursorPosition(0, currentPosition);
         }
     }
 }
