@@ -23,6 +23,8 @@ namespace WRforest.NWD
             commandDictionary.Add("get", Get);
             commandDictionary.Add("clear", Clear);
             commandDictionary.Add("download", Download);
+            commandDictionary.Add("d", Download);
+            commandDictionary.Add("merge", Merge);
         }
         public bool Contains(string commandName)
         {
@@ -160,6 +162,37 @@ namespace WRforest.NWD
                 }
             }
             Console.WriteLine("");
+        }
+        private void Merge(params string[] args)
+        {
+            if (args.Length == 0)
+            {
+                IO.PrintError("titleId를 입력해주세요");
+                return;
+            }
+            List<WebtoonKey> keys = new List<WebtoonKey>();
+            List<string> titles = new List<string>();
+            for (int i = 0; i < args.Length; i++)
+            {
+                if (!int.TryParse(args[0], out _))
+                {
+                    IO.PrintError("titleId는 숫자입니다. : " + args[i]);
+                    return;
+                }
+                /*
+                agent.LoadPage(string.Format("https://comic.naver.com/webtoon/list.nhn?titleId={0}", args[i]));
+                string title = parser.GetWebtoonTitle();
+                if (title == "네이버 웹툰")
+                {
+                    IO.PrintError("존재하지 않는 titleId입니다. : " + args[i]);
+                    return;
+                }
+                IO.Print(string.Format("{2}. {1}($${0}$cyan$) 대기..", args[i], title, i + 1), true, true);
+                titles.Add(title);
+                keys.Add(new WebtoonKey(args[i]));
+                */
+            }
+            IO.PrintError("미구현 커맨드");
         }
         private void Clear(params string[] args)
         {

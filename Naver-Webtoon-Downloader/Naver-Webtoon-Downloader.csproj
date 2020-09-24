@@ -74,6 +74,7 @@
     <Compile Include="NWD\Parser\Agent.cs" />
     <Compile Include="NWD\Parser\Parser.cs" />
     <Compile Include="NWD\Parser\XPath.cs" />
+    <Compile Include="unused\Merge.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

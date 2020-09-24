@@ -46,8 +46,8 @@
         else if( buildConfig == "Release" )
         {
             revision++;
-            File.WriteAllText(treepath, tree.Replace("　  　  └--", "　  　  ├─"));
-            File.AppendAllText(treepath, $"　  　  └--{major}.{minor}.{build}.{revision}    \r\n");
+            File.WriteAllText(treepath, tree.Replace("　    　└--", "　    　├─"));
+            File.AppendAllText(treepath, $"　    　└--{major}.{minor}.{build}.{revision}    \r\n");
 
         }
        
@@ -94,8 +94,8 @@ using System.Resources;
 [assembly: AssemblyVersion("<#= this.major #>.<#= this.minor #>.<#= this.build #>.<#= this.revision #>")]
 
 <#+
-    int major = 1;
-    int minor = 1;
+    int major = 2;
+    int minor = 0;
+    int build = 5;
     int revision = 0;
-    int build = 0;
 #>
