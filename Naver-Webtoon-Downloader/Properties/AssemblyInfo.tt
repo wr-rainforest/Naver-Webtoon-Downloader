@@ -1,0 +1,100 @@
+﻿<#@ template debug="true" hostspecific="true" language="C#" #>
+<#@ output extension=".cs" #>
+<#@ import namespace="System" #>
+<#@ import namespace="System.IO" #>
+<#@ import namespace="System.Text.RegularExpressions" #>
+<#
+    string output = File.ReadAllText(this.Host.ResolvePath("AssemblyInfo.cs"));
+    Regex pattern = new Regex("AssemblyVersion\\(\"(?<major>\\d+)\\.(?<minor>\\d+)\\.(?<build>\\d+)\\.(?<revision>\\d+)\"\\)");
+    MatchCollection matches = pattern.Matches(output);
+    var buildConfig = this.Host.ResolveParameterValue("-","-","BuildConfiguration");
+    if( matches.Count == 1 )
+    {
+        major = Convert.ToInt32(matches[0].Groups["major"].Value);
+        minor = Convert.ToInt32(matches[0].Groups["minor"].Value);
+        build = Convert.ToInt32(matches[0].Groups["build"].Value);
+        revision = Convert.ToInt32(matches[0].Groups["revision"].Value);
+    }
+
+    string lastverpath=Path.GetDirectoryName(this.Host.ResolvePath("version.last.txt"))+"\\version.last.txt";
+    string treepath=Path.GetDirectoryName(this.Host.ResolvePath("version.tree.txt"))+"\\version.tree.txt";
+    string lastver="";
+    string tree = "";
+        lastver = File.ReadAllText(lastverpath);
+        tree = File.ReadAllText(treepath);
+        var lastverSplit=lastver.Split('.');
+        var lastmajor = Convert.ToInt32(lastverSplit[0]);
+        var lastminor = Convert.ToInt32(lastverSplit[1]);
+        var lastbuild = Convert.ToInt32(lastverSplit[2]);
+        var lastrevision = Convert.ToInt32(lastverSplit[3]);
+       
+
+        if($"{lastmajor}.{lastminor}"!=$"{major}.{minor}")
+        {
+            if( buildConfig == "Release" ){throw new Exception("디버그 모드에서만 버전 변경이 가능합니다.");}
+            File.WriteAllText(treepath, tree.Replace("└--v","├─v").Replace("└--","└─").Replace("　  ","│  ")+$"└--v{major}.{minor}    \r\n");
+        }
+
+
+        if(buildConfig == "Debug")
+        {
+            build++;
+            revision = 0;
+            File.WriteAllText(treepath, tree.Replace("　    　","　  │  ").Replace("　  └--","　  ├─").Replace("　  │  └--", "　  │  └─"));
+            File.AppendAllText(treepath, $"　  └--{major}.{minor}.{build}.{revision}    \r\n");
+        }
+        else if( buildConfig == "Release" )
+        {
+            File.WriteAllText(treepath, tree.Replace("　  　  └--", "　  　  ├─"));
+            File.AppendAllText(treepath, $"　  　  └--{major}.{minor}.{build}.{revision}    \r\n");
+                revision++;
+        }
+       
+    File.WriteAllText(lastverpath, $"{major}.{minor}.{build}.{revision}");
+    
+
+#>
+
+using System.Reflection;
+using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
+using System.Resources;
+
+// 어셈블리에 대한 일반 정보는 다음 특성 집합을 통해 
+// 제어됩니다. 어셈블리와 관련된 정보를 수정하려면
+// 이러한 특성 값을 변경하세요.
+[assembly: AssemblyTitle("Naver-Webtoon-Downloader")]
+[assembly: AssemblyDescription("네이버 웹툰 다운로더.")]
+[assembly: AssemblyConfiguration("")]
+[assembly: AssemblyCompany("wrforest.com")]
+[assembly: AssemblyProduct("Naver-Webtoon-Downloader")]
+[assembly: AssemblyCopyright("Copyright 2020. wr-rainforest all rights reserved")]
+[assembly: AssemblyTrademark("")]
+[assembly: AssemblyCulture("")]
+
+// ComVisible을 false로 설정하면 이 어셈블리의 형식이 COM 구성 요소에 
+// 표시되지 않습니다. COM에서 이 어셈블리의 형식에 액세스하려면
+// 해당 형식에 대해 ComVisible 특성을 true로 설정하세요.
+[assembly: ComVisible(false)]
+
+// 이 프로젝트가 COM에 노출되는 경우 다음 GUID는 typelib의 ID를 나타냅니다.
+[assembly: Guid("c15f9a2b-e0d0-4ce4-8d2d-7d0cac5a58c3")]
+
+// 어셈블리의 버전 정보는 다음 네 가지 값으로 구성됩니다.
+//
+//      주 버전
+//      부 버전 
+//      빌드 번호
+//      수정 버전
+//
+// 모든 값을 지정하거나 아래와 같이 '*'를 사용하여 빌드 번호 및 수정 번호를
+// 기본값으로 할 수 있습니다.
+
+[assembly: AssemblyVersion("<#= this.major #>.<#= this.minor #>.<#= this.build #>.<#= this.revision #>")]
+
+<#+
+    int major = 1;
+    int minor = 1;
+    int revision = 0;
+    int build = 0;
+#>

@@ -56,10 +56,14 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Properties\AssemblyInfo.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>AssemblyInfo.tt</DependentUpon>
+    </Compile>
     <Compile Include="src\ConsoleApp\Command.cs" />
     <Compile Include="src\ConsoleApp\ConsolePage.cs" />
     <Compile Include="src\ConsoleApp\Program.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="src\NWD\Config.cs" />
     <Compile Include="src\NWD\DataType\EpisodeInfo.cs" />
     <Compile Include="src\NWD\DataType\WebtoonInfo.cs" />
@@ -78,6 +82,18 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="nwd_logo.ico" />
+    <Content Include="Properties\AssemblyInfo.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>AssemblyInfo.cs</LastGenOutput>
+    </Content>
+    <Content Include="Properties\version.last.txt" />
+    <Content Include="Properties\version.tree.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PreBuildEvent>"C:\Program Files\Microsoft Visual Studio\2019\Community\Common7\IDE\TextTransform.exe" -a !!BuildConfiguration!$(Configuration)  "$(ProjectDir)Properties\AssemblyInfo.tt"</PreBuildEvent>
+  </PropertyGroup>
 </Project>
