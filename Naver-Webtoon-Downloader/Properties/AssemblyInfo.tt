@@ -16,20 +16,20 @@
         revision = Convert.ToInt32(matches[0].Groups["revision"].Value);
     }
 
-    string lastverpath=Path.GetDirectoryName(this.Host.ResolvePath("version.last.txt"))+"\\version.last.txt";
-    string treepath=Path.GetDirectoryName(this.Host.ResolvePath("version.tree.txt"))+"\\version.tree.txt";
-    string lastver="";
+    string latestverpath=Path.GetDirectoryName(this.Host.ResolvePath("version.build.latest.txt"))+"\\version.build.latest.txt";
+    string treepath=Path.GetDirectoryName(this.Host.ResolvePath("version.build.tree.txt"))+"\\version.build.tree.txt";
+    string latestver="";
     string tree = "";
-        lastver = File.ReadAllText(lastverpath);
+        latestver = File.ReadAllText(latestverpath);
         tree = File.ReadAllText(treepath);
-        var lastverSplit=lastver.Split('.');
-        var lastmajor = Convert.ToInt32(lastverSplit[0]);
-        var lastminor = Convert.ToInt32(lastverSplit[1]);
-        var lastbuild = Convert.ToInt32(lastverSplit[2]);
-        var lastrevision = Convert.ToInt32(lastverSplit[3]);
+        var latestverSplit=latestver.Split('.');
+        var latestmajor = Convert.ToInt32(latestverSplit[0]);
+        var latestminor = Convert.ToInt32(latestverSplit[1]);
+        var latestbuild = Convert.ToInt32(latestverSplit[2]);
+        var latestrevision = Convert.ToInt32(latestverSplit[3]);
        
 
-        if($"{lastmajor}.{lastminor}"!=$"{major}.{minor}")
+        if($"{latestmajor}.{latestminor}"!=$"{major}.{minor}")
         {
             if( buildConfig == "Release" ){throw new Exception("디버그 모드에서만 버전 변경이 가능합니다.");}
             File.WriteAllText(treepath, tree.Replace("└--v","├─v").Replace("└--","└─").Replace("　  ","│  ")+$"└--v{major}.{minor}    \r\n");
@@ -45,12 +45,13 @@
         }
         else if( buildConfig == "Release" )
         {
+            revision++;
             File.WriteAllText(treepath, tree.Replace("　  　  └--", "　  　  ├─"));
             File.AppendAllText(treepath, $"　  　  └--{major}.{minor}.{build}.{revision}    \r\n");
-                revision++;
+
         }
        
-    File.WriteAllText(lastverpath, $"{major}.{minor}.{build}.{revision}");
+    File.WriteAllText(latestverpath, $"{major}.{minor}.{build}.{revision}");
     
 
 #>
