@@ -1,0 +1,1 @@
+﻿//private static Regex regex = new Regex(string.Format("[{0}]", Regex.Escape(new string(Path.GetInvalidFileNameChars()))));
