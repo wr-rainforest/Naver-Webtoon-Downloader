@@ -2,7 +2,7 @@
 [![GitHub release (latest by date)](https://img.shields.io/github/v/release/wr-rainforest/Naver-Webtoon-Downloader?label=latest&style=flat-square)](https://github.com/wr-rainforest/Naver-Webtoon-Downloader/releases/latest)
 [![GitHub All Releases](https://img.shields.io/github/downloads/wr-rainforest/Naver-Webtoon-Downloader/total?label=Downloades&style=flat-square)](https://github.com/wr-rainforest/Naver-Webtoon-Downloader/releases)
        
-[v1.0.7571.33791 다운로드](https://github.com/wr-rainforest/Naver-Webtoon-Downloader/releases/download/v1.0.7571.33791/Naver-Webtoon-Downloader.v1.0.7571.33791.zip)
+[v1.1 (5.2) 다운로드](https://github.com/wr-rainforest/Naver-Webtoon-Downloader/releases/download/v1.1.5.2/Naver-Webtoon-Downloader.v1.1.5.2.zip)
   
       
           
@@ -59,7 +59,10 @@
 - 총 268장 이미지 저장됨
      
 # Version 
-- __v1.0.7571.33791__
+- __v1.1 (5.2)__
+  - 업데이트 내용
+    - 새로운 버전을 확인하지 못하는 오류를 수정하였습니다.
+- __v1.0 (7571.33791)__
   - 업데이트 내용
     - 한번에 여러개의 titleId 입력이 가능해졌습니다. 다운로드는 순차적으로 이루어집니다.
     - 폴더/파일명에 사용 불가능한 반각 문자(\ / : * ? " < > |)들은 이제부터 동일한 전각 특수문자로 교체됩니다. 
