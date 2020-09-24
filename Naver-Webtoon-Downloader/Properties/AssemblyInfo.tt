@@ -94,8 +94,8 @@ using System.Resources;
 [assembly: AssemblyVersion("<#= this.major #>.<#= this.minor #>.<#= this.build #>.<#= this.revision #>")]
 
 <#+
-    int major = 2;
+    int major = 1;
     int minor = 0;
-    int build = 5;
+    int build = 0;
     int revision = 0;
 #>
