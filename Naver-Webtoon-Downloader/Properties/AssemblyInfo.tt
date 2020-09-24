@@ -45,9 +45,10 @@
         }
         else if( buildConfig == "Release" )
         {
+            revision++;
             File.WriteAllText(treepath, tree.Replace("　  　  └--", "　  　  ├─"));
             File.AppendAllText(treepath, $"　  　  └--{major}.{minor}.{build}.{revision}    \r\n");
-                revision++;
+
         }
        
     File.WriteAllText(latestverpath, $"{major}.{minor}.{build}.{revision}");
