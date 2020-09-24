@@ -58,7 +58,9 @@ namespace WRforest.NWD
                 IO.WriteTextFile(configFolderPath, xPathConfigFileName, xPath.ToJsonString());
             }
             Downloader.SetConfig(config);
-            Downloader.SetProgressDelegate(PrintProgess);
+
+            Downloader.ProgressChangedEvent += PrintProgess;
+
             Parser.Parser.Instance.SetXPath(xPath);
             Command command = new Command();
             var commands = command.GetCommandList(); ;

@@ -13,15 +13,10 @@ namespace WRforest.NWD
 {
     class Downloader
     {
-        public delegate void ProgressDelegate(string progress);
-        private static ProgressDelegate PrintProgress;
+        public delegate void ProgressChangedEventHandler(string progressMessage);
         private static Config config;
 
-        public static void SetProgressDelegate(ProgressDelegate progressDelegate)
-        {
-            PrintProgress = progressDelegate;
-        }
-        
+        public static event ProgressChangedEventHandler ProgressChangedEvent;
 
         public static void SetConfig(Config config)
         {
@@ -66,7 +61,7 @@ namespace WRforest.NWD
                 string episodeDate = parser.GetEpisodeDate();
                 string[] imageUrls = parser.GetComicContentImageUrls();
                 webtoonInfo.Episodes.Add(episodeNo, new EpisodeInfo(episodeKey, episodeTitle, imageUrls, episodeDate));
-                PrintProgress(string.Format(ProgressTextFormat,
+                ProgressChangedEvent(string.Format(ProgressTextFormat,
                                webtoonInfo.WebtoonTitle,
                                webtoonInfo.WebtoonTitleId,
                               (episodeNo).ToString("D" + latestEpisodeNo.ToString().Length.ToString()),
@@ -112,7 +107,7 @@ namespace WRforest.NWD
                 string episodeDate = parser.GetEpisodeDate();
                 string[] imageUrls = parser.GetComicContentImageUrls();
                 webtoonInfo.Episodes.Add(episodeNo, new EpisodeInfo(episodeKey, episodeTitle, imageUrls, episodeDate));
-                PrintProgress(string.Format(ProgressTextFormat,
+                ProgressChangedEvent(string.Format(ProgressTextFormat,
                                webtoonInfo.WebtoonTitle,
                                webtoonInfo.WebtoonTitleId,
                               (episodeNo).ToString("D" + latestEpisodeNo.ToString().Length.ToString()),
@@ -179,7 +174,7 @@ namespace WRforest.NWD
                     BuildImageFileName(webtoonInfo, imageKeys[i]),
                     buff);
                 size += buff.Length;
-                PrintProgress(string.Format(ProgressTextFormat,
+                ProgressChangedEvent(string.Format(ProgressTextFormat,
                     webtoonInfo.WebtoonTitle,
                     webtoonInfo.WebtoonTitleId,
                     i+1,
