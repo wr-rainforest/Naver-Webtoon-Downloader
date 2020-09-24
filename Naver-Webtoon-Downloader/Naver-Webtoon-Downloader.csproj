@@ -6,7 +6,7 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{C15F9A2B-E0D0-4CE4-8D2D-7D0CAC5A58C3}</ProjectGuid>
     <OutputType>Exe</OutputType>
-    <RootNamespace>WRforest.NWD</RootNamespace>
+    <RootNamespace>WRforest</RootNamespace>
     <AssemblyName>Naver-Webtoon-Downloader</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
@@ -61,20 +61,19 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>AssemblyInfo.tt</DependentUpon>
     </Compile>
-    <Compile Include="src\ConsoleApp\Command.cs" />
-    <Compile Include="src\ConsoleApp\ConsolePage.cs" />
-    <Compile Include="src\ConsoleApp\Program.cs" />
-    <Compile Include="src\NWD\Config.cs" />
-    <Compile Include="src\NWD\DataType\EpisodeInfo.cs" />
-    <Compile Include="src\NWD\DataType\WebtoonInfo.cs" />
-    <Compile Include="src\ConsoleApp\IO.cs" />
-    <Compile Include="src\NWD\Downloader.cs" />
-    <Compile Include="src\NWD\Key\EpisodeKey.cs" />
-    <Compile Include="src\NWD\Key\ImageKey.cs" />
-    <Compile Include="src\NWD\Key\WebtoonKey.cs" />
-    <Compile Include="src\NWD\Parser\Agent.cs" />
-    <Compile Include="src\NWD\Parser\Parser.cs" />
-    <Compile Include="src\NWD\Parser\XPath.cs" />
+    <Compile Include="NWD\Command.cs" />
+    <Compile Include="NWD\Program.cs" />
+    <Compile Include="NWD\Config.cs" />
+    <Compile Include="NWD\DataType\EpisodeInfo.cs" />
+    <Compile Include="NWD\DataType\WebtoonInfo.cs" />
+    <Compile Include="NWD\IO.cs" />
+    <Compile Include="NWD\Downloader.cs" />
+    <Compile Include="NWD\Key\EpisodeKey.cs" />
+    <Compile Include="NWD\Key\ImageKey.cs" />
+    <Compile Include="NWD\Key\WebtoonKey.cs" />
+    <Compile Include="NWD\Parser\Agent.cs" />
+    <Compile Include="NWD\Parser\Parser.cs" />
+    <Compile Include="NWD\Parser\XPath.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
@@ -88,6 +87,7 @@
     </Content>
     <Content Include="Properties\version.last.txt" />
     <Content Include="Properties\version.tree.txt" />
+    <Content Include="unused\regex.txt" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />

@@ -13,17 +13,16 @@ namespace WRforest.NWD
 {
     class Downloader
     {
-        public delegate void ProgressDelegate(string progress);
-        private static ProgressDelegate PrintProgress;
+        public delegate void ProgressChangedEventHandler(string progressMessage);
         private static Config config;
-        public static void SetProgressDelegate(ProgressDelegate progressDelegate)
-        {
-            PrintProgress = progressDelegate;
-        }
+
+        public static event ProgressChangedEventHandler ProgressChangedEvent;
+
         public static void SetConfig(Config config)
         {
             Downloader.config = config;
         }
+
         /// <summary>
         /// "{0}({1}) [{2}/{3}] ({4:P}) [{5}]"
         /// <code>{0}:웹툰 제목</code>
@@ -62,7 +61,7 @@ namespace WRforest.NWD
                 string episodeDate = parser.GetEpisodeDate();
                 string[] imageUrls = parser.GetComicContentImageUrls();
                 webtoonInfo.Episodes.Add(episodeNo, new EpisodeInfo(episodeKey, episodeTitle, imageUrls, episodeDate));
-                PrintProgress(string.Format(ProgressTextFormat,
+                ProgressChangedEvent(string.Format(ProgressTextFormat,
                                webtoonInfo.WebtoonTitle,
                                webtoonInfo.WebtoonTitleId,
                               (episodeNo).ToString("D" + latestEpisodeNo.ToString().Length.ToString()),
@@ -108,7 +107,7 @@ namespace WRforest.NWD
                 string episodeDate = parser.GetEpisodeDate();
                 string[] imageUrls = parser.GetComicContentImageUrls();
                 webtoonInfo.Episodes.Add(episodeNo, new EpisodeInfo(episodeKey, episodeTitle, imageUrls, episodeDate));
-                PrintProgress(string.Format(ProgressTextFormat,
+                ProgressChangedEvent(string.Format(ProgressTextFormat,
                                webtoonInfo.WebtoonTitle,
                                webtoonInfo.WebtoonTitleId,
                               (episodeNo).ToString("D" + latestEpisodeNo.ToString().Length.ToString()),
@@ -175,7 +174,7 @@ namespace WRforest.NWD
                     BuildImageFileName(webtoonInfo, imageKeys[i]),
                     buff);
                 size += buff.Length;
-                PrintProgress(string.Format(ProgressTextFormat,
+                ProgressChangedEvent(string.Format(ProgressTextFormat,
                     webtoonInfo.WebtoonTitle,
                     webtoonInfo.WebtoonTitleId,
                     i+1,
@@ -231,6 +230,7 @@ namespace WRforest.NWD
                 BuildEpisodeDirectoryName(webtoonInfo, imageKey);
             return directory;
         }
+
         /// <summary>
         /// imageKey가 지정하는 이미지의 파일명을 정의된 포맷 형식(<seealso cref="Config.ImageFileNameFormat"/>)에 따라 생성합니다.
         /// </summary>
@@ -249,7 +249,7 @@ namespace WRforest.NWD
                 ImageIndex,
                 ReplaceFileName(webtoonTitle),
                 ReplaceFileName(episoneTitle),
-                webtoonInfo.Episodes[imageKey.EpisodeNo].EpisodeDate);//이미지 파일은 반각 온점 ok
+                webtoonInfo.Episodes[imageKey.EpisodeNo].EpisodeDate);
         }
 
         /// <summary>
@@ -286,16 +286,27 @@ namespace WRforest.NWD
                 ReplaceFolderName(webtoonTitle));
         }
 
-        //private static Regex regex = new Regex(string.Format("[{0}]", Regex.Escape(new string(Path.GetInvalidFileNameChars()))));
+        /// <summary>
+        /// 윈도우에서 파일명으로 사용이 불가능한 반각 특수문자들을 전각 문자로 교체합니다.
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns></returns>
         private static string ReplaceFileName(string filename) 
         {
             return filename.Replace('/', '／').Replace('\\', '＼').Replace('?', '？').Replace('*', '＊').Replace(':', '：').Replace('|', '｜').Replace('\"', '＂').Replace("&lt;", "＜").Replace("&gt;", "＞");
         }
+
+        /// <summary>
+        /// 윈도우에서 폴더명으로 사용이 불가능한 반각 특수문자들을 전각 문자로 교체합니다.
+        /// <code>문자열의 마지막에 반각 온점이 있다면 해당 온점은 전각으로 교체합니다. 나머지 온점은 반각 그대로입니다.</code>
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns></returns>
         private static string ReplaceFolderName(string name)
-        {
+        { 
             if(name[name.Length-1]=='.')
             {
-                name = name.Substring(0, name.Length-1)+ "．";//끝이 반각 온점일경우 전각으로 교체
+                name = name.Substring(0, name.Length-1)+ "．";
             }
             return name.Replace('/', '／').Replace('\\', '＼').Replace('?', '？').Replace('*', '＊').Replace(':', '：').Replace('|', '｜').Replace('\"', '＂').Replace("&lt;", "＜").Replace("&gt;", "＞");
         }
