@@ -122,7 +122,7 @@ namespace WRforest.NWD
         {
             List<ImageKey> list = new List<ImageKey>();
             int latest = webtoonInfo.GetLastEpisodeNo();
-            for(int episodeNo = 1; episodeNo < latest; episodeNo++)
+            for(int episodeNo = 1; episodeNo <= latest; episodeNo++)
             {
                 if (!webtoonInfo.Episodes.ContainsKey(episodeNo))
                     continue;
