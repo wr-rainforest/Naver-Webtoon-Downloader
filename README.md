@@ -1,7 +1,4 @@
-# Naver-Webtoon-Downloader
-[![GitHub release (latest by date)](https://img.shields.io/github/v/release/wr-rainforest/Naver-Webtoon-Downloader?label=latest&style=flat-square)](https://github.com/wr-rainforest/Naver-Webtoon-Downloader/releases/latest)
-[![GitHub All Releases](https://img.shields.io/github/downloads/wr-rainforest/Naver-Webtoon-Downloader/total?label=Downloades&style=flat-square)](https://github.com/wr-rainforest/Naver-Webtoon-Downloader/releases)      
--------------
+## Naver-Webtoon-Downloader
 1. [프로그램 개요](#1-프로그램-개요)   
 2. [간단한 사용방법](#2-간단한-사용방법)   
 　2.1. [최초 다운로드](#21-최초-다운로드)   
@@ -13,16 +10,11 @@
 4. [릴리즈 정보](#4-릴리즈-정보)   
 5. [업데이트 예정 사항](#5-업데이트-예정-사항)  
 6. [버그](#6-버그)  
--------------
-**개발 정보**   
-1. [빌드 환경 구성](#1-빌드-환경-구성)  
-2. [기능 구현](#2-기능-구현)    
-　2.1. [현재 진행중](#21-현재-진행중)    
-　2.2. [예정](#22-예정)    
-3. [코드 개선](#3-코드-개선)    
-4. [Cache/*.json](#Cachejson)    
+7. [문제 해결하기](#7-문제-해결하기)  
 
 ## 1. 프로그램 개요
+[![GitHub release (latest by date)](https://img.shields.io/github/v/release/wr-rainforest/Naver-Webtoon-Downloader?label=latest&style=flat-square)](https://github.com/wr-rainforest/Naver-Webtoon-Downloader/releases/latest)
+[![GitHub All Releases](https://img.shields.io/github/downloads/wr-rainforest/Naver-Webtoon-Downloader/total?label=Downloades&style=flat-square)](https://github.com/wr-rainforest/Naver-Webtoon-Downloader/releases)      
 c#으로 제작된 콘솔 인터페이스 웹툰 다운로더입니다.  
           
 [최신버전 다운로드](https://github.com/wr-rainforest/Naver-Webtoon-Downloader/releases/download/v1.1.6.1/Naver-Webtoon-Downloader.v1.1.6.1.zip)  
@@ -33,6 +25,7 @@ c#으로 제작된 콘솔 인터페이스 웹툰 다운로더입니다.
     
     
 개발자 연락처 : contact@wrforest.com
+버그 제보, 기타 피드백 주시면 감사하겠습니다.
       
        
 ## 2. 간단한 사용방법
@@ -203,64 +196,3 @@ config.json 파일 내용
 해결방법:[3.1.](#31-configjson)  문단의 주의사항에 맞게 config가 설정되어 있는지 확인해주세요.  
 설정을 초기화하려면 config.json 파일을 삭제하세요.
 
-# 개발 정보
-
-## 1. 빌드 환경 구성   
-vs2019, .NET Framework 4.7.2가 필요합니다. 외부 패키지로 Newtonsoft.Json, HtmlAgilityPack을 사용합니다.   
-    
-1. 리포지트리를 복사하거나 [releases](https://github.com/wr-rainforest/Naver-Webtoon-Downloader/releases)에서 소스코드를 다운받습니다.    
-`git clone https://github.com/wr-rainforest/Naver-Webtoon-Downloader.git`    
-2. Nuget 패키지 관리자에서 누락된 패키지(Newtonsoft.Json, HtmlAgilityPack)를 복원합니다.    
-3. System.Web 참조를 추가합니다.
-4. 프로젝트 속성에서 빌드 이벤트 명령줄 대화상자의 내용을 삭제합니다.  
-
-## 2. 기능 구현
-### 2.1. 현재 진행중
-이미지 merge 기능을 구현중입니다. 램을 100MB 이하로 잡아먹도록 최적화를 하고 있습니다.      
-### 2.2. 예정
-args로도 titleId를 입력받아 다운로드를 진행할 수 있는 기능. 작업 스케쥴러에 사용  
-
-## 3. 코드 개선 
-
-## Cache/*.json
-  
-이 프로그램은 `\Cache` 폴더 내부에 json 파일을 저장합니다.   
-   
-직렬화/역직렬화에 Newtonsoft.Json.JsonConvert를 사용합니다.
-``` csharp
-JsonConvert.DeserializeObject<WebtoonInfo>(string);
-JsonConvert.SerializeObject(webtoonInfo);
-```  
-파일의 Json 구조입니다.
-```yaml
-{
-    "webtoon_title": "웹툰명",
-    "webtoon_titleId": "000000",
-    "webtoon_genre": null,
-    "webtoon_description": null,
-    "webtoon_writer": null,
-    "webtoon_episodes": {
-        "첫번째 회차 번호(1)": {
-            "episode_title": "회차 제목",
-            "episode_no": 첫번째 회차 번호(1),
-            "episode_date": "yyyy.MM.dd",
-            "episode_image_urls": [
-                "https://image-comic.pstatic.net/webtoon/748105/30/20200911112215_f596e562d9b34d4bec47a0a3402dbd95_IMAG01_1.jpg",
-                                                            .............중략..............
-                "https://image-comic.pstatic.net/webtoon/748105/30/20200911112215_f596e562d9b34d4bec47a0a3402dbd95_IMAG01_13.jpg"
-            ]
-        },
-                                                            .............중략.............. 
-        "마지막 회차 번호": {
-            "episode_title": "회차 제목",
-            "episode_no": 마지막 회차 번호,
-            "episode_date": "yyyy.MM.dd",
-            "episode_image_urls": [
-                "https://image-comic.pstatic.net/webtoon/748105/30/20200911112215_f596e562d9b34d4bec47a0a3402dbd95_IMAG01_1.jpg",
-                                                            .............중략..............
-                "https://image-comic.pstatic.net/webtoon/748105/30/20200911112215_f596e562d9b34d4bec47a0a3402dbd95_IMAG01_13.jpg"
-            ]
-        }
-    }
-}               
-```
