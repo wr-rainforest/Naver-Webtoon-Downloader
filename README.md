@@ -1,9 +1,6 @@
 # Naver-Webtoon-Downloader
 [![GitHub release (latest by date)](https://img.shields.io/github/v/release/wr-rainforest/Naver-Webtoon-Downloader?label=latest&style=flat-square)](https://github.com/wr-rainforest/Naver-Webtoon-Downloader/releases/latest)
 [![GitHub All Releases](https://img.shields.io/github/downloads/wr-rainforest/Naver-Webtoon-Downloader/total?label=Downloades&style=flat-square)](https://github.com/wr-rainforest/Naver-Webtoon-Downloader/releases)
-       
-[v1.1 (6.1) 다운로드](https://github.com/wr-rainforest/Naver-Webtoon-Downloader/releases/download/v1.1.6.1/Naver-Webtoon-Downloader.v1.1.6.1.zip)
-
 **사용 안내**  
 1. [프로그램 개요](#1-프로그램-개요)   
 2. [간단한 사용방법](#2-간단한-사용방법)   
@@ -27,7 +24,9 @@
 
 ## 1. 프로그램 개요
 c#으로 제작된 콘솔 인터페이스 웹툰 다운로더입니다.  
-   
+          
+[최신버전 다운로드](https://github.com/wr-rainforest/Naver-Webtoon-Downloader/releases/download/v1.1.6.1/Naver-Webtoon-Downloader.v1.1.6.1.zip)  
+
 .Net Frmamework 4.7.2 이상 버전에서 동작합니다.    
 윈도우 2018년 4월 업데이트(버전 1803) 이후 버전에서는 런타임 추가 설치 없이도 실행이 가능합니다.     
 [.Net Frmamework 4.7.2 다운로드](https://dotnet.microsoft.com/download/dotnet-framework/net472)    
@@ -38,11 +37,11 @@ c#으로 제작된 콘솔 인터페이스 웹툰 다운로더입니다.
        
 ## 2. 간단한 사용방법
 ### 2.1. 최초 다운로드
-1. [네이버 웹툰](https://comic.naver.com/webtoon/weekday.nhn)에서 다운로드 하고자 하는 웹툰을 찾아 해당 웹툰의 url을 확인합니다.  
-`예시) 마음의소리 url : https://comic.naver.com/webtoon/list.nhn?titleId=20853`  
+1. 다운로드 하고자 하는 웹툰을 찾아 해당 웹툰의 url을 확인합니다.  
+`예시) 독립일기 url : https://comic.naver.com/webtoon/list.nhn?titleId=748105`  
 2. 프로그램을 열고 `download` 커맨드와 함께 url의 `titleId` 값을 입력합니다.  
-`예시) download 20853 `    
-3. Enter 키를 누르면 자동으로 다운로드가 진행됩니다.   
+`예시) download 748105 `    
+3. Enter 키를 누르면 다운로드가 시작됩니다.   
   
 예시
 ```
@@ -108,14 +107,14 @@ c#으로 제작된 콘솔 인터페이스 웹툰 다운로더입니다.
 
   
    
-설정값   
+설정값 세부정보    
 ```
 기본 다운로드 폴더 : 실행파일('Naver-Webtoon-Downloader.exe')이 존재하는 폴더 안에 있는 `Download`폴더   
 웹툰별 폴더 이름 포맷 : `웹툰 이름`  
 회차별 폴더 이름 포맷 : `[업로드 날짜] 회차 제목`  
 이미지 파일 이름 포맷 : `[업로드 날짜] 회차 제목 (이미지 번호).jpg`  
    ```   
-condig.json 
+config.json 파일 내용
 ``` json
 {  
     "DefaultDownloadDirectory": "Download",   
@@ -127,20 +126,22 @@ condig.json
    
    
 **수정 주의사항!**  
-　DefaultDownloadDirectory의 값에 `\`(키보드 원화 버튼)이 들어간다면 `\`를 4개로 중복해서 써 주어야 합니다.  
+　DefaultDownloadDirectory의 값에 `\`이 들어간다면 `\`를 4개로 중복해서 써 주어야 합니다.  
 ```
 　예)D드라이브의 image 폴더 아래 Webtoon 폴더를 기본 다운로드 위치로 삼는 경우  
 　　 폴더 경로: `D:\image\Webtoon`    
 　　 설정값　 : `D:\\\\image\\\\webtoon`  
 ```
-  모든 설정값에는 윈도우에서 파일/폴더명으로 사용 불가능한 문자인 `\` `/` `:` `*` `?` `"` `<` `>` `|` 가 포함 될 수 없으며, `.`(반각 온점)으로 끝나는 값도 허용되지 않습니다.  
+  윈도우에서 파일/폴더명으로 사용 불가능한 문자인 `\` `/` `:` `*` `?` `"` `<` `>` `|` 가 포함 될 수 없습니다  
+  `.`(반각 온점)으로 끝나는 값은 사용이 불가능합니다.
    
 ### 3.2. 웹툰 이름, 회차 제목에 윈도우에서 파일/폴더명으로 사용 불가능한 문자가 포함된 경우의 처리
-   
-윈도우에서 파일/폴더명으로 사용 불가능한 문자인 `\` `/` `:` `*` `?` `"` `<` `>` `|` 은/는 자동으로 동일한 모양의 전각 문자 `\`　`／`　`：`　`＊`　`？`　`"`　`＜`　`＞`　`｜`로 치환되어 저장됩니다.    
+웹툰 이름, 회차 제목에는 종종 `\` `/` `:` `*` `?` `"` `<` `>` `|`가 포함되어 있는 경우가 있습니다.
+해당 특수문자들은 윈도우에서 파일/폴더명으로 사용 불가능한 문자들로, 동일한 모양의 전각 문자 `\`　`／`　`：`　`＊`　`？`　`"`　`＜`　`＞`　`｜`로 치환되어 저장됩니다.    
     
 만약 회차 제목이 `.`(반각 온점) 으로 끝난다면 해당 온점만 전각 온점으로 치환됩니다.
-  
+   
+
 
 ## 4. 릴리즈 정보
 - __v1.1 (6.1)__
@@ -189,6 +190,18 @@ condig.json
 * 다운로드 폴더 설정 기능
 ## 6. 버그
 * 콘솔창 폭이 좁으면 진행률 메세지가 제대로 표시되지 않습니다.
+## 7. 문제 해결하기
+1. Bad JSON escape sequence
+```csharp
+처리되지 않은 예외: Newtonsoft.Json.JsonReaderException: Bad JSON escape sequence: 
+   위치: Newtonsoft.Json.JsonTextReader.ReadStringIntoBuffer(Char quote)
+............................중략............................
+   위치: WRforest.NWD.Config..ctor(String json)
+   위치: WRforest.NWD.Program.Main(String[] args)
+```
+원인:Config/config.json 파일에 잘못된 문자가 포함되었습니다.  
+해결방법:[3.1.](#31-configjson)  문단의 주의사항에 맞게 config가 설정되어 있는지 확인해주세요.  
+설정을 초기화하려면 config.json 파일을 삭제하세요.
 
 # 개발 정보
 
