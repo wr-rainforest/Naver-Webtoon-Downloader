@@ -25,6 +25,7 @@ namespace WRforest.NWD
             commandDictionary.Add("download", Download);
             commandDictionary.Add("d", Download);
             commandDictionary.Add("merge", Merge);
+            commandDictionary.Add("set", Set);
         }
         public bool Contains(string commandName)
         {
@@ -193,6 +194,28 @@ namespace WRforest.NWD
                 */
             }
             IO.PrintError("미구현 커맨드");
+        }
+        string[] configs = { "help","downloadfolder" };
+        private void Set(params string[] args)
+        {
+            if (args.Length == 0)
+            {
+                IO.PrintError("인자를 입력해주세요. set help로 자세한 사용방법을 확인할 수 있습니다.");
+                return;
+            }
+            if(!configs.Contains(args[0]))
+            {
+                IO.PrintError("존재하지 않는 설정입니다. set help로 자세한 사용방법을 확인할 수 있습니다.");
+                return;
+            }
+            if (args[0] == configs[0])
+            {
+
+            }
+            else if (args[0] == configs[1])
+            {
+
+            }
         }
         private void Clear(params string[] args)
         {
