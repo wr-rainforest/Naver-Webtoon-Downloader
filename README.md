@@ -13,7 +13,7 @@
 7. [문제 해결하기](#7-문제-해결하기)  
 
 ## 1. 프로그램 개요
-[다운로드](https://github.com/wr-rainforest/Naver-Webtoon-Downloader/releases/download/v1.1.6.1/Naver-Webtoon-Downloader.v1.1.6.1.zip)   
+[다운로드](https://github.com/wr-rainforest/Naver-Webtoon-Downloader/releases/download/v1.1.6.1/Naver-Webtoon-Downloader.v1.1.6.1.zip)(인증서 서명이 없어서 윈도우 PC 보호 창이 뜹니다. 창에서 '추가 정보' 클릭하시고 실행 누르시면 잘 돌아갑니다.)    
    
 [![GitHub release (latest by date)](https://img.shields.io/github/v/release/wr-rainforest/Naver-Webtoon-Downloader?label=latest&style=flat-square)](https://github.com/wr-rainforest/Naver-Webtoon-Downloader/releases/latest)
 [![GitHub All Releases](https://img.shields.io/github/downloads/wr-rainforest/Naver-Webtoon-Downloader/total?label=Downloades&style=flat-square)](https://github.com/wr-rainforest/Naver-Webtoon-Downloader/releases)   
