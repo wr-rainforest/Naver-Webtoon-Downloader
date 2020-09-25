@@ -56,12 +56,13 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="NWD\Command\CommandManger.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>AssemblyInfo.tt</DependentUpon>
     </Compile>
-    <Compile Include="NWD\Command.cs" />
+    <Compile Include="NWD\Command\Command.cs" />
     <Compile Include="NWD\Program.cs" />
     <Compile Include="NWD\Config.cs" />
     <Compile Include="NWD\DataType\EpisodeInfo.cs" />
@@ -88,6 +89,7 @@
     </Content>
     <Content Include="Properties\version.build.tree.txt" />
     <Content Include="unused\regex.txt" />
+    <Content Include="unused\Command.txt" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />

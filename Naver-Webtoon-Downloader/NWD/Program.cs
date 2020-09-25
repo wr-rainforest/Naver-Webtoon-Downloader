@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using WRforest.NWD.Parser;
+using WRforest.NWD.Command;
 
 namespace WRforest.NWD
 {
@@ -35,10 +36,13 @@ namespace WRforest.NWD
             IO.Print("            get [$$weekday$green$] 선택한 요일(mon/tue/wed/thu/fri/sat/sun)의 웹툰 목록을 불러옵니다.");
             IO.Print("            예) get $$mon$green$ ");
             IO.Print("");
-            IO.Print("            merge [$$titleId$green$] 다운로드된 이미지를 하나의 파일로 병합합니다. / [$$titleId$green$] :병합할 웹툰의 $$titleId$green$입니다. ");
-            IO.Print("            예) merge $$20853$green$ ");
-            IO.Print("                merge $$183559$green$ $$20853$green$ $$703846$green$ ");
-            IO.Print("            주의사항)  ");
+            //IO.Print("            merge [$$titleId$green$] 다운로드된 이미지를 하나의 파일로 병합합니다. / [$$titleId$green$] :병합할 웹툰의 $$titleId$green$입니다. ");
+            //IO.Print("            예) merge $$20853$green$ ");
+            //IO.Print("                merge $$183559$green$ $$20853$green$ $$703846$green$ ");
+            //IO.Print("            주의사항)  ");
+            //IO.Print("");
+            IO.Print("            set -[$$configname$yellow$] [$$configvalue$green$] / [$$configname$yellow$]을/를 [$$configvalue$green$]로 설정합니다.");
+            IO.Print("            예) set -$$downloadpath$yellow$ $$d\\webtoons$green$ ");
             IO.Print("");
             IO.Print(" \r\n 키보드의 ↑ ↓ 버튼으로 이전에 입력했던 값을 불러올 수 있습니다. 프로그램 종료시 초기화됩니다.");
             IO.Print(new string('-', 100));
@@ -70,7 +74,7 @@ namespace WRforest.NWD
             Parser.Parser.Instance.SetXPath(xPath);
             Downloader.SetConfig(config);
             Downloader.ProgressChangedEvent += PrintProgess;
-            Command command = new Command();
+            CommandManager command = new CommandManager();
             string[] commands = command.GetCommandList(); 
 
 
