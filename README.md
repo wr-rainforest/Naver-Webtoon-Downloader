@@ -1,7 +1,7 @@
 # Naver-Webtoon-Downloader
 [![GitHub release (latest by date)](https://img.shields.io/github/v/release/wr-rainforest/Naver-Webtoon-Downloader?label=latest&style=flat-square)](https://github.com/wr-rainforest/Naver-Webtoon-Downloader/releases/latest)
-[![GitHub All Releases](https://img.shields.io/github/downloads/wr-rainforest/Naver-Webtoon-Downloader/total?label=Downloades&style=flat-square)](https://github.com/wr-rainforest/Naver-Webtoon-Downloader/releases)
-**사용 안내**  
+[![GitHub All Releases](https://img.shields.io/github/downloads/wr-rainforest/Naver-Webtoon-Downloader/total?label=Downloades&style=flat-square)](https://github.com/wr-rainforest/Naver-Webtoon-Downloader/releases)      
+-------------
 1. [프로그램 개요](#1-프로그램-개요)   
 2. [간단한 사용방법](#2-간단한-사용방법)   
 　2.1. [최초 다운로드](#21-최초-다운로드)   
@@ -13,8 +13,8 @@
 4. [릴리즈 정보](#4-릴리즈-정보)   
 5. [업데이트 예정 사항](#5-업데이트-예정-사항)  
 6. [버그](#6-버그)  
-
-**개발 안내**   
+-------------
+**개발 정보**   
 1. [빌드 환경 구성](#1-빌드-환경-구성)  
 2. [기능 구현](#2-기능-구현)    
 　2.1. [현재 진행중](#21-현재-진행중)    
