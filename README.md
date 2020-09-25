@@ -24,7 +24,7 @@ c#으로 제작된 콘솔 인터페이스 웹툰 다운로더입니다.
 [.Net Frmamework 4.7.2 다운로드](https://dotnet.microsoft.com/download/dotnet-framework/net472)    
     
     
-개발자 연락처 : contact@wrforest.com
+개발자 연락처 : contact@wrforest.com   
 버그 제보, 기타 피드백 주시면 감사하겠습니다.
       
        
