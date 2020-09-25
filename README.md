@@ -187,18 +187,18 @@ config.json 파일 내용
   - 버그
     - titleId가 존재하지 않을시 `NullReferenceException `을 throw 합니다.  
   
-  
+　  
    
 ## 5. 업데이트 예정 사항
 * 이미지 병합 기능  
 * 다운로드 폴더 설정 기능
   
-  
+　  
    
 ## 6. 버그
 * 콘솔창 폭이 좁으면 진행률 메세지가 제대로 표시되지 않습니다.
-  
-  
+　  
+  　  
    
 ## 7. 문제 해결하기
 1. Bad JSON escape sequence
