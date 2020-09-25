@@ -86,7 +86,6 @@
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>AssemblyInfo.cs</LastGenOutput>
     </Content>
-    <Content Include="Properties\version.build.latest.txt" />
     <Content Include="Properties\version.build.tree.txt" />
     <Content Include="unused\regex.txt" />
   </ItemGroup>

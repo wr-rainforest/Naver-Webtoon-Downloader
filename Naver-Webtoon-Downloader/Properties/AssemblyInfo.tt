@@ -14,46 +14,37 @@
         minor = Convert.ToInt32(matches[0].Groups["minor"].Value);
         build = Convert.ToInt32(matches[0].Groups["build"].Value);
         revision = Convert.ToInt32(matches[0].Groups["revision"].Value);
-    }
-
-    string latestverpath=Path.GetDirectoryName(this.Host.ResolvePath("version.build.latest.txt"))+"\\version.build.latest.txt";
-    string treepath=Path.GetDirectoryName(this.Host.ResolvePath("version.build.tree.txt"))+"\\version.build.tree.txt";
-    string latestver="";
-    string tree = "";
-        latestver = File.ReadAllText(latestverpath);
-        tree = File.ReadAllText(treepath);
-        var latestverSplit=latestver.Split('.');
-        var latestmajor = Convert.ToInt32(latestverSplit[0]);
-        var latestminor = Convert.ToInt32(latestverSplit[1]);
-        var latestbuild = Convert.ToInt32(latestverSplit[2]);
-        var latestrevision = Convert.ToInt32(latestverSplit[3]);
-       
-
-        if($"{latestmajor}.{latestminor}"!=$"{major}.{minor}")
-        {
-            if( buildConfig == "Release" ){throw new Exception("디버그 모드에서만 버전 변경이 가능합니다.");}
-            File.WriteAllText(treepath, tree.Replace("└--v","├─v").Replace("└--","└─").Replace("　  ","│  ")+$"└--v{major}.{minor}    \r\n");
-        }
-
-
+        string treepath=Path.GetDirectoryName(this.Host.ResolvePath("version.build.tree.txt"))+"\\version.build.tree.txt";
+        string tree = File.ReadAllText(treepath);
         if(buildConfig == "Debug")
         {
-            build++;
+            if(build==0)
+            {
+                tree = File.ReadAllText(treepath);
+                File.WriteAllText(treepath, tree.Replace("└--v","├─v").Replace("└--","└─").Replace("　  ","│  "));
+                File.AppendAllText(treepath, $"└--v{major}.{minor}    \r\n");
+                build++;
+            }
+            else
+            {
+                        build++;
+            }
+
             revision = 0;
+            tree = File.ReadAllText(treepath);
             File.WriteAllText(treepath, tree.Replace("　    　","　  │  ").Replace("　  └--","　  ├─").Replace("　  │  └--", "　  │  └─"));
             File.AppendAllText(treepath, $"　  └--{major}.{minor}.{build}.{revision}    \r\n");
         }
+
         else if( buildConfig == "Release" )
         {
             revision++;
+            tree = File.ReadAllText(treepath);
             File.WriteAllText(treepath, tree.Replace("　    　└--", "　    　├─"));
             File.AppendAllText(treepath, $"　    　└--{major}.{minor}.{build}.{revision}    \r\n");
-
         }
-       
-    File.WriteAllText(latestverpath, $"{major}.{minor}.{build}.{revision}");
-    
-
+        //File.AppendAllText(treepath+"dfdf.yy.txt", $"2. {DateTime.Now.ToString("[yyyy-MM-dd hh:mm:ss] : ")}-{buildConfig}-{major}.{minor}.{build}.{revision}-    \r\n");
+    }
 #>
 
 using System.Reflection;
@@ -95,7 +86,7 @@ using System.Resources;
 
 <#+
     int major = 1;
-    int minor = 0;
+    int minor = 2;
     int build = 0;
     int revision = 0;
 #>

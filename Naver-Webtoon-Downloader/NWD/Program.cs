@@ -29,7 +29,8 @@ namespace WRforest.NWD
             IO.Print(new string('-',100));
             IO.Print(" 명령어   : download [$$titleId$green$] 웹툰을 다운로드합니다. / 단축 명령어 d");
             IO.Print("            예) download $$20853$green$ ");
-            IO.Print("                d $$183559$green$ $$20853$green$ $$703846$green$ ");
+            IO.Print("                d $$183559$green$ $$20853$green$ ");
+            IO.Print("            ) comic.naver.com/webtoon/list.nhn?titleId=$$20853$green$"); 
             IO.Print("");
             IO.Print("            get [$$weekday$green$] 선택한 요일(mon/tue/wed/thu/fri/sat/sun)의 웹툰 목록을 불러옵니다.");
             IO.Print("            예) get $$mon$green$ ");
