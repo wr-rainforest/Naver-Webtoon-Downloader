@@ -56,7 +56,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="NWD\Agent.cs" />
     <Compile Include="NWD\Command\CommandManger.cs" />
+    <Compile Include="NWD\FileNameBuilder.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -72,9 +74,7 @@
     <Compile Include="NWD\Key\EpisodeKey.cs" />
     <Compile Include="NWD\Key\ImageKey.cs" />
     <Compile Include="NWD\Key\WebtoonKey.cs" />
-    <Compile Include="NWD\Parser\Agent.cs" />
-    <Compile Include="NWD\Parser\Parser.cs" />
-    <Compile Include="NWD\Parser\XPath.cs" />
+    <Compile Include="NWD\Parser.cs" />
     <Compile Include="unused\Merge.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -90,10 +90,12 @@
     <Content Include="Properties\version.build.tree.txt" />
     <Content Include="unused\regex.txt" />
     <Content Include="unused\Command.txt" />
+    <Content Include="unused\parser.txt" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PreBuildEvent>"C:\Program Files\Microsoft Visual Studio\2019\Community\Common7\IDE\TextTransform.exe" -a !!BuildConfiguration!$(Configuration)  "$(ProjectDir)Properties\AssemblyInfo.tt"</PreBuildEvent>
