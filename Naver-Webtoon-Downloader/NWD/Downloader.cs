@@ -90,7 +90,9 @@ namespace WRforest.NWD
                     ));
                 tasks.Add(SaveFileAsync(fileNameBuilder.BuildImageFileFullDirectory(imageKeys[i]), fileNameBuilder.BuildImageFileName(imageKeys[i]), buff));
             }
+            Thread.Sleep(700);
             await Task.WhenAll(tasks);
+
             return;
         }
         
