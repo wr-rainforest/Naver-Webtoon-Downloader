@@ -2,6 +2,7 @@
     "latest-release" : "1.1.6.2",
     "latest-release-comment" : "",
     "latest-pre-release" : "2.0.0.0",
-    "latest-pre-release-comment" : ""
+    "latest-pre-release-comment" : "",
+    "pre-releases" : ["2.0.29.0", "2.0.30.0"]
     
 }
