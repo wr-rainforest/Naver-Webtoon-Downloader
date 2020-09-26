@@ -48,7 +48,7 @@ namespace WRforest.NWD
             IO.Print($" 소스코드 : https://github.com/wr-rainforest/Naver-Webtoon-Downloader");
             IO.Print($" 연락처   : contact@wrforest.com");
             IO.Print(new string('-',100));
-            IO.Print(" 명령어   : download [$$titleId$green$] 웹툰을 다운로드합니다. / 단축 명령어 d");
+            IO.Print(" 명령어   : download [$$titleId$green$] 웹툰을 다운로드합니다. / (단축 명령어 : d)");
             IO.Print("            예) download $$20853$green$ ");
             IO.Print("                d $$183559$green$ $$20853$green$ ");
             IO.Print("            ) comic.naver.com/webtoon/list.nhn?titleId=$$20853$green$"); 
@@ -64,7 +64,7 @@ namespace WRforest.NWD
             IO.Print("            setfolder [$$folder$green$] / [$$folder$green$]를 기본 다운로드 폴더로 설정합니다.");
             IO.Print("            예) setfolder $$d\\webtoons$green$ ");
             DFDFcursorPosition = Console.CursorTop;
-            IO.Print($"            현재 기본 다운로드 폴더$${config.DefaultDownloadDirectory}$green$ ");
+            IO.Print($"            현재 기본 다운로드 폴더 $${config.DefaultDownloadDirectory}$green$ ");
             IO.Print("");
             IO.Print(" \r\n 키보드의 ↑ ↓ 버튼으로 이전에 입력했던 값을 불러올 수 있습니다. 프로그램 종료시 초기화됩니다.");
             IO.Print(new string('-', 100));
