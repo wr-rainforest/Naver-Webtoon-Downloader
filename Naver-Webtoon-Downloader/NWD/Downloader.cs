@@ -31,12 +31,13 @@ namespace WRforest.NWD
         {
             if (!Directory.Exists(directory))
                 Directory.CreateDirectory(directory);
-            //File.WriteAllBytesAsync()
+            //File.WriteAllBytesAsync() => .net 5.0
             using (FileStream fs=new FileStream(directory+"\\"+filename, FileMode.Create, FileAccess.Write))
             {
                 await fs.WriteAsync(data, 0, data.Length);
             }
         }
+
         /// <summary>
         /// <code>{0}:웹툰 제목</code>
         /// <code>{1}:웹툰 아이디</code>
@@ -52,7 +53,7 @@ namespace WRforest.NWD
         /// <param name="webtoonInfo"></param>
         /// <param name="imageKeys"></param>
         /// <param name="ProgressTextFormat"></param>
-        public async Task DownloadAsync(ImageKey[] imageKeys, IProgress<string> progress, string ProgressTextFormat)
+        public async Task DownloadAsync(ImageKey[] imageKeys, string ProgressTextFormat, IProgress<string> progress /*CancellationToken cancellationToken*/)
         {
 
             List<Task> tasks = new List<Task>();
@@ -64,6 +65,9 @@ namespace WRforest.NWD
                 {
                     buff = agent.DownloadWebtoonImage(webtoonInfo.Episodes[imageKeys[i].EpisodeNo].EpisodeImageUrls[imageKeys[i].ImageIndex]);
                     size += buff.Length;
+                    //400 => 헤더 용량 문제
+                    //403 => referer 추가
+                    //404 => todo 캐시 초기화 기능 추가
                 }
                 catch
                 {
@@ -101,7 +105,7 @@ namespace WRforest.NWD
         /// </summary>
         /// <param name="webtoonInfo"></param>
         /// <param name="ProgressTextFormat"></param>
-        public void UpdateWebtoonInfo(IProgress<string> progress, string ProgressTextFormat)
+        public void UpdateWebtoonInfo(string ProgressTextFormat, IProgress<string> progress)
         {
             WebtoonKey webtoonKey = new WebtoonKey(webtoonInfo.WebtoonTitleId);
             //comic.naver.com에서 최신 회차의 EpisodeNo를 불러옵니다.
