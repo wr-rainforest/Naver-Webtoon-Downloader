@@ -26,6 +26,7 @@ namespace WRforest.NWD.Command
             commandDictionary.Add("download", download);
             commandDictionary.Add("d", download);
             commandDictionary.Add("get", new Get(config));
+            commandDictionary.Add("setfolder", new SetFolder(config));
         }
         Dictionary<string, Command> commandDictionary;
         public bool Contains(string commandName)

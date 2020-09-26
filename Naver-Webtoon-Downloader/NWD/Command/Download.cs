@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using WRforest.NWD.DataType;
 using WRforest.NWD.Key;
@@ -24,7 +25,7 @@ namespace WRforest.NWD.Command
         {
             Console.Write(" ");
             var curp = Console.CursorTop;
-            Console.Write("\r" + new string(' ', Console.BufferWidth - 1) + "\r");
+            Console.Write("\r" + new string(' ', Console.BufferWidth-1) + "\r");
             IO.Print(ProgressText, false, true);//i = 0;
             Console.SetCursorPosition(0, curp);
         }
@@ -72,7 +73,7 @@ namespace WRforest.NWD.Command
                     if (latest != last)
                     {
                         IO.Print(string.Format("{4}. {0}($${1}$cyan$) URl 캐시를 업데이트합니다.. [no($${2}$cyan$) ~ no($${3}$cyan$)]", webtoonInfo.WebtoonTitle, keys[i].TitleId, last + 1, latest, i + 1), true, true);
-                        downloader.UpdateWebtoonInfo(downloaderProgress, (i + 1).ToString() + " {0}($${1}$cyan$) [{2}/{3}] ($${4:P}$green$) [{5}]");
+                        downloader.UpdateWebtoonInfo((i + 1).ToString() + " {0}($${1}$cyan$) [{2}/{3}] ($${4:P}$green$) [{5}]", downloaderProgress);
                         Console.WriteLine();
                         IO.Print(string.Format("{2}. {0}($${1}$cyan$) URl 캐시에 업데이트된 회차를 추가하였습니다.", webtoonInfo.WebtoonTitle, keys[i].TitleId, i + 1), true, true);
                     }
@@ -93,8 +94,9 @@ namespace WRforest.NWD.Command
                     downloader = new Downloader(webtoonInfo, config);
                     IO.Print(string.Format("{2}. {0}($${1}$cyan$) URl 캐시를 생성합니다.", webtoonInfo.WebtoonTitle, keys[i].TitleId, i + 1), true, true);
                     downloader.UpdateWebtoonInfo((i + 1).ToString() + ". {0}($${1}$cyan$) [{2}/{3}] ($${4:P}$green$) [{5}]", downloaderProgress);
-                    Console.WriteLine("");
+                    Console.WriteLine(""); 
                     IO.Print(string.Format("{2}. {0}($${1}$cyan$) URl 캐시를 생성하였습니다..", webtoonInfo.WebtoonTitle, keys[i].TitleId, i + 1), true, true);
+                    
                 }
                 IO.WriteTextFile("Cache", keys[i].TitleId + ".json", JsonConvert.SerializeObject(webtoonInfo));
 

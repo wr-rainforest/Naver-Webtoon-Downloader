@@ -131,12 +131,13 @@ namespace WRforest.NWD
                 progress.Report(string.Format(ProgressTextFormat,
                                webtoonInfo.WebtoonTitle,
                                webtoonInfo.WebtoonTitleId,
-                              (episodeNo+1).ToString("D" + latestEpisodeNo.ToString().Length.ToString()),
+                              (episodeNo).ToString("D" + latestEpisodeNo.ToString().Length.ToString()),
                              latestEpisodeNo,
-                             (decimal)(episodeNo+1) / latestEpisodeNo,
+                             (decimal)(episodeNo) / latestEpisodeNo,
                              webtoonInfo.Episodes[episodeNo].EpisodeDate,
                              webtoonInfo.Episodes[episodeNo].EpisodeTitle));
             }
+            Thread.Sleep(500);
         }
 
         public ImageKey[] BuildImageKeysToDown()
