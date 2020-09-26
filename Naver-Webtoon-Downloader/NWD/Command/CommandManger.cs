@@ -8,7 +8,7 @@ namespace WRforest.NWD.Command
 {
     class CommandManager
     {
-        public CommandManager()
+        public CommandManager(Config config)
         {
             commandDictionary = new Dictionary<string, Command>();
             /*
@@ -22,21 +22,21 @@ namespace WRforest.NWD.Command
             commandDictionary.Add("merge", Merge);
             commandDictionary.Add("set", Set);
             */
+            var download = new Download(config);
+            commandDictionary.Add("download", download);
+            commandDictionary.Add("d", download);
+            commandDictionary.Add("get", new Get(config));
+            commandDictionary.Add("setfolder", new SetFolder(config));
         }
         Dictionary<string, Command> commandDictionary;
-        Parser.Agent agent;
-        Parser.Parser parser;
         public bool Contains(string commandName)
         {
             return commandDictionary.ContainsKey(commandName);
         }
+
         public void Start(string commandName, params string[] args)
         {
             commandDictionary[commandName].Start(args);
-        }
-        public string[] GetCommandList()
-        {
-            return commandDictionary.Keys.ToArray();
         }
     }
 }

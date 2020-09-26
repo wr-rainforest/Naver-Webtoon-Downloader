@@ -1,11 +1,12 @@
-﻿using System;
+﻿using Newtonsoft.Json.Linq;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using WRforest.NWD.Parser;
+using WRforest.NWD;
 using WRforest.NWD.Command;
 
 namespace WRforest.NWD
@@ -13,6 +14,7 @@ namespace WRforest.NWD
     class Program
     {
         public static int cursorPosition;
+        public static int DFDFcursorPosition;
         static void Main(string[] args)
         { 
             string assemblyVersion = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString();
@@ -22,6 +24,24 @@ namespace WRforest.NWD
             var Title = $"네이버 웹툰 다운로더 v{version} ({build})";
 
             Console.Title = Title;
+
+
+            string configFolderPath = "Config";
+            string configFileName = "config.json";
+            Config config;
+            if (IO.Exists(configFolderPath, configFileName))
+            {
+                config = new Config(IO.ReadTextFile(configFolderPath, configFileName));
+            }
+            else
+            {
+                config = new Config();
+                IO.WriteTextFile(configFolderPath, configFileName, config.ToJsonString());
+            }
+            CommandManager command = new CommandManager(config);
+
+
+
             IO.Print($" 네이버 웹툰 다운로더 v{version} (빌드 {build})",false);
             CheckUpdate(assemblyVersion);
             IO.Print($" 홈페이지 : https://nwd.wrforest.com/");
@@ -41,41 +61,14 @@ namespace WRforest.NWD
             //IO.Print("                merge $$183559$green$ $$20853$green$ $$703846$green$ ");
             //IO.Print("            주의사항)  ");
             //IO.Print("");
-            IO.Print("            set -[$$configname$yellow$] [$$configvalue$green$] / [$$configname$yellow$]을/를 [$$configvalue$green$]로 설정합니다.");
-            IO.Print("            예) set -$$downloadpath$yellow$ $$d\\webtoons$green$ ");
+            IO.Print("            setfolder [$$folder$green$] / [$$folder$green$]를 기본 다운로드 폴더로 설정합니다.");
+            IO.Print("            예) setfolder $$d\\webtoons$green$ ");
+            DFDFcursorPosition = Console.CursorTop;
+            IO.Print($"            현재 기본 다운로드 폴더$${config.DefaultDownloadDirectory}$green$ ");
             IO.Print("");
             IO.Print(" \r\n 키보드의 ↑ ↓ 버튼으로 이전에 입력했던 값을 불러올 수 있습니다. 프로그램 종료시 초기화됩니다.");
             IO.Print(new string('-', 100));
             cursorPosition = Console.CursorTop;
-
-            string configFolderPath = "Config";
-            string configFileName = "config.json";
-            string xPathConfigFileName = "xpath.json";
-            Parser.XPath xPath;
-            Config config;
-            if (IO.Exists(configFolderPath, configFileName))
-            {
-                config = new Config(IO.ReadTextFile(configFolderPath, configFileName));
-            }
-            else
-            {
-                config = new Config();
-                IO.WriteTextFile(configFolderPath, configFileName, config.ToJsonString());
-            }
-            if (IO.Exists(configFolderPath, xPathConfigFileName))
-            {
-                xPath = new Parser.XPath(IO.ReadTextFile(configFolderPath, xPathConfigFileName));
-            }
-            else
-            {
-                xPath = new Parser.XPath();
-                IO.WriteTextFile(configFolderPath, xPathConfigFileName, xPath.ToJsonString());
-            }
-            Parser.Parser.Instance.SetXPath(xPath);
-            Downloader.SetConfig(config);
-            Downloader.ProgressChangedEvent += PrintProgess;
-            CommandManager command = new CommandManager();
-            string[] commands = command.GetCommandList(); 
 
 
             while (true)
@@ -135,14 +128,6 @@ namespace WRforest.NWD
                 IO.Print("\r\n $$버전 업데이트를 확인할 수 없습니다.$red$");
             }
         }
-        public static void PrintProgess(string ProgressText)
-        {
-            int currentPosition = Console.CursorTop;
-            Console.SetCursorPosition(0, currentPosition);
-            Console.Write("\r" + new string(' ', Console.BufferWidth - 1) + "\r");
-            
-            IO.Print(ProgressText, false, true);//i = 0;
-            Console.SetCursorPosition(0, currentPosition);
-        }
+
     }
 }

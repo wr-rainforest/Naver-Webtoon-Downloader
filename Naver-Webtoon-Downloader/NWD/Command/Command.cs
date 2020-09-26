@@ -11,9 +11,10 @@ namespace WRforest.NWD.Command
 {
     abstract class Command
     {
-        public Command()
+        protected Config config;
+        public Command(Config config)
         {
-
+            this.config = config;
         }
         public abstract void Start(params string[] args);
     }
