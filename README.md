@@ -1,7 +1,4 @@
-# Naver-Webtoon-Downloader
-[![GitHub release (latest by date)](https://img.shields.io/github/v/release/wr-rainforest/Naver-Webtoon-Downloader?label=latest&style=flat-square)](https://github.com/wr-rainforest/Naver-Webtoon-Downloader/releases/latest)
-[![GitHub All Releases](https://img.shields.io/github/downloads/wr-rainforest/Naver-Webtoon-Downloader/total?label=Downloades&style=flat-square)](https://github.com/wr-rainforest/Naver-Webtoon-Downloader/releases)
-**사용 안내**  
+## Naver-Webtoon-Downloader
 1. [프로그램 개요](#1-프로그램-개요)   
 2. [간단한 사용방법](#2-간단한-사용방법)   
 　2.1. [최초 다운로드](#21-최초-다운로드)   
@@ -9,31 +6,37 @@
 　2.2. [삭제된/누락된 파일 다시 다운로드](#23-삭제된누락된-파일-다시-다운로드)    
 3. [프로그램 상세](#3-프로그램-상세)   
 　3.1. [config.json 설정(기본 다운로드 폴더, 폴더명, 이미지 이름 포맷)](#31-configjson)   
-　3.2. [웹툰 이름, 회차 제목에 윈도우에서 파일/폴더명으로 사용 불가능한 문자가 포함된 경우의 처리](#32-웹툰-이름-회차-제목에-윈도우에서-파일폴더명으로-사용-불가능한-문자가-포함된-경우의-처리)   
+　3.2. [윈도우에서 파일/폴더명으로 사용 불가능한 문자의 처리](#32-윈도우에서-파일폴더명으로-사용-불가능한-문자의-처리)   
 4. [릴리즈 정보](#4-릴리즈-정보)   
 5. [업데이트 예정 사항](#5-업데이트-예정-사항)  
 6. [버그](#6-버그)  
-
-**개발 안내**   
-1. [빌드 환경 구성](#1-빌드-환경-구성)  
-2. [기능 구현](#2-기능-구현)    
-　2.1. [현재 진행중](#21-현재-진행중)    
-　2.2. [예정](#22-예정)    
-3. [코드 개선](#3-코드-개선)    
-4. [Cache/*.json](#Cachejson)    
+7. [문제 해결하기](#7-문제-해결하기)  
 
 ## 1. 프로그램 개요
-c#으로 제작된 콘솔 인터페이스 웹툰 다운로더입니다.  
+[다운로드](https://github.com/wr-rainforest/Naver-Webtoon-Downloader/releases/download/v1.1.6.1/Naver-Webtoon-Downloader.v1.1.6.1.zip)(인증서 서명이 없어서 윈도우 PC 보호 창이 뜹니다. 창에서 '추가 정보' 클릭하시고 실행 누르시면 잘 돌아갑니다.)    
+   
+[![GitHub release (latest by date)](https://img.shields.io/github/v/release/wr-rainforest/Naver-Webtoon-Downloader?label=latest&style=flat-square)](https://github.com/wr-rainforest/Naver-Webtoon-Downloader/releases/latest)
+[![GitHub All Releases](https://img.shields.io/github/downloads/wr-rainforest/Naver-Webtoon-Downloader/total?label=Downloades&style=flat-square)](https://github.com/wr-rainforest/Naver-Webtoon-Downloader/releases)   
+    
+c#으로 제작된 웹툰 다운로더입니다.   
+한 폴더에 하나의 회차를 저장합니다.    
+      
+![ㅑㅡ2](/info/Image/v1.0-4.png)
+      
           
-[최신버전 다운로드](https://github.com/wr-rainforest/Naver-Webtoon-Downloader/releases/download/v1.1.6.1/Naver-Webtoon-Downloader.v1.1.6.1.zip)  
+
 
 .Net Frmamework 4.7.2 이상 버전에서 동작합니다.    
 윈도우 2018년 4월 업데이트(버전 1803) 이후 버전에서는 런타임 추가 설치 없이도 실행이 가능합니다.     
 [.Net Frmamework 4.7.2 다운로드](https://dotnet.microsoft.com/download/dotnet-framework/net472)    
     
     
-개발자 연락처 : contact@wrforest.com
+개발자 연락처 : contact@wrforest.com   
+버그 제보, 기타 피드백 주시면 감사하겠습니다.
       
+  
+      
+       
        
 ## 2. 간단한 사용방법
 ### 2.1. 최초 다운로드
@@ -104,7 +107,6 @@ c#으로 제작된 콘솔 인터페이스 웹툰 다운로더입니다.
 ### 3.1. config.json  
 `/Config/config.json` 파일을 수정하여 설정을 변경할 수 있습니다.   
 파일이 삭제되었다면 초기 설정값으로 새로운 파일을 생성합니다. 
-
   
    
 설정값 세부정보    
@@ -123,8 +125,7 @@ config.json 파일 내용
     "ImageFileNameFormat": "[{5}] {3} - {4} ({2:D3}).jpg"   
 } 
 ```  
-   
-   
+  
 **수정 주의사항!**  
 　DefaultDownloadDirectory의 값에 `\`이 들어간다면 `\`를 4개로 중복해서 써 주어야 합니다.  
 ```
@@ -134,15 +135,16 @@ config.json 파일 내용
 ```
   윈도우에서 파일/폴더명으로 사용 불가능한 문자인 `\` `/` `:` `*` `?` `"` `<` `>` `|` 가 포함 될 수 없습니다  
   `.`(반각 온점)으로 끝나는 값은 사용이 불가능합니다.
-   
-### 3.2. 웹툰 이름, 회차 제목에 윈도우에서 파일/폴더명으로 사용 불가능한 문자가 포함된 경우의 처리
-웹툰 이름, 회차 제목에는 종종 `\` `/` `:` `*` `?` `"` `<` `>` `|`가 포함되어 있는 경우가 있습니다.
-해당 특수문자들은 윈도우에서 파일/폴더명으로 사용 불가능한 문자들로, 동일한 모양의 전각 문자 `\`　`／`　`：`　`＊`　`？`　`"`　`＜`　`＞`　`｜`로 치환되어 저장됩니다.    
+  
+### 3.2. 윈도우에서 파일/폴더명으로 사용 불가능한 문자의 처리
+웹툰 이름, 회차 제목에는 종종 `\` `/` `:` `*` `?` `"` `<` `>` `|`가 포함되어 있는 경우가 있습니다.        
+해당 특수문자들은 윈도우에서 파일/폴더명으로 사용이 불가능한 문자들로, 동일한 모양의 전각 문자 `\`　`／`　`：`　`＊`　`？`　`"`　`＜`　`＞`　`｜`로 치환되어 저장됩니다.    
     
-만약 회차 제목이 `.`(반각 온점) 으로 끝난다면 해당 온점만 전각 온점으로 치환됩니다.
+만약 회차 제목이 `.`(반각 온점) 으로 끝난다면 해당 온점은 전각 온점으로 치환됩니다.   
+윈도우는 파일/폴더명에 온점을 사용할 수 있도록 하지만, 폴더의 마지막의 온점은 모두 잘라냅니다?
+  
+  
    
-
-
 ## 4. 릴리즈 정보
 - __v1.1 (6.1)__
   - 업데이트 내용
@@ -184,12 +186,20 @@ config.json 파일 내용
     - 현재 다운로드 진행상황을 볼 수 있습니다.
   - 버그
     - titleId가 존재하지 않을시 `NullReferenceException `을 throw 합니다.  
-
+  
+　  
+   
 ## 5. 업데이트 예정 사항
 * 이미지 병합 기능  
 * 다운로드 폴더 설정 기능
+  
+　  
+   
 ## 6. 버그
 * 콘솔창 폭이 좁으면 진행률 메세지가 제대로 표시되지 않습니다.
+　  
+  　  
+   
 ## 7. 문제 해결하기
 1. Bad JSON escape sequence
 ```csharp
@@ -202,65 +212,3 @@ config.json 파일 내용
 원인:Config/config.json 파일에 잘못된 문자가 포함되었습니다.  
 해결방법:[3.1.](#31-configjson)  문단의 주의사항에 맞게 config가 설정되어 있는지 확인해주세요.  
 설정을 초기화하려면 config.json 파일을 삭제하세요.
-
-# 개발 정보
-
-## 1. 빌드 환경 구성   
-vs2019, .NET Framework 4.7.2가 필요합니다. 외부 패키지로 Newtonsoft.Json, HtmlAgilityPack을 사용합니다.   
-    
-1. 리포지트리를 복사하거나 [releases](https://github.com/wr-rainforest/Naver-Webtoon-Downloader/releases)에서 소스코드를 다운받습니다.    
-`git clone https://github.com/wr-rainforest/Naver-Webtoon-Downloader.git`    
-2. Nuget 패키지 관리자에서 누락된 패키지(Newtonsoft.Json, HtmlAgilityPack)를 복원합니다.    
-3. System.Web 참조를 추가합니다.
-4. 프로젝트 속성에서 빌드 이벤트 명령줄 대화상자의 내용을 삭제합니다.  
-
-## 2. 기능 구현
-### 2.1. 현재 진행중
-이미지 merge 기능을 구현중입니다. 램을 100MB 이하로 잡아먹도록 최적화를 하고 있습니다.      
-### 2.2. 예정
-args로도 titleId를 입력받아 다운로드를 진행할 수 있는 기능. 작업 스케쥴러에 사용  
-
-## 3. 코드 개선 
-
-## Cache/*.json
-  
-이 프로그램은 `\Cache` 폴더 내부에 json 파일을 저장합니다.   
-   
-직렬화/역직렬화에 Newtonsoft.Json.JsonConvert를 사용합니다.
-``` csharp
-JsonConvert.DeserializeObject<WebtoonInfo>(string);
-JsonConvert.SerializeObject(webtoonInfo);
-```  
-파일의 Json 구조입니다.
-```yaml
-{
-    "webtoon_title": "웹툰명",
-    "webtoon_titleId": "000000",
-    "webtoon_genre": null,
-    "webtoon_description": null,
-    "webtoon_writer": null,
-    "webtoon_episodes": {
-        "첫번째 회차 번호(1)": {
-            "episode_title": "회차 제목",
-            "episode_no": 첫번째 회차 번호(1),
-            "episode_date": "yyyy.MM.dd",
-            "episode_image_urls": [
-                "https://image-comic.pstatic.net/webtoon/748105/30/20200911112215_f596e562d9b34d4bec47a0a3402dbd95_IMAG01_1.jpg",
-                                                            .............중략..............
-                "https://image-comic.pstatic.net/webtoon/748105/30/20200911112215_f596e562d9b34d4bec47a0a3402dbd95_IMAG01_13.jpg"
-            ]
-        },
-                                                            .............중략.............. 
-        "마지막 회차 번호": {
-            "episode_title": "회차 제목",
-            "episode_no": 마지막 회차 번호,
-            "episode_date": "yyyy.MM.dd",
-            "episode_image_urls": [
-                "https://image-comic.pstatic.net/webtoon/748105/30/20200911112215_f596e562d9b34d4bec47a0a3402dbd95_IMAG01_1.jpg",
-                                                            .............중략..............
-                "https://image-comic.pstatic.net/webtoon/748105/30/20200911112215_f596e562d9b34d4bec47a0a3402dbd95_IMAG01_13.jpg"
-            ]
-        }
-    }
-}               
-```
