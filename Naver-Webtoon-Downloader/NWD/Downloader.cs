@@ -14,13 +14,18 @@ namespace WRforest.NWD
     class Downloader
     {
         public delegate void ProgressChangedEventHandler(string progressMessage);
-        private static Config config;
+        public event ProgressChangedEventHandler ProgressChangedEvent;
+        private Config config;
+        private WebtoonInfo webtoonInfo;
+        Agent agent;
+        Parser.Parser parser;
 
-        public static event ProgressChangedEventHandler ProgressChangedEvent;
-
-        public static void SetConfig(Config config)
+        public Downloader(WebtoonInfo webtoonInfo, Config config, XPath xPath)
         {
-            Downloader.config = config;
+            agent = new Agent();
+            parser = new Parser.Parser(xPath);
+            this.webtoonInfo = webtoonInfo;
+            this.config = config;
         }
 
         /// <summary>
@@ -34,18 +39,14 @@ namespace WRforest.NWD
         /// </summary>
         /// <param name="webtoonInfo"></param>
         /// <param name="ProgressTextFormat"></param>
-        public static void UpdateWebtoonInfo(WebtoonInfo webtoonInfo, string ProgressTextFormat)
+        public void UpdateWebtoonInfo(string ProgressTextFormat)
         {
-            Agent agent = Agent.Instance;
-            Parser.Parser parser = Parser.Parser.Instance;
             WebtoonKey webtoonKey = new WebtoonKey(webtoonInfo.WebtoonTitleId);
-
             //comic.naver.com에서 최신 회차의 EpisodeNo를 불러옵니다.
             agent.LoadPage(webtoonKey.BuildUrl());
             int latestEpisodeNo = int.Parse(parser.GetLatestEpisodeNo());
             //webtoonInfo중 가장 마지막 회차의 EpisodeNo를 불러옵니다.
             int lastEpisodeNo = webtoonInfo.GetLastEpisodeNo();
-
             //웹툰 정보를 업데이트합니다.
             for (int episodeNo = lastEpisodeNo + 1; episodeNo <= latestEpisodeNo; episodeNo++)
             {
@@ -70,7 +71,6 @@ namespace WRforest.NWD
                              webtoonInfo.Episodes[episodeNo].EpisodeDate,
                              webtoonInfo.Episodes[episodeNo].EpisodeTitle));
             }
-            Console.WriteLine();
         }
 
         /// <summary>
@@ -84,10 +84,9 @@ namespace WRforest.NWD
         /// </summary>
         /// <param name="webtoonInfo"></param>
         /// <param name="ProgressTextFormat"></param>
-        public static void BuildWebtoonInfo(WebtoonInfo webtoonInfo, string ProgressTextFormat)
+        public void BuildWebtoonInfo(string ProgressTextFormat)
         {
-            Agent agent = Agent.Instance;
-            Parser.Parser parser = Parser.Parser.Instance;
+
             WebtoonKey webtoonKey = new WebtoonKey(webtoonInfo.WebtoonTitleId);
             //comic.naver.com에서 최신 회차의 EpisodeNo를 불러옵니다.
             agent.LoadPage(webtoonKey.BuildUrl());
@@ -116,13 +115,12 @@ namespace WRforest.NWD
                              webtoonInfo.Episodes[episodeNo].EpisodeDate,
                              webtoonInfo.Episodes[episodeNo].EpisodeTitle));
             }
-            Console.WriteLine();
         }
-        public static ImageKey[] BuildImageKeysToDown(WebtoonInfo webtoonInfo)
+        public ImageKey[] BuildImageKeysToDown()
         {
             List<ImageKey> list = new List<ImageKey>();
-            int latest = webtoonInfo.GetLastEpisodeNo();
-            for(int episodeNo = 1; episodeNo <= latest; episodeNo++)
+            int lastEpisodeNo = webtoonInfo.GetLastEpisodeNo();
+            for(int episodeNo = 1; episodeNo <= lastEpisodeNo; episodeNo++)
             {
                 if (!webtoonInfo.Episodes.ContainsKey(episodeNo))
                     continue;
@@ -131,7 +129,7 @@ namespace WRforest.NWD
                 for(int imageIndex = 0; imageIndex < imageUrls.Length; imageIndex++)
                 {
                     ImageKey imageKey = new ImageKey(webtoonInfo.WebtoonTitleId, episodeNo, imageIndex);
-                    if(IO.Exists(BuildImageFileFullDirectory(webtoonInfo,imageKey), BuildImageFileName(webtoonInfo, imageKey)))
+                    if(ImageExists(imageKey))
                     {
                         continue;
                     }
@@ -139,6 +137,12 @@ namespace WRforest.NWD
                 }
             }
             return list.ToArray();
+        }
+        public bool ImageExists(ImageKey imageKey)
+        {
+            string directory = BuildImageFileFullDirectory(imageKey);
+            string filename = BuildImageFileName(imageKey);
+            return File.Exists(string.Format("{0}\\{1}", directory, filename));
         }
         /// <summary>
         /// <code>{0}:웹툰 제목</code>
@@ -155,11 +159,10 @@ namespace WRforest.NWD
         /// <param name="webtoonInfo"></param>
         /// <param name="imageKeys"></param>
         /// <param name="ProgressTextFormat"></param>
-        public static void Download(WebtoonInfo webtoonInfo, ImageKey[] imageKeys, string ProgressTextFormat)
+        public void Download(ImageKey[] imageKeys, string ProgressTextFormat)
         {
             IO.taskEnd = false;
             Task t = new Task(new Action(()=> { IO.SaveFileAsync(); }));
-            Agent agent = Agent.Instance;
             long size = 0;
             t.Start();
             for(int i=0; i<imageKeys.Length; i++)
@@ -170,8 +173,8 @@ namespace WRforest.NWD
                 byte[] buff = agent.DownloadData(webtoonInfo.Episodes[imageKeys[i].EpisodeNo].EpisodeImageUrls[imageKeys[i].ImageIndex]);
                 
                 IO.WriteAllBytes(
-                    BuildImageFileFullDirectory(webtoonInfo, imageKeys[i]),
-                    BuildImageFileName(webtoonInfo, imageKeys[i]),
+                    BuildImageFileFullDirectory(imageKeys[i]),
+                    BuildImageFileName(imageKeys[i]),
                     buff);
                 size += buff.Length;
                 ProgressChangedEvent(string.Format(ProgressTextFormat,
@@ -183,15 +186,14 @@ namespace WRforest.NWD
                     webtoonInfo.Episodes[imageKeys[i].EpisodeNo].EpisodeDate,
                     webtoonInfo.Episodes[imageKeys[i].EpisodeNo].EpisodeTitle,
                     imageKeys[i].ImageIndex,
-                    BuildImageFileName(webtoonInfo, imageKeys[i]),
+                    BuildImageFileName(imageKeys[i]),
                     (double)size/1048576
                     ));
             }
             IO.taskEnd = true;
             t.Wait();
-            Console.WriteLine();
         }
-        public static (int downloadedImageCount, long downloadedImagesSize) GetDownloadedImagesInformation(WebtoonInfo webtoonInfo)
+        public (int downloadedImageCount, long downloadedImagesSize) GetDownloadedImagesInformation()
         {
             WebtoonKey webtoonKey = new WebtoonKey(webtoonInfo.WebtoonTitleId);
             int count = 0;
@@ -206,10 +208,10 @@ namespace WRforest.NWD
                 for (int imageIndex = 0; imageIndex < imageUrls.Length; imageIndex++)
                 {
                     ImageKey imageKey = new ImageKey(webtoonInfo.WebtoonTitleId, episodeNo, imageIndex);
-                    if (IO.Exists(BuildImageFileFullDirectory(webtoonInfo, imageKey), BuildImageFileName(webtoonInfo, imageKey)))
+                    if (IO.Exists(BuildImageFileFullDirectory(imageKey), BuildImageFileName(imageKey)))
                     {
                         count++;
-                        size += new FileInfo(BuildImageFileFullDirectory(webtoonInfo, imageKey) +"\\"+ BuildImageFileName(webtoonInfo, imageKey)).Length;
+                        size += new FileInfo(BuildImageFileFullDirectory(imageKey) +"\\"+ BuildImageFileName(imageKey)).Length;
                     }
                 }
             }
@@ -222,12 +224,12 @@ namespace WRforest.NWD
         /// </summary>
         /// <param name="imageKey"></param>
         /// <returns></returns>
-        private static string BuildImageFileFullDirectory(WebtoonInfo webtoonInfo, ImageKey imageKey)
+        private string BuildImageFileFullDirectory(ImageKey imageKey)
         {
             string directory =
                 config.DefaultDownloadDirectory + "\\" +
-                BuildWebtoonDirectoryName(webtoonInfo, imageKey) + "\\" +
-                BuildEpisodeDirectoryName(webtoonInfo, imageKey);
+                BuildWebtoonDirectoryName(imageKey) + "\\" +
+                BuildEpisodeDirectoryName(imageKey);
             return directory;
         }
 
@@ -236,7 +238,7 @@ namespace WRforest.NWD
         /// </summary>
         /// <param name="imageKey"></param>
         /// <returns></returns>
-        private static string BuildImageFileName(WebtoonInfo webtoonInfo, ImageKey imageKey)
+        private string BuildImageFileName(ImageKey imageKey)
         {
             string titleId = imageKey.TitleId;
             int episodeNo = imageKey.EpisodeNo;
@@ -257,7 +259,7 @@ namespace WRforest.NWD
         /// </summary>
         /// <param name="episodeKey"></param>
         /// <returns></returns>
-        private static string BuildEpisodeDirectoryName(WebtoonInfo webtoonInfo, EpisodeKey episodeKey)
+        private string BuildEpisodeDirectoryName(EpisodeKey episodeKey)
         {
             string titleId = episodeKey.TitleId;
             int episodeNo = episodeKey.EpisodeNo;
@@ -277,7 +279,7 @@ namespace WRforest.NWD
         /// </summary>
         /// <param name="episodeKey"></param>
         /// <returns></returns>
-        private static string BuildWebtoonDirectoryName(WebtoonInfo webtoonInfo, WebtoonKey webtoonKey)
+        private string BuildWebtoonDirectoryName(WebtoonKey webtoonKey)
         {
             string titleId = webtoonInfo.WebtoonTitleId;
             string webtoonTitle = webtoonInfo.WebtoonTitle;
@@ -291,7 +293,7 @@ namespace WRforest.NWD
         /// </summary>
         /// <param name="name"></param>
         /// <returns></returns>
-        private static string ReplaceFileName(string filename) 
+        private string ReplaceFileName(string filename) 
         {
             return filename.Replace('/', '／').Replace('\\', '＼').Replace('?', '？').Replace('*', '＊').Replace(':', '：').Replace('|', '｜').Replace('\"', '＂').Replace("&lt;", "＜").Replace("&gt;", "＞");
         }
@@ -302,7 +304,7 @@ namespace WRforest.NWD
         /// </summary>
         /// <param name="name"></param>
         /// <returns></returns>
-        private static string ReplaceFolderName(string name)
+        private string ReplaceFolderName(string name)
         { 
             if(name[name.Length-1]=='.')
             {
