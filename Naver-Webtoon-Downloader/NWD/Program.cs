@@ -19,7 +19,7 @@ namespace WRforest.NWD
         { 
             string assemblyVersion = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString();
             string[] assemsplit = assemblyVersion.Split('.');
-            var version = $"{assemsplit[0]}.{assemsplit[1]}";
+            var version = $"{assemsplit[0]}.{assemsplit[1]}"; 
             var build = $"{assemsplit[2]}.{assemsplit[3]}";
             var Title = $"네이버 웹툰 다운로더 v{version} ({build})";
 
