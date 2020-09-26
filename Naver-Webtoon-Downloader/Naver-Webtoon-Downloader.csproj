@@ -58,6 +58,8 @@
   <ItemGroup>
     <Compile Include="NWD\Agent.cs" />
     <Compile Include="NWD\Command\CommandManger.cs" />
+    <Compile Include="NWD\Command\Download.cs" />
+    <Compile Include="NWD\Command\Get.cs" />
     <Compile Include="NWD\FileNameBuilder.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <AutoGen>True</AutoGen>
