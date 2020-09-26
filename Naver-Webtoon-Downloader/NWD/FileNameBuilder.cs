@@ -17,14 +17,27 @@ namespace WRforest.NWD
             this.webtoonInfo = webtoonInfo;
             this.config = config;
         }
-
-
         /// <summary>
-        /// imageKey가 지정하는 이미지의 전체 경로 문자열을 반환합니다.
+        /// imageKey가 지정하는 이미지의 전체 파일 경로문자열을 반환합니다.
         /// </summary>
         /// <param name="imageKey"></param>
         /// <returns></returns>
-        private string BuildImageFileFullDirectory(ImageKey imageKey)
+        public string BuildImageFileFullPath(ImageKey imageKey)
+        {
+            string path =
+                config.DefaultDownloadDirectory + "\\" +
+                BuildWebtoonDirectoryName(imageKey) + "\\" +
+                BuildEpisodeDirectoryName(imageKey) + "\\" +
+                BuildImageFileName(imageKey);
+            return path;
+        }
+
+        /// <summary>
+        /// imageKey가 지정하는 이미지의 전체 폴더 경로 문자열을 반환합니다.
+        /// </summary>
+        /// <param name="imageKey"></param>
+        /// <returns></returns>
+        public string BuildImageFileFullDirectory(ImageKey imageKey)
         {
             string directory =
                 config.DefaultDownloadDirectory + "\\" +
@@ -38,7 +51,7 @@ namespace WRforest.NWD
         /// </summary>
         /// <param name="imageKey"></param>
         /// <returns></returns>
-        private string BuildImageFileName(ImageKey imageKey)
+        public string BuildImageFileName(ImageKey imageKey)
         {
             string titleId = imageKey.TitleId;
             int episodeNo = imageKey.EpisodeNo;
@@ -59,7 +72,7 @@ namespace WRforest.NWD
         /// </summary>
         /// <param name="episodeKey"></param>
         /// <returns></returns>
-        private string BuildEpisodeDirectoryName(EpisodeKey episodeKey)
+        public string BuildEpisodeDirectoryName(EpisodeKey episodeKey)
         {
             string titleId = episodeKey.TitleId;
             int episodeNo = episodeKey.EpisodeNo;
@@ -79,7 +92,7 @@ namespace WRforest.NWD
         /// </summary>
         /// <param name="episodeKey"></param>
         /// <returns></returns>
-        private string BuildWebtoonDirectoryName(WebtoonKey webtoonKey)
+        public string BuildWebtoonDirectoryName(WebtoonKey webtoonKey)
         {
             string titleId = webtoonInfo.WebtoonTitleId;
             string webtoonTitle = webtoonInfo.WebtoonTitle;
