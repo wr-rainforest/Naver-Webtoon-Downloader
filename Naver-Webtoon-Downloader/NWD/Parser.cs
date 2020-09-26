@@ -11,9 +11,14 @@ namespace WRforest.NWD
 {
     class Parser
     {
-        public Parser()
+        HtmlDocument htmlDocument;
+        /// <summary>
+        /// <paramref name="htmlDocument"/>를 파싱하는 파서의 새로운 인스턴스를 생성합니다.
+        /// </summary>
+        /// <param name="htmlDocument"></param>
+        public Parser(Agent agent)
         {
-
+            this.htmlDocument = agent.Page;
         }
         /// <summary>
         /// <paramref name="htmlDocument"/>에서 가장 최신 회차의 번호를 파싱합니다.
@@ -21,7 +26,7 @@ namespace WRforest.NWD
         /// </summary>
         /// <param name="htmlDocument"></param>
         /// <returns></returns>
-        public string GetLatestEpisodeNo(HtmlDocument htmlDocument)
+        public string GetLatestEpisodeNo()
         {
             string href = htmlDocument.DocumentNode.SelectSingleNode("//td[@class=\"title\"]/a").Attributes["href"].Value;
             Uri myUri = new Uri("https://comic.naver.com" + href);
@@ -35,7 +40,7 @@ namespace WRforest.NWD
         /// </summary>
         /// <param name="htmlDocument"></param>
         /// <returns></returns>
-        public string GetWebtoonTitle(HtmlDocument htmlDocument)
+        public string GetWebtoonTitle()
         {
             return htmlDocument.DocumentNode.SelectSingleNode("//*[@property=\"og:title\"]").Attributes["content"].Value;
         }
@@ -46,7 +51,7 @@ namespace WRforest.NWD
         /// </summary>
         /// <param name="htmlDocument"></param>
         /// <returns></returns>
-        public string GetEpisodeTitle(HtmlDocument htmlDocument)
+        public string GetEpisodeTitle()
         {
             return htmlDocument.DocumentNode.SelectSingleNode("//*[@property=\"og:description\"]").Attributes["content"].Value;
         }
@@ -57,7 +62,7 @@ namespace WRforest.NWD
         /// </summary>
         /// <param name="htmlDocument"></param>
         /// <returns></returns>
-        public string GetEpisodeDate(HtmlDocument htmlDocument)
+        public string GetEpisodeDate()
         {
             return htmlDocument.DocumentNode.SelectSingleNode("//*[@class=\"date\"]").InnerText;
         }
@@ -69,7 +74,7 @@ namespace WRforest.NWD
         /// <param name="htmlDocument"></param>
         /// <code> htmlDocument : https://comic.naver.com/webtoon/detail.nhn?titleId={0} no={1} </code>
         /// <returns></returns>
-        public string[] GetComicContentImageUrls(HtmlDocument htmlDocument)
+        public string[] GetComicContentImageUrls()
         {
             List<string> urls = new List<string>();
             HtmlNodeCollection htmlNodes = htmlDocument.DocumentNode.SelectNodes("//*[@alt=\"comic content\"]");
@@ -92,7 +97,7 @@ namespace WRforest.NWD
         /// </summary>
         /// <param name="htmlDocument"></param>
         /// <returns></returns>
-        public string GetCurrentEpisodeNo(HtmlDocument htmlDocument)
+        public string GetCurrentEpisodeNo()
         {
             string href = htmlDocument.DocumentNode.SelectSingleNode("//*[@property=\"og:url\"]").Attributes["content"].Value;
             var url = href.Replace("amp;", "&");
@@ -107,7 +112,7 @@ namespace WRforest.NWD
         /// </summary>
         /// <param name="htmlDocument"></param>
         /// <returns></returns>
-        public (string title, string titleId)[] GetWebtoonList(HtmlDocument htmlDocument, string weekDay)
+        public (string title, string titleId)[] GetWebtoonList(string weekDay)
         {
             //반환할 배열 초기화
             List<(string title, string titleId)> list = new List<(string title, string titleId)>();
