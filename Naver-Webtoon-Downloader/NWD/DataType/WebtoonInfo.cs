@@ -75,6 +75,8 @@ namespace WRforest.NWD.DataType
         /// <returns></returns>
         public int GetLastEpisodeNo()
         {
+            if (Episodes.Keys.Count == 0)
+                return 0;
             return Episodes.Keys.Max();
         }
         public int GetImageCount()
