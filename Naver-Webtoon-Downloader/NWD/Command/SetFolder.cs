@@ -28,23 +28,22 @@ namespace WRforest.NWD.Command
                 System.IO.DirectoryInfo info;
                 try
                 {
-                    IO.Print($"존재하지 않는 폴더입니다.  생성합니다");
                     info = System.IO.Directory.CreateDirectory(path);
                 }
                 catch(Exception e)
                 {
-                    IO.Print(e.Message);
-                    IO.Print("실패하였습니다. 경로가 잘못되었거나 접근 권한이 존재하지 않습니다.");
+                    IO.PrintError(e.Message);
                     return;
                 }
-
+                IO.Print($"폴더를 생성하였습니다.");
                 config.DefaultDownloadDirectory = info.FullName;
                 IO.Print($"$${config.DefaultDownloadDirectory}$green$를 기본 다운로드 폴더로 설정합니다.");
             }
             Console.Write(" ");
             int currpos = Console.CursorTop;
             Console.SetCursorPosition(0, Program.DFDFcursorPosition);
-            IO.Print($"            현재 기본 다운로드 폴더$${config.DefaultDownloadDirectory}$green$\r\n\r\n");
+            Console.Write("\r" + new string(' ', Console.BufferWidth - 1) + "\r");
+            IO.Print($"            현재 기본 다운로드 폴더 $${config.DefaultDownloadDirectory}$green$\r\n\r\n");
             Console.SetCursorPosition(0, currpos);
             Console.WriteLine();
             IO.WriteTextFile("Config", "config.json", config.ToJsonString());
