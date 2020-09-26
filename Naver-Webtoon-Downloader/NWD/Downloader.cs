@@ -5,6 +5,7 @@ using System.Linq;
 using System.Net;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Threading;
 using System.Threading.Tasks;
 using WRforest.NWD.DataType;
 using WRforest.NWD.Key;
@@ -26,10 +27,12 @@ namespace WRforest.NWD
             fileNameBuilder = new FileNameBuilder(webtoonInfo, config);
         }
 
-        private async Task SaveFileAsync(string path, byte[] data)
+        private async Task SaveFileAsync(string directory, string filename, byte[] data)
         {
+            if (!Directory.Exists(directory))
+                Directory.CreateDirectory(directory);
             //File.WriteAllBytesAsync()
-            using(FileStream fs=new FileStream(path, FileMode.Create, FileAccess.Write))
+            using (FileStream fs=new FileStream(directory+"\\"+filename, FileMode.Create, FileAccess.Write))
             {
                 await fs.WriteAsync(data, 0, data.Length);
             }
@@ -51,13 +54,24 @@ namespace WRforest.NWD
         /// <param name="ProgressTextFormat"></param>
         public async Task DownloadAsync(ImageKey[] imageKeys, IProgress<string> progress, string ProgressTextFormat)
         {
+
             List<Task> tasks = new List<Task>();
             long size = 0;
             for (int i = 0; i < imageKeys.Length; i++)
             {
-                var downloadTask = agent.DownloadWebtoonImageAsync(webtoonInfo.Episodes[imageKeys[i].EpisodeNo].EpisodeImageUrls[imageKeys[i].ImageIndex]);
-                byte[] buff = await downloadTask;
-                size += buff.Length;
+                byte[] buff;
+                try
+                {
+                    buff = agent.DownloadWebtoonImage(webtoonInfo.Episodes[imageKeys[i].EpisodeNo].EpisodeImageUrls[imageKeys[i].ImageIndex]);
+                    size += buff.Length;
+                }
+                catch
+                {
+                    progress.Report("\r\n다운로드 오류가 발생했습니다. 5초뒤 다음 파일로 건너뜁니다.");
+                    Thread.Sleep(5000);
+                    continue;
+                }
+
                 progress.Report(string.Format(ProgressTextFormat,
                     webtoonInfo.WebtoonTitle,
                     webtoonInfo.WebtoonTitleId,
@@ -70,7 +84,7 @@ namespace WRforest.NWD
                     fileNameBuilder.BuildImageFileName(imageKeys[i]),
                     (double)size / 1048576
                     ));
-                tasks.Add(SaveFileAsync(fileNameBuilder.BuildImageFileFullPath(imageKeys[i]), buff));
+                tasks.Add(SaveFileAsync(fileNameBuilder.BuildImageFileFullDirectory(imageKeys[i]), fileNameBuilder.BuildImageFileName(imageKeys[i]), buff));
             }
             await Task.WhenAll(tasks);
             return;
@@ -113,9 +127,9 @@ namespace WRforest.NWD
                 progress.Report(string.Format(ProgressTextFormat,
                                webtoonInfo.WebtoonTitle,
                                webtoonInfo.WebtoonTitleId,
-                              (episodeNo).ToString("D" + latestEpisodeNo.ToString().Length.ToString()),
+                              (episodeNo+1).ToString("D" + latestEpisodeNo.ToString().Length.ToString()),
                              latestEpisodeNo,
-                             (decimal)(episodeNo) / latestEpisodeNo,
+                             (decimal)(episodeNo+1) / latestEpisodeNo,
                              webtoonInfo.Episodes[episodeNo].EpisodeDate,
                              webtoonInfo.Episodes[episodeNo].EpisodeTitle));
             }

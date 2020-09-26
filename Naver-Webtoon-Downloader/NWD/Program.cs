@@ -5,7 +5,7 @@ using System.Net;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using WRforest.NWD.Parser;
+using WRforest.NWD;
 using WRforest.NWD.Command;
 
 namespace WRforest.NWD
@@ -41,17 +41,15 @@ namespace WRforest.NWD
             //IO.Print("                merge $$183559$green$ $$20853$green$ $$703846$green$ ");
             //IO.Print("            주의사항)  ");
             //IO.Print("");
-            IO.Print("            set -[$$configname$yellow$] [$$configvalue$green$] / [$$configname$yellow$]을/를 [$$configvalue$green$]로 설정합니다.");
-            IO.Print("            예) set -$$downloadpath$yellow$ $$d\\webtoons$green$ ");
-            IO.Print("");
-            IO.Print(" \r\n 키보드의 ↑ ↓ 버튼으로 이전에 입력했던 값을 불러올 수 있습니다. 프로그램 종료시 초기화됩니다.");
+            //IO.Print("            set -[$$configname$yellow$] [$$configvalue$green$] / [$$configname$yellow$]을/를 [$$configvalue$green$]로 설정합니다.");
+            //IO.Print("            예) set -$$downloadpath$yellow$ $$d\\webtoons$green$ ");
+            //IO.Print("");
+            //IO.Print(" \r\n 키보드의 ↑ ↓ 버튼으로 이전에 입력했던 값을 불러올 수 있습니다. 프로그램 종료시 초기화됩니다.");
             IO.Print(new string('-', 100));
             cursorPosition = Console.CursorTop;
 
             string configFolderPath = "Config";
             string configFileName = "config.json";
-            string xPathConfigFileName = "xpath.json";
-            Parser.XPath xPath;
             Config config;
             if (IO.Exists(configFolderPath, configFileName))
             {
@@ -62,20 +60,7 @@ namespace WRforest.NWD
                 config = new Config();
                 IO.WriteTextFile(configFolderPath, configFileName, config.ToJsonString());
             }
-            if (IO.Exists(configFolderPath, xPathConfigFileName))
-            {
-                xPath = new Parser.XPath(IO.ReadTextFile(configFolderPath, xPathConfigFileName));
-            }
-            else
-            {
-                xPath = new Parser.XPath();
-                IO.WriteTextFile(configFolderPath, xPathConfigFileName, xPath.ToJsonString());
-            }
-            Parser.Parser.Instance.SetXPath(xPath);
-            Downloader.SetConfig(config);
-            Downloader.ProgressChangedEvent += PrintProgess;
-            CommandManager command = new CommandManager();
-            string[] commands = command.GetCommandList(); 
+            CommandManager command = new CommandManager(config);
 
 
             while (true)
@@ -135,14 +120,6 @@ namespace WRforest.NWD
                 IO.Print("\r\n $$버전 업데이트를 확인할 수 없습니다.$red$");
             }
         }
-        public static void PrintProgess(string ProgressText)
-        {
-            int currentPosition = Console.CursorTop;
-            Console.SetCursorPosition(0, currentPosition);
-            Console.Write("\r" + new string(' ', Console.BufferWidth - 1) + "\r");
-            
-            IO.Print(ProgressText, false, true);//i = 0;
-            Console.SetCursorPosition(0, currentPosition);
-        }
+
     }
 }
