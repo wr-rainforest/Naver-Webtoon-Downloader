@@ -21,7 +21,7 @@
     
 [다운로드](https://github.com/wr-rainforest/Naver-Webtoon-Downloader/releases/download/v2.0.54.13/Naver-Webtoon-Downloader.v2.0.54.13.zip)   
     
-CA인증서가 없어서 윈도우 PC 보호 창이 표시됩니다. 해당 메세지는 프로그램이 위험하다는 뜻이 아닙니다.    
+CA인증서가 없어서 윈도우 PC 보호 창이 표시됩니다. 해당 메세지는 프로그램이 위험하다는 의미가 아닙니다.    
 [Windows Defender SmartScreen FAQ](https://fb.smartscreen.microsoft.com/smartscreenfaq.aspx)
 ```
 이 경고는 파일이 악성이고 내 컴퓨터에 해를 끼칠 것이라는 의미인가요?
