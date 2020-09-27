@@ -41,7 +41,7 @@ namespace WRforest.NWD.Command
             List<string> titles = new List<string>();
             for (int i = 0; i < args.Length; i++)
             {
-                if (!int.TryParse(args[0], out _))
+                if (!int.TryParse(args[i], out _))
                 {
                     IO.PrintError("titleId는 숫자입니다. : " + args[i]);
                     return;
