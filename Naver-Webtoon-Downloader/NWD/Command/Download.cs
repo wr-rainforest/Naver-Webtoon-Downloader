@@ -14,20 +14,11 @@ namespace WRforest.NWD.Command
     {
         Agent agent;
         Parser parser;
-        IProgress<string> downloaderProgress;
+
         public Download(Config config) : base(config)
         {
             agent = new Agent();
             parser = new Parser(agent);
-            downloaderProgress = new Progress<string>(msg => PrintProgess(msg));
-        }
-        private void PrintProgess(string ProgressText)
-        {
-            Console.Write(" ");
-            var curp = Console.CursorTop;
-            Console.Write("\r" + new string(' ', Console.BufferWidth-1) + "\r");
-            IO.Print(ProgressText, false, true);//i = 0;
-            Console.SetCursorPosition(0, curp);
         }
 
         public override void Start(params string[] args)
@@ -73,7 +64,7 @@ namespace WRforest.NWD.Command
                     if (latest != last)
                     {
                         IO.Print(string.Format("{4}. {0}($${1}$cyan$) URl 캐시를 업데이트합니다.. [no($${2}$cyan$) ~ no($${3}$cyan$)]", webtoonInfo.WebtoonTitle, keys[i].TitleId, last + 1, latest, i + 1), true, true);
-                        downloader.UpdateWebtoonInfo((i + 1).ToString() + ". {0}($${1}$cyan$) [{2}/{3}] ($${4:P}$green$) [{5}]", downloaderProgress);
+                        downloader.UpdateWebtoonInfo((i + 1).ToString() + ". {0}($${1}$cyan$) [{2}/{3}] ($${4:P}$green$) [{5}]", progress);
                         Console.WriteLine();
                         IO.Print(string.Format("{2}. {0}($${1}$cyan$) URl 캐시에 업데이트된 회차를 추가하였습니다.", webtoonInfo.WebtoonTitle, keys[i].TitleId, i + 1), true, true);
                     }
@@ -93,7 +84,7 @@ namespace WRforest.NWD.Command
                     webtoonInfo = new WebtoonInfo(keys[i], titles[i]);
                     downloader = new Downloader(webtoonInfo, config);
                     IO.Print(string.Format("{2}. {0}($${1}$cyan$) URl 캐시를 생성합니다.", webtoonInfo.WebtoonTitle, keys[i].TitleId, i + 1), true, true);
-                    downloader.UpdateWebtoonInfo((i + 1).ToString() + ". {0}($${1}$cyan$) [{2}/{3}] ($${4:P}$green$) [{5}]", downloaderProgress);
+                    downloader.UpdateWebtoonInfo((i + 1).ToString() + ". {0}($${1}$cyan$) [{2}/{3}] ($${4:P}$green$) [{5}]", progress);
                     Console.WriteLine(""); 
                     IO.Print(string.Format("{2}. {0}($${1}$cyan$) URl 캐시를 생성하였습니다..", webtoonInfo.WebtoonTitle, keys[i].TitleId, i + 1), true, true);
                     
@@ -104,11 +95,10 @@ namespace WRforest.NWD.Command
                 if (imageKeys.Length == 0)
                 {
                     IO.Print(string.Format("{2}. {0}($${1}$cyan$) 모든 이미지가 다운로드되었습니다..추가로 다운로드할 이미지가 존재하지 않습니다.", webtoonInfo.WebtoonTitle, keys[i].TitleId, i + 1), true, true);
-                    IO.Print("");
                     return;
                 }
                 IO.Print(string.Format("{2}. {0}($${1}$cyan$) 다운로드를 시작합니다. ", webtoonInfo.WebtoonTitle, keys[i].TitleId, i + 1), true, true);
-                var task = Task.Run(() => downloader.DownloadAsync(imageKeys, (i + 1).ToString() + ". {0}($${1}$cyan$) [{2}/{3}] ($${9:0.00}$blue$ MB) ($${4:P}$green$) [{5}]", downloaderProgress));
+                var task = Task.Run(() => downloader.DownloadAsync(imageKeys, (i + 1).ToString() + ". {0}($${1}$cyan$) [{2}/{3}] ($${9:0.00}$blue$ MB) ($${4:P}$green$) [{5}]", progress));
                 task.Wait();
                 Console.WriteLine();
                 IO.Print(string.Format("{2}. {0}($${1}$cyan$) 다운로드 완료", webtoonInfo.WebtoonTitle, keys[i].TitleId, i + 1), true, true);
