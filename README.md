@@ -15,13 +15,20 @@
 7. [문제 해결하기](#7-문제-해결하기)  
 
 ## 1. 프로그램 개요
-[다운로드](https://github.com/wr-rainforest/Naver-Webtoon-Downloader/releases/download/v2.0.54.13/Naver-Webtoon-Downloader.v2.0.54.13.zip)   
-(인증서 서명이 없어서 윈도우 PC 보호 창이 뜹니다. 코드가 다 공개되어 있는 프로그램으로 바이러스가 존재하지 않습니다.)    
-[Windows의 PC 보호 메세지 해결](https://github.com/wr-rainforest/Naver-Webtoon-Downloader/wiki/%22Windows%EC%9D%98-PC-%EB%B3%B4%ED%98%B8%22-%EC%B0%BD%EC%9D%B4-%EB%9C%A8%EB%8A%94-%EA%B2%BD%EC%9A%B0)
-   
+  
 [![GitHub release (latest by date)](https://img.shields.io/github/v/release/wr-rainforest/Naver-Webtoon-Downloader?label=latest&style=flat-square)](https://github.com/wr-rainforest/Naver-Webtoon-Downloader/releases/latest)
 [![GitHub All Releases](https://img.shields.io/github/downloads/wr-rainforest/Naver-Webtoon-Downloader/total?label=Downloades&style=flat-square)](https://github.com/wr-rainforest/Naver-Webtoon-Downloader/releases)   
     
+[다운로드](https://github.com/wr-rainforest/Naver-Webtoon-Downloader/releases/download/v2.0.54.13/Naver-Webtoon-Downloader.v2.0.54.13.zip)   
+    
+CA인증서가 없어서 윈도우 PC 보호 창이 표시됩니다. 해당 메세지는 프로그램이 위험하다는 뜻이 아닙니다.    
+[Windows Defender SmartScreen FAQ](https://fb.smartscreen.microsoft.com/smartscreenfaq.aspx)
+```
+이 경고는 파일이 악성이고 내 컴퓨터에 해를 끼칠 것이라는 의미인가요?
+*아니요* - 응용 프로그램 신뢰도 경고 표시는 악성코드에 감염된 다운로드 상태를 보여주는 것이 아니라 일반 Internet Explorer, Microsoft Edge 및 Windows 사용자가 악성 코드에 감염될 가능성이 높은 다운로드 상태를 보여줍니다.
+```
+[Windows의 PC 보호 메세지 해결(클릭)](https://github.com/wr-rainforest/Naver-Webtoon-Downloader/wiki/%22Windows%EC%9D%98-PC-%EB%B3%B4%ED%98%B8%22-%EC%B0%BD%EC%9D%B4-%EB%9C%A8%EB%8A%94-%EA%B2%BD%EC%9A%B0) 방식을 통해 별다른 설정 없이 바로 실행이 가능합니다.
+ 
  - c#으로 제작된 웹툰 다운로더입니다. [직접 빌드하기](https://github.com/wr-rainforest/Naver-Webtoon-Downloader/wiki/Build)   
  - 한 폴더에 하나의 회차를 저장합니다. 웹툰명, 회차 제목까지 그대로 저장합니다.    
  - 다운로드된 파일을 병합하여 하나의 이미지로 저장할 수 있습니다.
@@ -181,11 +188,15 @@ config.json 파일 내용
 해당 특수문자들은 윈도우에서 파일/폴더명으로 사용이 불가능한 문자들로, 동일한 모양의 전각 문자 `\`　`／`　`：`　`＊`　`？`　`"`　`＜`　`＞`　`｜`로 치환되어 저장됩니다.    
     
 만약 회차 제목이 `.`(반각 온점) 으로 끝난다면 해당 온점은 전각 온점으로 치환됩니다.   
-윈도우는 파일/폴더명에 온점을 사용할 수 있도록 하지만, 폴더의 마지막의 온점은 모두 잘라냅니다?
+윈도우는 파일/폴더명에 온점을 사용할 수 있도록 하지만, 폴더의 마지막의 온점은 모두 잘라냅니다.
   
   
    
 ## 4. 릴리즈 정보
+- __v2.0 (54.13)__
+  - 업데이트 내용
+    - 이미지 병합 기능이 추가되었습니다. 
+    - 다운로드 폴더 설정이 가능해졌습니다.
 - __v1.1 (6.1)__
   - 업데이트 내용
     - 다운로드시 마지막 회차를 누락하는 버그를 수정하였습니다.
