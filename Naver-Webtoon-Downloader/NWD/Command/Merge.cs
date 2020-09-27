@@ -32,10 +32,15 @@ namespace WRforest.NWD.Command
             }
             if (!IO.Exists("Cache", args[0] + ".json"))
             {
-                IO.Print($"Cache/{args[0]}.json 파일을 찾을 수 없습니다.") ;
+                IO.Print($"$$Error : Cache/{args[0]}.json 파일을 찾을 수 없습니다.$red$") ;
+                IO.Print("");
                 IO.Print($"Merge는 이미 다운로드된 이미지를 합쳐서 새로운 파일로 저장하는 커맨드입니다.");
-                IO.Print($"download $${args[0]}$green$ 로 먼저 이미지를 다운로드 한 후에 merge $${ args[0]}$green$ 을/를 사용해 주세요.");
-                IO.Print($"이미 다운로드된 웹툰임에도 이 메세지가 나타난다면 download $${args[0]}$green$ 로 캐시파일 생성 후에 merge $${ args[0]}$green$ 을/를 사용해 주세요.");
+                IO.Print("");
+                IO.Print($"download $${args[0]}$green$ 으로 먼저 이미지를 다운로드 한 후에 merge $${ args[0]}$green$ 를 사용해 주세요.");
+                IO.Print("");
+                IO.Print($"이미 다운로드된 웹툰임에도 이 메세지가 나타난다면, 캐시파일을 새로 생성해야 합니다.");
+                IO.Print("");
+                IO.Print($"download $${args[0]}$green$ 로 캐시파일을 생성할 수 있습니다.");
                 return;
             }
             var webtoonInfo = JsonConvert.DeserializeObject<WebtoonInfo>(IO.ReadTextFile("Cache", args[0] + ".json"));
@@ -45,7 +50,8 @@ namespace WRforest.NWD.Command
             var tuple = downloader.GetDownloadedImagesInformation();
             if(tuple.downloadedImageCount!=webtoonInfo.GetImageCount())
             {
-                IO.Print(string.Format("{0}($${1}$cyan$) 누락된 이미지 $${2}$blue$장이 존재합니다. download $${1}$green$ 로 다운로드하세요.  ", webtoonInfo.WebtoonTitle, args[0], tuple.downloadedImageCount, webtoonInfo.GetImageCount(), true, true));
+                IO.Print("");
+                IO.Print(string.Format("{0}($${1}$cyan$) :누락된 이미지 $${2}$blue$장이 존재합니다. download $${1}$green$ 로 모든 다운로드를 마쳐주세요.  ", webtoonInfo.WebtoonTitle, args[0], webtoonInfo.GetImageCount() - tuple.downloadedImageCount, true, true));
                 return;
             }
             IO.Print(string.Format("{0}($${1}$cyan$) 총 $${2}$cyan$장 ($${3:0.00}$blue$ MB) 병합을 시작합니다.  ", webtoonInfo.WebtoonTitle, args[0], tuple.downloadedImageCount, (double)tuple.downloadedImagesSize / 1048576), true, true);
