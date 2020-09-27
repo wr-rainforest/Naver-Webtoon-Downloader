@@ -45,7 +45,6 @@ namespace WRforest.NWD.Command
             Console.Write("\r" + new string(' ', Console.BufferWidth - 1) + "\r");
             IO.Print($"            현재 기본 다운로드 폴더 $${config.DefaultDownloadDirectory}$green$\r\n\r\n");
             Console.SetCursorPosition(0, currpos);
-            Console.WriteLine();
             IO.WriteTextFile("Config", "config.json", config.ToJsonString());
         }
     }

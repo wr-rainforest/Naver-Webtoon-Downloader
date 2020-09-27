@@ -55,7 +55,7 @@ namespace WRforest.NWD.Command
 
                 }
             }
-            Console.WriteLine("\r\n");
+            Console.WriteLine("");
         }
     }
 }

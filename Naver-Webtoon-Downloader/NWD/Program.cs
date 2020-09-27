@@ -78,6 +78,7 @@ namespace WRforest.NWD
                 if (string.IsNullOrWhiteSpace(userInput))
                 {
                     IO.PrintError("명령어를 입력해주세요.");
+                    Console.WriteLine();
                     continue;
                 }
                 string[] split = userInput.Trim().Split(' ');
@@ -86,10 +87,12 @@ namespace WRforest.NWD
                 {
                     list.RemoveAt(0);
                     command.Start(split[0], list.ToArray());
+                    Console.WriteLine();
                 }
                 else
                 {
                     IO.PrintError("존재하지 않는 명령어입니다.");
+                    Console.WriteLine();
                 }
             }
         }
