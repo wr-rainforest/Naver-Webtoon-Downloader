@@ -21,13 +21,8 @@
     
 [다운로드](https://github.com/wr-rainforest/Naver-Webtoon-Downloader/releases/download/v2.0.54.13/Naver-Webtoon-Downloader.v2.0.54.13.zip)   
     
-CA인증서가 없어서 윈도우 PC 보호 창이 표시됩니다. 해당 메세지는 프로그램이 위험하다는 의미가 아닙니다.    
-[Windows Defender SmartScreen FAQ](https://fb.smartscreen.microsoft.com/smartscreenfaq.aspx)
-```
-이 경고는 파일이 악성이고 내 컴퓨터에 해를 끼칠 것이라는 의미인가요?
-*아니요* - 응용 프로그램 신뢰도 경고 표시는 악성코드에 감염된 다운로드 상태를 보여주는 것이 아니라 일반 Internet Explorer, Microsoft Edge 및 Windows 사용자가 악성 코드에 감염될 가능성이 높은 다운로드 상태를 보여줍니다.
-```
-[Windows의 PC 보호 메세지 해결(클릭)](https://github.com/wr-rainforest/Naver-Webtoon-Downloader/wiki/%22Windows%EC%9D%98-PC-%EB%B3%B4%ED%98%B8%22-%EC%B0%BD%EC%9D%B4-%EB%9C%A8%EB%8A%94-%EA%B2%BD%EC%9A%B0) 방식을 통해 별다른 설정 없이 바로 실행이 가능합니다.
+CA인증서가 없어서 윈도우 PC 보호 창이 표시됩니다.   
+[Windows의 PC 보호 메세지 해결(클릭)](https://github.com/wr-rainforest/Naver-Webtoon-Downloader/wiki/%22Windows%EC%9D%98-PC-%EB%B3%B4%ED%98%B8%22-%EC%B0%BD%EC%9D%B4-%EB%9C%A8%EB%8A%94-%EA%B2%BD%EC%9A%B0) 을 통해 별다른 설정 없이 바로 실행이 가능합니다.
  
  - c#으로 제작된 웹툰 다운로더입니다. [직접 빌드하기](https://github.com/wr-rainforest/Naver-Webtoon-Downloader/wiki/Build)   
  - 한 폴더에 하나의 회차를 저장합니다. 웹툰명, 회차 제목까지 그대로 저장합니다.    
