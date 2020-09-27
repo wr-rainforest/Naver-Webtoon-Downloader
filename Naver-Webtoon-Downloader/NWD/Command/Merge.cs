@@ -5,6 +5,7 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using WRforest.NWD.DataType;
 using WRforest.NWD.Key;
@@ -48,7 +49,7 @@ namespace WRforest.NWD.Command
                 return;
             }
             IO.Print(string.Format("{0}($${1}$cyan$) 총 $${2}$cyan$장 ($${3:0.00}$blue$ MB) 병합을 시작합니다.  ", webtoonInfo.WebtoonTitle, args[0], tuple.downloadedImageCount, (double)tuple.downloadedImagesSize / 1048576), true, true);
-
+            Thread.Sleep(500);
             FileNameBuilder fileNameBuilder = new FileNameBuilder(webtoonInfo, config);
             var episodeNoList = webtoonInfo.Episodes.Keys.ToArray();
             string webtoonDirectory = config.DefaultDownloadDirectory + "\\" + fileNameBuilder.BuildWebtoonDirectoryName(new WebtoonKey(args[0])) + " - merged";
@@ -63,13 +64,12 @@ namespace WRforest.NWD.Command
             for (int i = 0; i < episodeNoList.Length; i++)
             {
                 var imageCount = webtoonInfo.Episodes[episodeNoList[i]].EpisodeImageUrls.Length;
-                Key.EpisodeKey episodeKey = new Key.EpisodeKey(args[0], episodeNoList[0]);
+                Key.EpisodeKey episodeKey = new Key.EpisodeKey(args[0], episodeNoList[i]);
                 string episodeFilePath = webtoonDirectory + "\\" + fileNameBuilder.BuildEpisodeDirectoryName(episodeKey)+".jpg" ;
                 if (File.Exists(episodeFilePath))
                 {
                     continue;
                 }
-                progress.Report(string.Format("{0}($${1}$cyan$ $${2}$cyan$ 장 병합 )", webtoonInfo.WebtoonTitle, args[0], webtoonInfo.Episodes[episodeNoList[i]].EpisodeImageUrls.Length+1));
                 if (imageCount==1)
                 {
                     File.Copy(fileNameBuilder.BuildImageFileFullPath(new ImageKey(args[0], episodeNoList[i], 0)), episodeFilePath, true) ;
@@ -82,24 +82,36 @@ namespace WRforest.NWD.Command
                 }
                 byte[]buff = MergeImages(webtoonImagePathList);
                 File.WriteAllBytes(episodeFilePath, buff);
+                progress.Report(string.Format("{0}($${1}$cyan$) [{3}/{4}] ($${5:P}$green$)  $${2}$cyan$장을 병합하였습니다. ", webtoonInfo.WebtoonTitle, args[0], webtoonInfo.Episodes[episodeNoList[i]].EpisodeImageUrls.Length + 1,i+1, episodeNoList.Length,(double)(i+1)/episodeNoList.Length));
+                GC.Collect();//
             }
+            Thread.Sleep(700);
+            Console.WriteLine("");
 
         }
-        private byte[] MergeImages(List<string> webtoonImagePathList)
+        private byte[] MergeImages(List<string> imagePathList)
         {
             ImageConverter imageConverter = new ImageConverter();
             List<Bitmap> images = new List<Bitmap>();
-            for(int i=0;i< webtoonImagePathList.Count;i++)
+            for(int i=0;i< imagePathList.Count;i++)
             {
-                images.Add(new Bitmap(webtoonImagePathList[i]));
+                images.Add(new Bitmap(imagePathList[i]));
             }
-            int width = images.First().Width;
+            int maxwidth=0;
+            for(int i=0; i<imagePathList.Count;i++)
+            {
+                if (images[i].Width > maxwidth)
+                {
+                    maxwidth = images[i].Width;
+                }
+            }
+            int width = maxwidth;
             int height = 0;
             for (int i = 0; i < images.Count; i++)
             {
                 height += images[i].Height;
             }
-            Bitmap bitmap = new Bitmap(width, height);
+            Bitmap bitmap = new Bitmap(width, height, System.Drawing.Imaging.PixelFormat.Format24bppRgb);
             bitmap.SetResolution(images[0].HorizontalResolution, images[0].VerticalResolution);
 
             using (Graphics g = Graphics.FromImage(bitmap))
@@ -108,44 +120,19 @@ namespace WRforest.NWD.Command
                 for (int i = 0; i < images.Count; i++)
                 {
                     Bitmap image = images[i];
-                    image.SetResolution(images[0].HorizontalResolution, images[0].VerticalResolution);
+                    image.SetResolution(images[i].HorizontalResolution, images[i].VerticalResolution);
+
+                    if(maxwidth>image.Width)
+                    {
+                        g.DrawImage(image, (maxwidth - image.Width) / 2, height);
+                        height += image.Height;
+                        continue;
+                    }
                     g.DrawImage(image, 0, height);
                     height += image.Height;
-                    images[i].Dispose();//램
                 }
             }
             return (byte[])imageConverter.ConvertTo(bitmap, typeof(byte[]));
-        }
-        private byte[] MergeImages(List<byte[]> webtoonimages)
-        {
-            ImageConverter imageConverter = new ImageConverter();
-            List<Bitmap> images = new List<Bitmap>();
-            while(webtoonimages.Count==0)
-            {
-                images.Add(new Bitmap((Image)imageConverter.ConvertFrom(webtoonimages[0])));
-            }
-            int width = images.First().Width;
-            int height = 0;
-            for (int i = 0; i < images.Count; i++)
-            {
-                height += images[i].Height;
-            }
-            Bitmap bitmap2 = new Bitmap(width, height);
-            bitmap2.SetResolution(images[0].HorizontalResolution, images[0].VerticalResolution); // <-- Set explicit resolution on bitmap2
-                                                                                                 // Always put Graphics objects in a 'using' block.
-            using (Graphics g = Graphics.FromImage(bitmap2))
-            {
-                height = 0;
-                for (int i = 0; i < images.Count; i++)
-                {
-                    Bitmap image = images[i];
-                    image.SetResolution(images[0].HorizontalResolution, images[0].VerticalResolution); // <-- Set resolution equal to bitmap2
-                    g.DrawImage(image, 0, height);
-                    height += image.Height;
-                    images[i].Dispose();//램? dispose?
-                }
-            }
-            return (byte[])imageConverter.ConvertTo(bitmap2, typeof(byte[]));
         }
     }
 }

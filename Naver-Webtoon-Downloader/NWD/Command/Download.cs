@@ -102,7 +102,6 @@ namespace WRforest.NWD.Command
                 task.Wait();
                 Console.WriteLine();
                 IO.Print(string.Format("{2}. {0}($${1}$cyan$) 다운로드 완료", webtoonInfo.WebtoonTitle, keys[i].TitleId, i + 1), true, true);
-                Console.WriteLine();
             }
 
         }
