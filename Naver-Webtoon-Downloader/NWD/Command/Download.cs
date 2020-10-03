@@ -73,12 +73,21 @@ namespace WRforest.NWD.Command
                     {
                         IO.Print(string.Format("{2}. {0}($${1}$cyan$) 업데이트된 회차가 없습니다. ", webtoonInfo.WebtoonTitle, keys[i].TitleId, i + 1), true, true);
                     }
+                    if (string.IsNullOrWhiteSpace(webtoonInfo.WebtoonWriter))
+                    {
+                        EpisodeKey episodeKey = new EpisodeKey(keys[i].TitleId, 1);
+                        agent.LoadPage(episodeKey.BuildUrl());
+                        string webtoonWriter = parser.GetWebtoonWriter();
+                        webtoonInfo.WebtoonWriter = webtoonWriter;
+                    }
                     var tuple = downloader.GetDownloadedImagesInformation();
 
                     if (tuple.downloadedImageCount != 0)
                     {
                         IO.Print(string.Format("{4}. {0}($${1}$cyan$) 이미 다운로드된 이미지 $${2}$cyan$장 ($${3:0.00}$blue$ MB)  ", webtoonInfo.WebtoonTitle, keys[i].TitleId, tuple.downloadedImageCount, (double)tuple.downloadedImagesSize / 1048576, i + 1), true, true);
                     }
+
+
                 }
                 else
                 {
