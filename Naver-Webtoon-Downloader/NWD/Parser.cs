@@ -46,6 +46,17 @@ namespace WRforest.NWD
         }
 
         /// <summary>
+        /// <paramref name="htmlDocument"/>에서 웹툰작가 닉네임을 파싱합니다. 
+        /// <code> htmlDocument : https://comic.naver.com/webtoon/detail.nhn?titleId={0} no={1} </code>
+        /// </summary>
+        /// <param name="htmlDocument"></param>
+        /// <returns></returns>
+        public string GetWebtoonWriter()
+        {
+            return htmlDocument.DocumentNode.SelectSingleNode("//*[@name=\"itemWriterId\"]").Attributes["value"].Value;
+        }
+
+        /// <summary>
         /// <paramref name="htmlDocument"/>에서 회차 제목을 파싱합니다.
         /// <code> htmlDocument : https://comic.naver.com/webtoon/detail.nhn?titleId={0} no={1} </code>
         /// </summary>

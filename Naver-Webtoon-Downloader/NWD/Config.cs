@@ -61,7 +61,7 @@ namespace WRforest.NWD
         [JsonIgnore]
         private string episodeDirectoryNameFormat;
         /// <summary>
-        /// 저장할 회차의 폴더 이름 포맷을 설정합니다. {0~4}는 중복되거나 누락시킬 수 있습니다. {0~4}이외의 다른 숫자는 올 수 없습니다.
+        /// 저장할 회차의 폴더 이름 포맷을 설정합니다. {0~5}은/는 중복되거나 누락시킬 수 있습니다. {0~5}이외의 다른 숫자는 올 수 없습니다.
         /// <code>포맷 : {0}-{1:D4}-{2}-{3}-{4}</code>
         /// <code>기본값 : [{2}] {4}</code>
         /// <c>{0} : 웹툰의 titleId 입니다.</c>
@@ -69,6 +69,7 @@ namespace WRforest.NWD
         /// <code>{2} : 회차 업로드 날짜(date)입니다</code>
         /// <code>{3} : 웹툰 제목(title)입니다.</code>
         /// <code>{4} : 회차 제목(episodeTitle)입니다.</code>
+        /// <code>{5} : 작가 이름(WebtoonWriter)입니다.</code>
         /// </summary>
         public string EpisodeDirectoryNameFormat
         {
@@ -87,11 +88,12 @@ namespace WRforest.NWD
         [JsonIgnore]
         private string webtoonDirectoryNameFormat;
         /// <summary>
-        /// 저장할 웹툰의 폴더 이름 포맷을 설정합니다. {0~1}은 중복되거나 누락시킬 수 있습니다. {0~1}이외의 다른 숫자는 올 수 없습니다.
+        /// 저장할 웹툰의 폴더 이름 포맷을 설정합니다. {0~2}은/는 중복되거나 누락시킬 수 있습니다. {0~2}이외의 다른 숫자는 올 수 없습니다.
         /// <code>포맷 : {0}-{1}</code>
         /// <code>기본값 : {1}</code>
         /// <c>{0} : 웹툰의 titleId 입니다.</c>
         /// <code>{1} : 웹툰 제목(title)입니다.</code>
+        /// <code>{2} : 작가 이름(WebtoonWriter)입니다.</code>
         /// </summary>
         public string WebtoonDirectoryNameFormat
         {

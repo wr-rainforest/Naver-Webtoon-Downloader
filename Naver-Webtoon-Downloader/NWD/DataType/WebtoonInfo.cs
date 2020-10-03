@@ -41,7 +41,7 @@ namespace WRforest.NWD.DataType
         /// 웹툰작가 닉네임입니다.
         /// </summary>
         [JsonProperty(PropertyName = "webtoon_writer")]
-        public string WebtoonWriter { get; private set; }
+        public string WebtoonWriter { get; set; }
 
         /// <summary>
         /// 웹툰 회차 목록입니다.
