@@ -17,9 +17,14 @@
 ## 1. 프로그램 개요
   
 [![GitHub release (latest by date)](https://img.shields.io/github/v/release/wr-rainforest/Naver-Webtoon-Downloader?label=latest&style=flat-square)](https://github.com/wr-rainforest/Naver-Webtoon-Downloader/releases/latest)
+![GitHub release (latest by date including pre-releases)](https://img.shields.io/github/v/release/wr-rainforest/Naver-Webtoon-Downloader?include_prereleases&label=pre-release&style=flat-square)
 [![GitHub All Releases](https://img.shields.io/github/downloads/wr-rainforest/Naver-Webtoon-Downloader/total?label=Downloades&style=flat-square)](https://github.com/wr-rainforest/Naver-Webtoon-Downloader/releases)   
-    
-[다운로드](https://github.com/wr-rainforest/Naver-Webtoon-Downloader/releases/download/v2.0.54.13/Naver-Webtoon-Downloader.v2.0.54.13.zip)   
+     
+[v2.0.54.13](https://github.com/wr-rainforest/Naver-Webtoon-Downloader/releases/tag/v2.0.54.13)  
+[다운로드](https://github.com/wr-rainforest/Naver-Webtoon-Downloader/releases/download/v2.0.54.13/Naver-Webtoon-Downloader.v2.0.54.13.zip)    
+   
+[v2.0.57.2 Pre-elease](https://github.com/wr-rainforest/Naver-Webtoon-Downloader/releases/tag/v2.0.57.2)  
+[다운로드](https://github.com/wr-rainforest/Naver-Webtoon-Downloader/releases/download/v2.0.57.2/Naver-Webtoon-Downloader.v2.0.57.2.zip)   
     
 CA인증서가 없어서 윈도우 PC 보호 창이 표시됩니다.   
 [Windows의 PC 보호 메세지 해결(클릭)](https://github.com/wr-rainforest/Naver-Webtoon-Downloader/wiki/%22Windows%EC%9D%98-PC-%EB%B3%B4%ED%98%B8%22-%EC%B0%BD%EC%9D%B4-%EB%9C%A8%EB%8A%94-%EA%B2%BD%EC%9A%B0) 을 통해 별다른 설정 없이 바로 실행이 가능합니다.
