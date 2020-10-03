@@ -79,12 +79,14 @@ namespace WRforest.NWD
             string date = webtoonInfo.Episodes[episodeKey.EpisodeNo].EpisodeDate;
             string webtoonTitle = webtoonInfo.WebtoonTitle;
             string episodeTitle = webtoonInfo.Episodes[episodeKey.EpisodeNo].EpisodeTitle;
+            string webtoonWriter = webtoonInfo.WebtoonWriter;
             return string.Format(config.EpisodeDirectoryNameFormat,
                 titleId,
                 episodeNo,
                 date,
                 ReplaceFolderName(webtoonTitle),
-                ReplaceFolderName(episodeTitle));
+                ReplaceFolderName(episodeTitle),
+                ReplaceFolderName(webtoonWriter));
         }
 
         /// <summary>
@@ -96,9 +98,11 @@ namespace WRforest.NWD
         {
             string titleId = webtoonInfo.WebtoonTitleId;
             string webtoonTitle = webtoonInfo.WebtoonTitle;
+            string webtoonWriter = webtoonInfo.WebtoonWriter;
             return string.Format(config.WebtoonDirectoryNameFormat,
                 titleId,
-                ReplaceFolderName(webtoonTitle));
+                ReplaceFolderName(webtoonTitle),
+                ReplaceFolderName(webtoonWriter));
         }
 
         /// <summary>

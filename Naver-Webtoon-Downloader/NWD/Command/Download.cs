@@ -53,6 +53,7 @@ namespace WRforest.NWD.Command
                 Downloader downloader;
                 IO.Print("");
                 WebtoonInfo webtoonInfo;
+
                 if (IO.Exists("Cache", keys[i].TitleId + ".json"))
                 {
                     webtoonInfo = JsonConvert.DeserializeObject<WebtoonInfo>(IO.ReadTextFile("Cache", keys[i].TitleId + ".json"));
@@ -89,6 +90,15 @@ namespace WRforest.NWD.Command
                     IO.Print(string.Format("{2}. {0}($${1}$cyan$) URl 캐시를 생성하였습니다..", webtoonInfo.WebtoonTitle, keys[i].TitleId, i + 1), true, true);
                     
                 }
+
+                if (string.IsNullOrWhiteSpace(webtoonInfo.WebtoonWriter))
+                {
+                    EpisodeKey episodeKey = new EpisodeKey(keys[i].TitleId, 1);
+                    agent.LoadPage(episodeKey.BuildUrl());
+                    string webtoonWriter = parser.GetWebtoonWriter();
+                    webtoonInfo.WebtoonWriter = webtoonWriter;
+                }
+
                 IO.WriteTextFile("Cache", keys[i].TitleId + ".json", JsonConvert.SerializeObject(webtoonInfo));
 
                 ImageKey[] imageKeys = downloader.BuildImageKeysToDown();
