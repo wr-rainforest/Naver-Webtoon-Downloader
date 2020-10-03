@@ -3,7 +3,9 @@
 2. [간단한 사용방법](#2-간단한-사용방법)   
 　2.1. [최초 다운로드](#21-최초-다운로드)   
 　2.2. [업데이트된 회차 다운로드](#22-업데이트된-회차-다운로드)   
-　2.2. [삭제된/누락된 파일 다시 다운로드](#23-삭제된누락된-파일-다시-다운로드)    
+　2.3. [삭제된/누락된 파일 다시 다운로드](#23-삭제된누락된-파일-다시-다운로드)    
+　2.4. [이미지를 병합해 하나의 파일로 만들기](#24-이미지를-병합해-하나의-파일로-만들기)    
+　2.5. [기본 다운로드 폴더 변경하기](#25-기본-다운로드-폴더-변경하기)    
 3. [프로그램 상세](#3-프로그램-상세)   
 　3.1. [config.json 설정(기본 다운로드 폴더, 폴더명, 이미지 이름 포맷)](#31-configjson)   
 　3.2. [윈도우에서 파일/폴더명으로 사용 불가능한 문자의 처리](#32-윈도우에서-파일폴더명으로-사용-불가능한-문자의-처리)   
@@ -13,21 +15,27 @@
 7. [문제 해결하기](#7-문제-해결하기)  
 
 ## 1. 프로그램 개요
-[다운로드](https://github.com/wr-rainforest/Naver-Webtoon-Downloader/releases/download/v1.1.6.1/Naver-Webtoon-Downloader.v1.1.6.1.zip)(인증서 서명이 없어서 윈도우 PC 보호 창이 뜹니다. 창에서 '추가 정보' 클릭하시고 실행 누르시면 잘 돌아갑니다.)    
-   
+  
 [![GitHub release (latest by date)](https://img.shields.io/github/v/release/wr-rainforest/Naver-Webtoon-Downloader?label=latest&style=flat-square)](https://github.com/wr-rainforest/Naver-Webtoon-Downloader/releases/latest)
 [![GitHub All Releases](https://img.shields.io/github/downloads/wr-rainforest/Naver-Webtoon-Downloader/total?label=Downloades&style=flat-square)](https://github.com/wr-rainforest/Naver-Webtoon-Downloader/releases)   
     
-c#으로 제작된 웹툰 다운로더입니다.   
-한 폴더에 하나의 회차를 저장합니다.    
+[다운로드](https://github.com/wr-rainforest/Naver-Webtoon-Downloader/releases/download/v2.0.54.13/Naver-Webtoon-Downloader.v2.0.54.13.zip)   
+    
+CA인증서가 없어서 윈도우 PC 보호 창이 표시됩니다.   
+[Windows의 PC 보호 메세지 해결(클릭)](https://github.com/wr-rainforest/Naver-Webtoon-Downloader/wiki/%22Windows%EC%9D%98-PC-%EB%B3%B4%ED%98%B8%22-%EC%B0%BD%EC%9D%B4-%EB%9C%A8%EB%8A%94-%EA%B2%BD%EC%9A%B0) 을 통해 별다른 설정 없이 바로 실행이 가능합니다.
+ 
+ - c#으로 제작된 웹툰 다운로더입니다. [직접 빌드하기](https://github.com/wr-rainforest/Naver-Webtoon-Downloader/wiki/Build)   
+ - 한 폴더에 하나의 회차를 저장합니다. 웹툰명, 회차 제목까지 그대로 저장합니다.    
+ - 다운로드된 파일을 병합하여 하나의 이미지로 저장할 수 있습니다.
       
 ![ㅑㅡ2](/info/Image/v1.0-4.png)
+![ㅑㅡ2](/info/Image/merged.png)
       
           
 
 
 .Net Frmamework 4.7.2 이상 버전에서 동작합니다.    
-윈도우 2018년 4월 업데이트(버전 1803) 이후 버전에서는 런타임 추가 설치 없이도 실행이 가능합니다.     
+윈도우 2018년 4월 업데이트(버전 1803) 이후 버전에서는 별다른 설정 없이 바로 실행이 가능합니다.      
 [.Net Frmamework 4.7.2 다운로드](https://dotnet.microsoft.com/download/dotnet-framework/net472)    
     
     
@@ -102,6 +110,40 @@ c#으로 제작된 웹툰 다운로더입니다.
 [2020-09-25 06:57:44] : 1. 독립일기(748105) [14/14] (1.62 MB) (100.00%) [2020.08.26]
 [2020-09-25 06:57:44] : 1. 독립일기(748105) 다운로드 완료
 ```
+    
+### 2.4. 이미지를 병합해 하나의 파일로 만들기
+1. merge 명령어로 다운로드된 이미지를 하나로 합치는게 가능합니다. 합쳐진 이미지는 기본 다운로드 폴더의 "웹툰이름 - merged" 폴더에 저장됩니다.              
+병합된 이미지의 크기는 원본 이미지보다 더 커집니다.   
+
+    
+**주의사항!**   
+Merge는 이미 다운로드된 이미지를 합쳐서 새로운 파일로 저장하는 커맨드입니다. 합쳐진 파일을 다운로드를 하는 방식이 아닙니다.   
+기본 다운로드 폴더에 존재하지 않는 이미지는 **다운로드 받지 않은 이미지**로 취급합니다.  
+   
+예시 
+```
+[Command] : merge 748105
+[2020-09-27 09:59:24] : 독립일기(748105) 기본 다운로드 폴더 Download 에서 병합할 파일 확인..
+[2020-09-27 09:59:24] : 독립일기(748105) 총 440장 (49.05 MB) 병합을 시작합니다.
+[2020-09-27 10:00:08] : 독립일기(748105) [31/31] (100.00%)  15장을 병합하였습니다.
+```
+   
+### 2.5. 기본 다운로드 폴더 변경하기
+1. setfolder 명령어로 기본 다운로드 폴더 변경이 가능합니다. 해당 폴더가 존재하지 않으면 생성합니다.        
+
+예시 
+```
+[Command] : setfolder d:/Download
+폴더를 생성하였습니다.
+d:\Download를 기본 다운로드 폴더로 설정합니다
+```
+```
+[Command] : setfolder d:/Download
+d:/Download를 기본 다운로드 폴더로 설정합니다.
+해당 폴더에 접근 권한이 없을 경우 다운로드 도증 오류가 발생합니다.
+설정을 초기화하려면 프로그램 실행파일이 있는 폴더의 Config폴더를 삭제하세요.
+```
+   
 
 ## 3. 프로그램 상세
 ### 3.1. config.json  
@@ -141,11 +183,15 @@ config.json 파일 내용
 해당 특수문자들은 윈도우에서 파일/폴더명으로 사용이 불가능한 문자들로, 동일한 모양의 전각 문자 `\`　`／`　`：`　`＊`　`？`　`"`　`＜`　`＞`　`｜`로 치환되어 저장됩니다.    
     
 만약 회차 제목이 `.`(반각 온점) 으로 끝난다면 해당 온점은 전각 온점으로 치환됩니다.   
-윈도우는 파일/폴더명에 온점을 사용할 수 있도록 하지만, 폴더의 마지막의 온점은 모두 잘라냅니다?
+윈도우는 파일/폴더명에 온점을 사용할 수 있도록 하지만, 폴더의 마지막의 온점은 모두 잘라냅니다.
   
   
    
 ## 4. 릴리즈 정보
+- __v2.0 (54.13)__
+  - 업데이트 내용
+    - 이미지 병합 기능이 추가되었습니다. 
+    - 다운로드 폴더 설정이 가능해졌습니다.
 - __v1.1 (6.1)__
   - 업데이트 내용
     - 다운로드시 마지막 회차를 누락하는 버그를 수정하였습니다.
