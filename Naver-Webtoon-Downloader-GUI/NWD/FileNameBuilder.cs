@@ -80,7 +80,7 @@ namespace WRforest.NWD
             string webtoonTitle = webtoonInfo.WebtoonTitle;
             string episodeTitle = webtoonInfo.Episodes[episodeKey.EpisodeNo].EpisodeTitle;
             string webtoonWriter = webtoonInfo.WebtoonWriter;
-            return string.Format(ReplaceFolderName(config.EpisodeDirectoryNameFormat),
+            return string.Format(config.EpisodeDirectoryNameFormat,
                 titleId,
                 episodeNo,
                 date,
@@ -99,7 +99,7 @@ namespace WRforest.NWD
             string titleId = webtoonInfo.WebtoonTitleId;
             string webtoonTitle = webtoonInfo.WebtoonTitle;
             string webtoonWriter = webtoonInfo.WebtoonWriter;
-            return string.Format(ReplaceFolderName(config.WebtoonDirectoryNameFormat),
+            return string.Format(config.WebtoonDirectoryNameFormat,
                 titleId,
                 ReplaceFolderName(webtoonTitle),
                 ReplaceFolderName(webtoonWriter));

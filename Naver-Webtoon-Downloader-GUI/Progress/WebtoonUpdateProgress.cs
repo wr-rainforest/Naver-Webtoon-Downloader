@@ -30,8 +30,8 @@ namespace WRforest.Progress
 
         public void Report(object[] value)
         {
-            long position = (int)value[2];
-            long count = (int)value[3];
+            long position = (int)value[7];
+            long count = (int)value[8];
             string date = (string)value[5];
             string episodeTitle = (string)value[6];
             DownloadInfo.LastEpisodeInfo = $"[{date}] {episodeTitle}";

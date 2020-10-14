@@ -124,9 +124,10 @@ namespace WRforest.Model
         }
 
         public string TitleId;
-        public WebtoonDownloadInfo(string title, string writer, string lastEpisodeInfo, string status, double progress, string progressText, string size)
+        public WebtoonDownloadInfo(string title, string titleId, string writer, string lastEpisodeInfo, string status, double progress, string progressText, string size)
         {
             Title = title;
+            TitleId = titleId;
             Writer = writer;
             LastEpisodeInfo = lastEpisodeInfo;
             Status = status;

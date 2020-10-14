@@ -67,7 +67,7 @@
                         <ColumnDefinition Width="150" x:Name="StatusColumn"></ColumnDefinition>
                         <ColumnDefinition Width="280*" x:Name="ProgressColumn"></ColumnDefinition>
                         <ColumnDefinition Width="90" x:Name="SizeColumn"></ColumnDefinition>
-                        <ColumnDefinition Width="30" x:Name="RunPauseButtonColumn"></ColumnDefinition>
+                        <ColumnDefinition Width="0" x:Name="RunPauseButtonColumn"></ColumnDefinition>
                         <ColumnDefinition Width="30" x:Name="StopDeleteButtonColumn"></ColumnDefinition>
                         <ColumnDefinition Width="18" x:Name="MarginColumn"></ColumnDefinition>
                     </Grid.ColumnDefinitions>
@@ -89,6 +89,6 @@
                 </StackPanel>
             </ScrollViewer>
         </Grid>
-        <Label Name="Loading" Content="로딩중.." VerticalAlignment="Center" HorizontalAlignment="Center" Visibility="Visible" Panel.ZIndex="2"></Label>
+        <Label Name="Loading" Content="로딩중.." VerticalAlignment="Center" HorizontalAlignment="Center" Visibility="Hidden" Panel.ZIndex="2"></Label>
     </Grid>
 </Window>

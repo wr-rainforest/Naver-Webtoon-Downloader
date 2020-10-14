@@ -37,7 +37,7 @@ namespace WRforest.NWD
                 await fs.WriteAsync(data, 0, data.Length);
             }
         }
-
+#if Console
         /// <summary>
         /// <code>{0}:웹툰 제목</code>
         /// <code>{1}:웹툰 아이디</code>
@@ -153,8 +153,7 @@ namespace WRforest.NWD
             await Task.WhenAll(tasks);
             return;
         }
-
-        /// <summary>
+                /// <summary>
         /// "{0}({1}) [{2}/{3}] ({4:P}) [{5}]"
         /// <code>{0}:웹툰 제목</code>
         /// <code>{1}:웹툰 아이디</code>
@@ -198,8 +197,73 @@ namespace WRforest.NWD
                              webtoonInfo.Episodes[episodeNo].EpisodeTitle));
             }
         }
-
+#endif
 #if WPF
+        /// <summary>
+        /// <code>{0}:웹툰 제목</code>
+        /// <code>{1}:웹툰 아이디</code>
+        /// <code>{2}:현재 포지션</code>
+        /// <code>{3}:총 작업수</code>
+        /// <code>{4}:퍼센트</code>
+        /// <code>{5}:회차 날짜</code>
+        /// <code>{6}:회차 제목</code>
+        /// <code>{7}:이미지 인덱스</code>
+        /// <code>{8}:이미지 파일명</code>
+        /// <code>{9}:다운받은 메가바이트 용량</code>
+        /// <code>{10}:다운로드된 파일수</code>
+        /// <code>{11}:총 파일수</code>
+        /// </summary>
+        /// <param name="webtoonInfo"></param>
+        /// <param name="imageKeys"></param>
+        /// <param name="ProgressTextFormat"></param>
+        public async Task DownloadAsync(ImageKey[] imageKeys,IProgress<object[]> progress, CancellationToken cancellationToken)
+        {
+            int fileCount = webtoonInfo.GetImageCount();
+            int downloadedCount = fileCount - imageKeys.Length;
+            List<Task> tasks = new List<Task>();
+            long size = 0;
+            for (int i = 0; i < imageKeys.Length; i++)
+            {
+                if (cancellationToken.IsCancellationRequested)
+                {
+                    return;
+                }
+                byte[] buff;
+                try
+                {
+                    buff = agent.DownloadWebtoonImage(webtoonInfo.Episodes[imageKeys[i].EpisodeNo].EpisodeImageUrls[imageKeys[i].ImageIndex]);
+                    size += buff.Length;
+                    //400 => 헤더 용량 문제
+                    //403 => referer 추가
+                    //404 => todo 캐시 초기화 기능 추가
+                }
+                catch
+                {
+                    continue;
+                }
+
+                progress.Report(new object[] {
+                    webtoonInfo.WebtoonTitle,
+                    webtoonInfo.WebtoonTitleId,
+                    i + 1,
+                    imageKeys.Length,
+                    (double)(i + 1) / imageKeys.Length,
+                    webtoonInfo.Episodes[imageKeys[i].EpisodeNo].EpisodeDate,
+                    webtoonInfo.Episodes[imageKeys[i].EpisodeNo].EpisodeTitle,
+                    imageKeys[i].ImageIndex,
+                    fileNameBuilder.BuildImageFileName(imageKeys[i]),
+                    (double)size / 1048576,
+                    downloadedCount,
+                    fileCount
+                    });
+                downloadedCount++;
+                
+                tasks.Add(SaveFileAsync(fileNameBuilder.BuildImageFileFullDirectory(imageKeys[i]), fileNameBuilder.BuildImageFileName(imageKeys[i]), buff));
+            }
+            await Task.WhenAll(tasks);
+            return;
+        }
+#if false
         /// <summary>
         /// "{0}({1}) [{2}/{3}] ({4:P}) [{5}]"
         /// <code>{0}:웹툰 제목</code>
@@ -209,6 +273,7 @@ namespace WRforest.NWD
         /// <code>{4}:퍼센트</code>
         /// <code>{5}:회차 날짜</code>
         /// <code>{6}:회차 제목</code>
+        /// 
         /// </summary>
         /// <param name="webtoonInfo"></param>
         /// <param name="ProgressTextFormat"></param>
@@ -246,6 +311,7 @@ namespace WRforest.NWD
             }
             Thread.Sleep(500);
         }
+#endif
         /// <summary>
         /// "{0}({1}) [{2}/{3}] ({4:P}) [{5}]"
         /// <code>{0}:웹툰 제목</code>
@@ -255,6 +321,8 @@ namespace WRforest.NWD
         /// <code>{4}:퍼센트</code>
         /// <code>{5}:회차 날짜</code>
         /// <code>{6}:회차 제목</code>
+        /// <code>{7}:캐싱된 회차수</code>
+        /// <code>{8}:총 회차수</code>
         /// </summary>
         /// <param name="webtoonInfo"></param>
         /// <param name="ProgressTextFormat"></param>
