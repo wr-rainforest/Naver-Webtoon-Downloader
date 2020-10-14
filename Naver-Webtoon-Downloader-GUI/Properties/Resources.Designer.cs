@@ -81,12 +81,56 @@ namespace WRforest.Properties {
         }
         
         /// <summary>
+        ///   MIT License
+        ///
+        ///Copyright (c) 2020 wr-rainforest
+        ///
+        ///Permission is hereby granted, free of charge, to any person obtaining a copy
+        ///of this software and associated documentation files (the &quot;Software&quot;), to deal
+        ///in the Software without restriction, including without limitation the rights
+        ///to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+        ///copies of the Software, and to permit persons to whom the Software is
+        ///furnished to do so, subject to the following conditions:
+        ///
+        ///The above copyright [나머지 문자열은 잘림]&quot;;과(와) 유사한 지역화된 문자열을 찾습니다.
+        /// </summary>
+        internal static string License {
+            get {
+                return ResourceManager.GetString("License", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   System.Drawing.Bitmap 형식의 지역화된 리소스를 찾습니다.
         /// </summary>
         internal static System.Drawing.Bitmap Link_16x {
             get {
                 object obj = ResourceManager.GetObject("Link_16x", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   
+        ///*Newtonsoft.Json
+        ///https://www.newtonsoft.com/json
+        ///	MIT License (MIT)
+        ///
+        ///
+        ///*HtmlAgilityPack
+        ///https://html-agility-pack.net/
+        ///	The MIT License (MIT)
+        ///
+        ///*Microsoft.WindowsAPICodePack
+        ///https://github.com/aybe/Windows-API-Code-Pack-1.1
+        ///MICROSOFT SOFTWARE LICENSE TERMS
+        ///MICROSOFT WINDOWS API CODE PACK FOR MICROSOFT .NET FRAMEWORK
+        ///___________________________________________________
+        ///These license terms are an agreement between Microsoft Corporation (or based on where you live, one of its affiliates) and you. [나머지 문자열은 잘림]&quot;;과(와) 유사한 지역화된 문자열을 찾습니다.
+        /// </summary>
+        internal static string OpenSourceLicence {
+            get {
+                return ResourceManager.GetString("OpenSourceLicence", resourceCulture);
             }
         }
         

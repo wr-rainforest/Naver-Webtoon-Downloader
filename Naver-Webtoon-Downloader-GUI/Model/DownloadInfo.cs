@@ -15,16 +15,17 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using WRforest.NWD.DataType;
 
 namespace WRforest.Model
 {
-    class WebtoonDownloadInfo : INotifyPropertyChanged
+    class DownloadInfo : INotifyPropertyChanged
     {
-        private Task task;
-        public Task Task { get => task; set => task = value; }
-
         private CancellationTokenSource cancellationTokenSource;
         public CancellationTokenSource CancellationTokenSource { get => cancellationTokenSource; set => cancellationTokenSource = value; }
+
+        private WebtoonInfo webtoonInfo;
+        public WebtoonInfo WebtoonInfo { get => webtoonInfo; set => webtoonInfo = value; }
 
         private string title;
         public string Title
@@ -124,11 +125,13 @@ namespace WRforest.Model
         }
 
         public string TitleId;
-        public WebtoonDownloadInfo(string title, string titleId, string writer, string lastEpisodeInfo, string status, double progress, string progressText, string size)
+        public DownloadInfo(WebtoonInfo webtoonInfo, string lastEpisodeInfo, string status, double progress, string progressText, string size)
         {
-            Title = title;
-            TitleId = titleId;
-            Writer = writer;
+            WebtoonInfo = webtoonInfo;
+            CancellationTokenSource = cancellationTokenSource;
+            Title = webtoonInfo.WebtoonTitle;
+            TitleId = webtoonInfo.WebtoonTitleId;
+            Writer = webtoonInfo.WebtoonWriter;
             LastEpisodeInfo = lastEpisodeInfo;
             Status = status;
             Progress = progress;

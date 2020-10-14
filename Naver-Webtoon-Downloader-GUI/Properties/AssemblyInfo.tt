@@ -4,7 +4,7 @@
 <#@ import namespace="System.IO" #>
 <#@ import namespace="System.Text.RegularExpressions" #>
 <#
-    string output = File.ReadAllText(this.Host.ResolvePath("AssemblyInfo.cs"));
+string output = File.ReadAllText(this.Host.ResolvePath("AssemblyInfo.cs"));
     Regex pattern = new Regex("AssemblyVersion\\(\"(?<major>\\d+)\\.(?<minor>\\d+)\\.(?<build>\\d+)\\.(?<revision>\\d+)\"\\)");
     MatchCollection matches = pattern.Matches(output);
     var buildConfig = this.Host.ResolveParameterValue("-","-","BuildConfiguration");
@@ -14,17 +14,36 @@
         minor = Convert.ToInt32(matches[0].Groups["minor"].Value);
         build = Convert.ToInt32(matches[0].Groups["build"].Value);
         revision = Convert.ToInt32(matches[0].Groups["revision"].Value);
-
+        string treepath=Path.GetDirectoryName(this.Host.ResolvePath("version.build.tree.txt"))+"\\version.build.tree.txt";
+        string tree = File.ReadAllText(treepath);
         if(buildConfig == "Debug")
         {
-            build++;
+            if(build==0)
+            {
+                tree = File.ReadAllText(treepath);
+                File.WriteAllText(treepath, tree.Replace("└--v","├─v").Replace("└--","└─").Replace("　  ","│  "));
+                File.AppendAllText(treepath, $"└--v{major}.{minor}    \r\n");
+                build++;
+            }
+            else
+            {
+                        build++;
+            }
+
             revision = 0;
+            tree = File.ReadAllText(treepath);
+            File.WriteAllText(treepath, tree.Replace("　    　","　  │  ").Replace("　  └--","　  ├─").Replace("　  │  └--", "　  │  └─"));
+            File.AppendAllText(treepath, $"　  └--{major}.{minor}.{build}.{revision}    \r\n");
         }
 
         else if( buildConfig == "Release" )
         {
             revision++;
+            tree = File.ReadAllText(treepath);
+            File.WriteAllText(treepath, tree.Replace("　    　└--", "　    　├─"));
+            File.AppendAllText(treepath, $"　    　└--{major}.{minor}.{build}.{revision}    \r\n");
         }
+        //File.AppendAllText(treepath+"dfdf.yy.txt", $"2. {DateTime.Now.ToString("[yyyy-MM-dd hh:mm:ss] : ")}-{buildConfig}-{major}.{minor}.{build}.{revision}-    \r\n");
     }
 #>
 /*

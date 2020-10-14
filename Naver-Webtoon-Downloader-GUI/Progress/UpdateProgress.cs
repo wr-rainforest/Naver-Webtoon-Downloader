@@ -19,11 +19,11 @@ using WRforest.View;
 
 namespace WRforest.Progress
 {
-    class WebtoonUpdateProgress : IProgress<object[]>
+    class UpdateProgress : IProgress<object[]>
     {
-        WebtoonDownloadInfo DownloadInfo;
+        DownloadInfo DownloadInfo;
 
-        public WebtoonUpdateProgress(WebtoonDownloadInfo downloadInfo)
+        public UpdateProgress(DownloadInfo downloadInfo)
         {
             DownloadInfo = downloadInfo;
         }
@@ -35,8 +35,8 @@ namespace WRforest.Progress
             string date = (string)value[5];
             string episodeTitle = (string)value[6];
             DownloadInfo.LastEpisodeInfo = $"[{date}] {episodeTitle}";
-            DownloadInfo.Progress = (double)(position) / count;
-            DownloadInfo.ProgressText = string.Format("{0:P}", (double)(position) / count);
+            DownloadInfo.Progress = (double)(position+1) / count;
+            DownloadInfo.ProgressText = string.Format("{0:P} ({1} / {2})", (double)(position) / count,(position), count);
         }
     
     }

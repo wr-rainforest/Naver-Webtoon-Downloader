@@ -209,7 +209,7 @@ namespace WRforest.NWD
         /// <code>{6}:회차 제목</code>
         /// <code>{7}:이미지 인덱스</code>
         /// <code>{8}:이미지 파일명</code>
-        /// <code>{9}:다운받은 메가바이트 용량</code>
+        /// <code>{9}:다운받은 바이트 용량</code>
         /// <code>{10}:다운로드된 파일수</code>
         /// <code>{11}:총 파일수</code>
         /// </summary>
@@ -221,7 +221,7 @@ namespace WRforest.NWD
             int fileCount = webtoonInfo.GetImageCount();
             int downloadedCount = fileCount - imageKeys.Length;
             List<Task> tasks = new List<Task>();
-            long size = 0;
+            long size = GetDownloadedImagesInformation().downloadedImagesSize;
             for (int i = 0; i < imageKeys.Length; i++)
             {
                 if (cancellationToken.IsCancellationRequested)
@@ -252,7 +252,7 @@ namespace WRforest.NWD
                     webtoonInfo.Episodes[imageKeys[i].EpisodeNo].EpisodeTitle,
                     imageKeys[i].ImageIndex,
                     fileNameBuilder.BuildImageFileName(imageKeys[i]),
-                    (double)size / 1048576,
+                    (double)size,
                     downloadedCount,
                     fileCount
                     });
@@ -321,8 +321,8 @@ namespace WRforest.NWD
         /// <code>{4}:퍼센트</code>
         /// <code>{5}:회차 날짜</code>
         /// <code>{6}:회차 제목</code>
-        /// <code>{7}:캐싱된 회차수</code>
-        /// <code>{8}:총 회차수</code>
+        /// <code>{7}:캐싱된 회차수(빈 회차 포함)</code>
+        /// <code>{8}:총 회차수 (빈 회차 포함)</code>
         /// </summary>
         /// <param name="webtoonInfo"></param>
         /// <param name="ProgressTextFormat"></param>
@@ -360,7 +360,11 @@ namespace WRforest.NWD
                              latestEpisodeNo,
                              (double)(episodeNo) / latestEpisodeNo,
                              webtoonInfo.Episodes[episodeNo].EpisodeDate,
-                             webtoonInfo.Episodes[episodeNo].EpisodeTitle});
+                             webtoonInfo.Episodes[episodeNo].EpisodeTitle,
+                             episodeNo,
+                             latestEpisodeNo 
+                }
+                             );
             }
         }
 #endif

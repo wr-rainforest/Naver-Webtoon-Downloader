@@ -72,11 +72,19 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="Progress\WebtoonDownloadProgress.cs" />
-    <Compile Include="Progress\WebtoonUpdateProgress.cs" />
+    <Compile Include="InformationWindow.xaml.cs">
+      <DependentUpon>InformationWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Model\FooterModel.cs" />
+    <Compile Include="Progress\DownloadProgress.cs" />
+    <Compile Include="Progress\UpdateProgress.cs" />
     <Compile Include="Token\PauseToken.cs" />
     <Compile Include="Token\PauseTokenSource.cs" />
-    <Compile Include="View\WebtoonDownloadPanelItem.cs" />
+    <Compile Include="View\DownloadPanelItem.cs" />
+    <Page Include="InformationWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -91,7 +99,7 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Model\WebtoonDownloadInfo.cs" />
+    <Compile Include="Model\DownloadInfo.cs" />
     <Compile Include="NWD\Agent.cs" />
     <Compile Include="NWD\Config.cs" />
     <Compile Include="NWD\DataType\EpisodeInfo.cs" />
@@ -135,6 +143,9 @@
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resources\OpenSourceLicence.txt" />
+    <None Include="Resources\License.txt" />
+    <Resource Include="Properties\version.build.tree.txt" />
     <Resource Include="Resources\Pause_grey_16x.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Resource>
@@ -159,4 +170,7 @@
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PreBuildEvent>"C:\Program Files\Microsoft Visual Studio\2019\Community\Common7\IDE\TextTransform.exe" -a !!BuildConfiguration!$(Configuration)  "$(ProjectDir)Properties\AssemblyInfo.tt"</PreBuildEvent>
+  </PropertyGroup>
 </Project>

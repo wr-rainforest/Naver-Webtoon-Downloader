@@ -18,11 +18,17 @@
             </Grid.RowDefinitions>
             <Menu Grid.Row="0" Background="White">
                 <MenuItem Header="파일" >
+                    <MenuItem Header="다운로드 폴더 열기" Click="OpenDownloadFoleder_MenuItem_Click"></MenuItem>
                 </MenuItem>
                 <MenuItem Header="도구" >
+                    <MenuItem Header="이미지 병합" Click="Merge_MenuItem_Click" IsEnabled="False"></MenuItem>
+                </MenuItem>
+                <MenuItem Header="설정">
+                    <MenuItem Header="다운로드 폴더 설정" Click="SetFolder_MenuItem_Click"></MenuItem>
                 </MenuItem>
                 <MenuItem Header="도움말">
-                    <MenuItem Header="GitHub"></MenuItem>
+                    <MenuItem Header="GitHub" Click="GitHub_MenuItem_Click"></MenuItem>
+                    <MenuItem Header="정보" Click="Information_MenuItem_Click"></MenuItem>
                 </MenuItem>
             </Menu>
             <Border Grid.Row="1" Background="#f0f0f0" BorderBrush="White" BorderThickness="0,1,0,0" Padding="0">
@@ -41,7 +47,7 @@
                     </Grid.RowDefinitions>
                     <Image Grid.Column="0" Grid.Row="1" Margin="5"  Source="/Resources/Link_16x.png" VerticalAlignment="Center" HorizontalAlignment="Center">
                     </Image>
-                    <TextBox x:Name="UriTextBox" Grid.Column="1" Grid.Row="1" VerticalContentAlignment="Center" >
+                    <TextBox x:Name="UriTextBox" Grid.Column="1" Grid.Row="1" VerticalContentAlignment="Center" KeyDown="UriTextBox_KeyDown">
                         <TextBox.Resources>
                             <Style TargetType="{x:Type Border}">
                                 <Setter Property="CornerRadius" Value="3"/>
@@ -67,7 +73,7 @@
                         <ColumnDefinition Width="150" x:Name="StatusColumn"></ColumnDefinition>
                         <ColumnDefinition Width="280*" x:Name="ProgressColumn"></ColumnDefinition>
                         <ColumnDefinition Width="90" x:Name="SizeColumn"></ColumnDefinition>
-                        <ColumnDefinition Width="0" x:Name="RunPauseButtonColumn"></ColumnDefinition>
+                        <ColumnDefinition Width="30" x:Name="RunPauseButtonColumn"></ColumnDefinition>
                         <ColumnDefinition Width="30" x:Name="StopDeleteButtonColumn"></ColumnDefinition>
                         <ColumnDefinition Width="18" x:Name="MarginColumn"></ColumnDefinition>
                     </Grid.ColumnDefinitions>
@@ -88,7 +94,20 @@
 
                 </StackPanel>
             </ScrollViewer>
+            <Border Grid.Row="4" BorderBrush="White" BorderThickness="0" Background="#f0f0f0">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="1*"></ColumnDefinition>
+                        <ColumnDefinition Width="150"></ColumnDefinition>
+                        <ColumnDefinition Width="150"></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
+                    <Label Name="Footer1" Grid.Column="0" BorderBrush="White" BorderThickness="0,0,1,0" Padding="0" HorizontalContentAlignment="Left" VerticalContentAlignment="Center"></Label>
+                    <Label Name="Footer2" Grid.Column="1" BorderBrush="White" BorderThickness="0,0,1,0" Padding="0" HorizontalContentAlignment="Left" VerticalContentAlignment="Center"></Label>
+                    <Label Name="Footer3" Grid.Column="2" BorderBrush="White" BorderThickness="0,0,1,0" Padding="0" HorizontalContentAlignment="Left" VerticalContentAlignment="Center"></Label>
+                </Grid>
+            </Border>
         </Grid>
         <Label Name="Loading" Content="로딩중.." VerticalAlignment="Center" HorizontalAlignment="Center" Visibility="Hidden" Panel.ZIndex="2"></Label>
+        
     </Grid>
 </Window>

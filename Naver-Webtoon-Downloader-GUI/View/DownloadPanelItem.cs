@@ -20,7 +20,7 @@ using WRforest.View;
 
 namespace WRforest.View
 {
-    class WebtoonDownloadPanelItem : Border
+    class DownloadPanelItem : Border
     {
         Grid webtoonDownloadGrid;
 
@@ -46,7 +46,7 @@ namespace WRforest.View
         public RoutedEventHandler DeleteButtonClickEventHandler;
 
 
-        public WebtoonDownloadPanelItem(WebtoonDownloadInfo webtoonDownloadInfo, bool gray, ColumnDefinitionCollection columnDefinitions, RoutedEventHandler runButtonClickEventHandler, RoutedEventHandler pauseButtonClickEventHandler, RoutedEventHandler stopButtonClickEventHandler, RoutedEventHandler deleteButtonClickEventHandler)
+        public DownloadPanelItem(DownloadInfo webtoonDownloadInfo, bool gray, ColumnDefinitionCollection columnDefinitions, RoutedEventHandler runButtonClickEventHandler, RoutedEventHandler pauseButtonClickEventHandler, RoutedEventHandler stopButtonClickEventHandler, RoutedEventHandler deleteButtonClickEventHandler)
         {
             RunButtonClickEventHandler = runButtonClickEventHandler;
             PauseButtonClickEventHandler = pauseButtonClickEventHandler;
@@ -81,6 +81,8 @@ namespace WRforest.View
             webtoonDownloadGrid.ColumnDefinitions.Add(checkBoxColumn);
             checkBox = new CheckBox()
             {
+                VerticalAlignment = VerticalAlignment.Center,
+                HorizontalAlignment = HorizontalAlignment.Center,
                 VerticalContentAlignment = VerticalAlignment.Center,
                 HorizontalContentAlignment = HorizontalAlignment.Center,
             };
@@ -226,11 +228,11 @@ namespace WRforest.View
                 BorderThickness = new Thickness(0d),
                 HorizontalContentAlignment = HorizontalAlignment.Center,
                 VerticalContentAlignment = VerticalAlignment.Center,
-                Content = pauseButtonImage
+                Content = runButtonImage
             };
             Grid.SetColumn(runPauseButton, runPauseButtonColumnIndex);
             webtoonDownloadGrid.Children.Add(runPauseButton);
-            SetRunPauseButtonMode(RunPauseButtonMode.Pause);
+            SetRunPauseButtonMode(RunPauseButtonMode.RunDisable);
 
 
             //delete 버튼
@@ -246,40 +248,58 @@ namespace WRforest.View
                 BorderThickness = new Thickness(0d),
                 HorizontalContentAlignment = HorizontalAlignment.Center,
                 VerticalContentAlignment = VerticalAlignment.Center,
-                Content = stopButtonImage
+                Content = deleteButtonImage
             };
             Grid.SetColumn(stopDeleteButton, stopDeleteButtonColumnIndex);
             webtoonDownloadGrid.Children.Add(stopDeleteButton);
-            SetStopDeleteButtonMode(StopDeleteButtonMode.Stop);
+            SetStopDeleteButtonMode(StopDeleteButtonMode.Delete);
 
         }//public WebtoonDownloadPanelItem(
 
         public void SetRunPauseButtonMode(RunPauseButtonMode mode)
         {
-            if(mode == RunPauseButtonMode.Run)
+            if (Dispatcher.Thread != Thread.CurrentThread)
             {
+                Dispatcher.Invoke(() => SetRunPauseButtonMode(mode), System.Windows.Threading.DispatcherPriority.Normal);
+                return;
+            }
+            if (mode == RunPauseButtonMode.Run)
+            {
+                runPauseButton.IsEnabled = true;
                 runPauseButton.Click -= PauseButtonClickEventHandler;
+                runPauseButton.Click -= RunButtonClickEventHandler;
                 runPauseButton.Click += RunButtonClickEventHandler;
                 runPauseButton.Content = runButtonImage;
             }
+            else if(mode == RunPauseButtonMode.RunDisable)
+            {
+                runPauseButton.IsEnabled = false;
+            }
             else
             {
-                runPauseButton.Click -= RunButtonClickEventHandler;
-                runPauseButton.Click += PauseButtonClickEventHandler;
-                runPauseButton.Content = pauseButtonImage;
+                //runPauseButton.Click -= RunButtonClickEventHandler;
+                //runPauseButton.Click += PauseButtonClickEventHandler;
+                //runPauseButton.Content = pauseButtonImage;
             }
         }
         public void SetStopDeleteButtonMode(StopDeleteButtonMode mode)
         {
+            if(Dispatcher.Thread !=Thread.CurrentThread)
+            {
+                Dispatcher.Invoke(() => SetStopDeleteButtonMode(mode), System.Windows.Threading.DispatcherPriority.Normal);
+                return;
+            }
             if (mode == StopDeleteButtonMode.Stop)
             {
                 stopDeleteButton.Click -= DeleteButtonClickEventHandler;
+                stopDeleteButton.Click -= StopButtonClickEventHandler;
                 stopDeleteButton.Click += StopButtonClickEventHandler;
                 stopDeleteButton.Content = stopButtonImage;
             }
-            else
+            else if(mode == StopDeleteButtonMode.Delete)
             {
                 stopDeleteButton.Click -= StopButtonClickEventHandler;
+                stopDeleteButton.Click -= DeleteButtonClickEventHandler;
                 stopDeleteButton.Click += DeleteButtonClickEventHandler;
                 stopDeleteButton.Content = deleteButtonImage;
             }
@@ -288,7 +308,9 @@ namespace WRforest.View
     public enum RunPauseButtonMode
     {
         Run = 0,
-        Pause = 1
+        Pause = 1,
+        RunDisable=2,
+        PauseDisable=3
     }
     public enum StopDeleteButtonMode
     {
