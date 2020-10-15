@@ -1,7 +1,9 @@
 ## Naver-Webtoon-Downloader-GUI
+https://github.com/wr-rainforest/Naver-Webtoon-Downloader-GUI      
+GUI 버전을 개발중입니다.  
+     
+      
 <img src="https://wr-rainforest.github.io/Naver-Webtoon-Downloader-GUI/Pages/Images/%EC%8A%A4%ED%81%AC%EB%A6%B0%EC%83%B7.png" width="788" height="443">
-https://github.com/wr-rainforest/Naver-Webtoon-Downloader-GUI
-GUI 버전을 개발중입니다. 캐시파일, 다운로드 결과물 호환이 가능합니다. 
  
    
 ## Naver-Webtoon-Downloader  
