@@ -27,8 +27,8 @@
                     <MenuItem Header="다운로드 폴더 설정" Click="SetFolder_MenuItem_Click"></MenuItem>
                 </MenuItem>
                 <MenuItem Header="도움말">
-                    <MenuItem Header="GitHub" Click="GitHub_MenuItem_Click"></MenuItem>
                     <MenuItem Header="정보" Click="Information_MenuItem_Click"></MenuItem>
+                    <MenuItem Header="GitHub" Click="GitHub_MenuItem_Click"></MenuItem>
                 </MenuItem>
             </Menu>
             <Border Grid.Row="1" Background="#f0f0f0" BorderBrush="White" BorderThickness="0,1,0,0" Padding="0">
@@ -103,7 +103,7 @@
                     </Grid.ColumnDefinitions>
                     <Label Name="Footer1" Grid.Column="0" BorderBrush="White" BorderThickness="0,0,1,0" Padding="0" HorizontalContentAlignment="Left" VerticalContentAlignment="Center"></Label>
                     <Label Name="Footer2" Grid.Column="1" BorderBrush="White" BorderThickness="0,0,1,0" Padding="0" HorizontalContentAlignment="Left" VerticalContentAlignment="Center"></Label>
-                    <Label Name="Footer3" Grid.Column="2" BorderBrush="White" BorderThickness="0,0,1,0" Padding="0" HorizontalContentAlignment="Left" VerticalContentAlignment="Center"></Label>
+                    <Label Name="Footer3" Grid.Column="2" BorderBrush="White" BorderThickness="0,0,1,0" Padding="0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"></Label>
                 </Grid>
             </Border>
         </Grid>

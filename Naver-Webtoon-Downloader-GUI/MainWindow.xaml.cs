@@ -50,8 +50,9 @@ namespace WRforest
             string[] assemsplit = assemblyVersion.Split('.');
             var version = $"{assemsplit[0]}.{assemsplit[1]}";
             var build = $"{assemsplit[2]}.{assemsplit[3]}";
-            var Title = $"Naver-Webtoon-Downloader-GUI v{version} ({build})";
+            var Title = $"Naver-Webtoon-Downloader-GUI v{version} (Build {build})";
             this.Title = Title;
+            Footer3.Content = $" Build {build}";
 
             if (IO.Exists(configFolderPath, configFileName))
             {
@@ -140,6 +141,7 @@ namespace WRforest
                     +e.Message, "Error");
                 return;
             }
+
 
         }
         private async Task LoadCache()
@@ -286,7 +288,7 @@ namespace WRforest
             var result = await CheckUserInput(uriText);
             if (result != null)
             {
-                MessageBox.Show(result);
+                MessageBox.Show(result,"Error",MessageBoxButton.OK,MessageBoxImage.Error);
                 button.IsEnabled = true;
                 Loading.Visibility = Visibility.Hidden;
                 return;
@@ -585,6 +587,8 @@ namespace WRforest
 
         private void OpenDownloadFoleder_MenuItem_Click(object sender, RoutedEventArgs e)
         {
+            if (!Directory.Exists(config.DefaultDownloadDirectory))
+                Directory.CreateDirectory(config.DefaultDownloadDirectory);
             Process.Start(config.DefaultDownloadDirectory);
         }
 
