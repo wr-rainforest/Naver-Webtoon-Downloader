@@ -1,26 +1,26 @@
 ## Naver-Webtoon-Downloader-GUI
-[![GitHub release (latest by date)](https://img.shields.io/github/v/release/wr-rainforest/Naver-Webtoon-Downloader-GUI?label=latest&style=flat-square)](https://github.com/wr-rainforest/Naver-Webtoon-Downloader/releases/latest)
+[![GitHub release (latest by date)](https://img.shields.io/github/v/release/wr-rainforest/Naver-Webtoon-Downloader-GUI?label=latest&style=flat-square)](https://github.com/wr-rainforest/Naver-Webtoon-Downloader-GUI/releases/latest)
 [![GitHub All Releases](https://img.shields.io/github/downloads/wr-rainforest/Naver-Webtoon-Downloader-GUI/total?label=Downloades&style=flat-square)](https://github.com/wr-rainforest/Naver-Webtoon-Downloader/releases)    
   
   
-[v0.1.107.6](https://github.com/wr-rainforest/Naver-Webtoon-Downloader-GUI/releases/tag/v0.1.107.6)  
-[´Ù¿î·Îµå](https://github.com/wr-rainforest/Naver-Webtoon-Downloader-GUI/releases/download/v0.1.107.6/Naver-Webtoon-Downloader-GUI.v0.1.107.6.zip)  
+[v0.1.107.6](https://github.com/wr-rainforest/Naver-Webtoon-Downloader-GUI/releases/tag/v.0.1.107.6)  
+[ë‹¤ìš´ë¡œë“œ](https://github.com/wr-rainforest/Naver-Webtoon-Downloader-GUI/releases/download/v.0.1.107.6/Naver-Webtoon-Downloader-GUI.v.0.1.107.6.zip)  
   
   
   
-[Naver-Webtoon-Downloader](https://github.com/wr-rainforest/Naver-Webtoon-Downloader) ÀÇ UI ±¸ÇöÀÔ´Ï´Ù.   
+[Naver-Webtoon-Downloader](https://github.com/wr-rainforest/Naver-Webtoon-Downloader) ì˜ UI êµ¬í˜„ì…ë‹ˆë‹¤.   
 
    
 
-![½ºÅ©¸°¼¦](Pages\Images\½ºÅ©¸°¼¦.png)
+![ìŠ¤í¬ë¦°ìƒ·](Pages/Images/ìŠ¤í¬ë¦°ìƒ·.png)
   
 
-ÃÖÃÊ ½ÇÇà½Ã CAÀÎÁõ¼­°¡ ¾ø¾î¼­ À©µµ¿ì PC º¸È£ Ã¢ÀÌ Ç¥½ÃµË´Ï´Ù.   
-[WindowsÀÇ PC º¸È£ ¸Ş¼¼Áö ÇØ°á(Å¬¸¯)](https://github.com/wr-rainforest/Naver-Webtoon-Downloader/wiki/%22Windows%EC%9D%98-PC-%EB%B3%B4%ED%98%B8%22-%EC%B0%BD%EC%9D%B4-%EB%9C%A8%EB%8A%94-%EA%B2%BD%EC%9A%B0) À» ÅëÇØ º°´Ù¸¥ ¼³Á¤ ¾øÀÌ ¹Ù·Î ½ÇÇàÀÌ °¡´ÉÇÕ´Ï´Ù.
+ìµœì´ˆ ì‹¤í–‰ì‹œ CAì¸ì¦ì„œê°€ ì—†ì–´ì„œ ìœˆë„ìš° PC ë³´í˜¸ ì°½ì´ í‘œì‹œë©ë‹ˆë‹¤.   
+[Windowsì˜ PC ë³´í˜¸ ë©”ì„¸ì§€ í•´ê²°(í´ë¦­)](https://github.com/wr-rainforest/Naver-Webtoon-Downloader/wiki/%22Windows%EC%9D%98-PC-%EB%B3%B4%ED%98%B8%22-%EC%B0%BD%EC%9D%B4-%EB%9C%A8%EB%8A%94-%EA%B2%BD%EC%9A%B0) ì„ í†µí•´ ë³„ë‹¤ë¥¸ ì„¤ì • ì—†ì´ ë°”ë¡œ ì‹¤í–‰ì´ ê°€ëŠ¥í•©ë‹ˆë‹¤.
   
-.Net Frmamework 4.7.2 ÀÌ»ó ¹öÀü¿¡¼­ µ¿ÀÛÇÕ´Ï´Ù.    
-À©µµ¿ì 2018³â 4¿ù ¾÷µ¥ÀÌÆ®(¹öÀü 1803) ÀÌÈÄ ¹öÀü¿¡¼­´Â º°´Ù¸¥ ¼³Á¤ ¾øÀÌ ¹Ù·Î ½ÇÇàÀÌ °¡´ÉÇÕ´Ï´Ù.      
-[.Net Frmamework 4.7.2 ´Ù¿î·Îµå](https://dotnet.microsoft.com/download/dotnet-framework/net472)    
+.Net Frmamework 4.7.2 ì´ìƒ ë²„ì „ì—ì„œ ë™ì‘í•©ë‹ˆë‹¤.    
+ìœˆë„ìš° 2018ë…„ 4ì›” ì—…ë°ì´íŠ¸(ë²„ì „ 1803) ì´í›„ ë²„ì „ì—ì„œëŠ” ë³„ë‹¤ë¥¸ ì„¤ì • ì—†ì´ ë°”ë¡œ ì‹¤í–‰ì´ ê°€ëŠ¥í•©ë‹ˆë‹¤.      
+[.Net Frmamework 4.7.2 ë‹¤ìš´ë¡œë“œ](https://dotnet.microsoft.com/download/dotnet-framework/net472)    
     
     
-°³¹ßÀÚ ¿¬¶ôÃ³ : contact@wrforest.com   
+ê°œë°œì ì—°ë½ì²˜ : contact@wrforest.com   
