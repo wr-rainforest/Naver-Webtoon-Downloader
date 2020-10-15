@@ -1,4 +1,10 @@
-## Naver-Webtoon-Downloader
+## Naver-Webtoon-Downloader-GUI
+<img src="https://wr-rainforest.github.io/Naver-Webtoon-Downloader-GUI/Pages/Images/%EC%8A%A4%ED%81%AC%EB%A6%B0%EC%83%B7.png" width="788" height="443">
+https://github.com/wr-rainforest/Naver-Webtoon-Downloader-GUI 
+　GUI 버전을 개발중입니다. 캐시파일, 다운로드 결과물 호환이 가능합니다. 
+ 
+   
+## Naver-Webtoon-Downloader  
 1. [프로그램 개요](#1-프로그램-개요)   
 2. [간단한 사용방법](#2-간단한-사용방법)   
 　2.1. [최초 다운로드](#21-최초-다운로드)   
@@ -17,13 +23,9 @@
 ## 1. 프로그램 개요
   
 [![GitHub release (latest by date)](https://img.shields.io/github/v/release/wr-rainforest/Naver-Webtoon-Downloader?label=latest&style=flat-square)](https://github.com/wr-rainforest/Naver-Webtoon-Downloader/releases/latest)
-![GitHub release (latest by date including pre-releases)](https://img.shields.io/github/v/release/wr-rainforest/Naver-Webtoon-Downloader?include_prereleases&label=pre-release&style=flat-square)
 [![GitHub All Releases](https://img.shields.io/github/downloads/wr-rainforest/Naver-Webtoon-Downloader/total?label=Downloades&style=flat-square)](https://github.com/wr-rainforest/Naver-Webtoon-Downloader/releases)   
-     
-[v2.0.54.13](https://github.com/wr-rainforest/Naver-Webtoon-Downloader/releases/tag/v2.0.54.13)  
-[다운로드](https://github.com/wr-rainforest/Naver-Webtoon-Downloader/releases/download/v2.0.54.13/Naver-Webtoon-Downloader.v2.0.54.13.zip)    
    
-[v2.0.57.2 Pre-elease](https://github.com/wr-rainforest/Naver-Webtoon-Downloader/releases/tag/v2.0.57.2)  
+[v2.0.57.2](https://github.com/wr-rainforest/Naver-Webtoon-Downloader/releases/tag/v2.0.57.2)  
 [다운로드](https://github.com/wr-rainforest/Naver-Webtoon-Downloader/releases/download/v2.0.57.2/Naver-Webtoon-Downloader.v2.0.57.2.zip)   
     
 CA인증서가 없어서 윈도우 PC 보호 창이 표시됩니다.   
