@@ -60,6 +60,7 @@
   <ItemGroup>
     <Compile Include="NWD\Agent.cs" />
     <Compile Include="NWD\Command\CommandManger.cs" />
+    <Compile Include="NWD\Command\CommandProgress.cs" />
     <Compile Include="NWD\Command\Download.cs" />
     <Compile Include="NWD\Command\Get.cs" />
     <Compile Include="NWD\Command\Merge.cs" />

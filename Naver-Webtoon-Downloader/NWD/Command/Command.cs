@@ -16,17 +16,8 @@ namespace WRforest.NWD.Command
         public Command(Config config)
         {
             this.config = config;
-            progress = new Progress<string>(msg => PrintProgess(msg));
+            progress = new CommandProgress();
         }
         public abstract void Start(params string[] args);
-
-        private void PrintProgess(string ProgressText)
-        {
-            Console.Write(" ");
-            var curp = Console.CursorTop;
-            Console.Write("\r" + new string(' ', Console.BufferWidth - 1) + "\r");
-            IO.Print(ProgressText, false, true);//i = 0;
-            Console.SetCursorPosition(0, curp);
-        }
     }
 }
