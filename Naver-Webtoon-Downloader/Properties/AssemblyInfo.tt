@@ -86,7 +86,7 @@ using System.Resources;
 
 <#+
     int major = 2; 
-    int minor = 0;
+    int minor = 1;
     int build = 0;
     int revision = 0;
 #>
