@@ -85,14 +85,26 @@ namespace WRforest.NWD.Command
                 }
 
                 var bitmap = MergeImages(webtoonImagePathList);
-                bitmap.Save(episodeFilePath, ImageFormat.Png);
-                bitmap.Dispose();
+                try
+                {
+                    bitmap.Save(episodeFilePath, ImageFormat.Png);
+                }
+                catch(Exception e)
+                {
+                    if(bitmap.Height>65535)
+                    {
+                        Console.WriteLine();
+                        IO.Print(string.Format("{0}($${1}$cyan$) [{3}/{4}] ($${5:P}$green$) $병합 오류:$$red$ $$\r\n회차의 이미지 높이 총합이 65535 픽셀을 초과하는 경우 병합이 불가능합니다.\r\n" +
+                            "자세한 내용은 https://github.com/wr-rainforest/Naver-Webtoon-Downloader/issues/5 를 참고해 주세요.$red$ ", webtoonInfo.WebtoonTitle, args[0], webtoonInfo.Episodes[episodeNoList[i]].EpisodeImageUrls.Length + 1, i + 1, episodeNoList.Length, (double)(i + 1) / episodeNoList.Length));
+                        bitmap.Dispose();
+                        continue;
+                    }
+                }
                 progress.Report(string.Format("{0}($${1}$cyan$) [{3}/{4}] ($${5:P}$green$)  $${2}$cyan$장을 병합하였습니다. ", webtoonInfo.WebtoonTitle, args[0], webtoonInfo.Episodes[episodeNoList[i]].EpisodeImageUrls.Length + 1,i+1, episodeNoList.Length,(double)(i+1)/episodeNoList.Length));
-                GC.Collect();//
+                //GC.Collect();//
             }
             Thread.Sleep(700);
             Console.WriteLine("");
-
         }
 
         private Bitmap MergeImages(List<string> imagePathList)
