@@ -58,6 +58,7 @@ namespace WRforest.NWD.Command
                 {
                     webtoonInfo = JsonConvert.DeserializeObject<WebtoonInfo>(IO.ReadTextFile("Cache", keys[i].TitleId + ".json"));
                     downloader = new Downloader(webtoonInfo, config);
+                    agent.LoadPage(keys[i].BuildUrl());
                     int latest = int.Parse(parser.GetLatestEpisodeNo());
                     int last = webtoonInfo.GetLastEpisodeNo();
                     IO.Print(string.Format("{2}. {0}($${1}$cyan$) URl 캐시를 불러왔습니다.", webtoonInfo.WebtoonTitle, keys[i].TitleId, i + 1), true, true);
@@ -86,8 +87,6 @@ namespace WRforest.NWD.Command
                     {
                         IO.Print(string.Format("{4}. {0}($${1}$cyan$) 이미 다운로드된 이미지 $${2}$cyan$장 ($${3:0.00}$blue$ MB)  ", webtoonInfo.WebtoonTitle, keys[i].TitleId, tuple.downloadedImageCount, (double)tuple.downloadedImagesSize / 1048576, i + 1), true, true);
                     }
-
-
                 }
                 else
                 {
@@ -99,7 +98,6 @@ namespace WRforest.NWD.Command
                     IO.Print(string.Format("{2}. {0}($${1}$cyan$) URl 캐시를 생성하였습니다..", webtoonInfo.WebtoonTitle, keys[i].TitleId, i + 1), true, true);
                     
                 }
-
                 if (string.IsNullOrWhiteSpace(webtoonInfo.WebtoonWriter))
                 {
                     EpisodeKey episodeKey = new EpisodeKey(keys[i].TitleId, 1);
@@ -114,7 +112,7 @@ namespace WRforest.NWD.Command
                 if (imageKeys.Length == 0)
                 {
                     IO.Print(string.Format("{2}. {0}($${1}$cyan$) 모든 이미지가 다운로드되었습니다..추가로 다운로드할 이미지가 존재하지 않습니다.", webtoonInfo.WebtoonTitle, keys[i].TitleId, i + 1), true, true);
-                    return;
+                    continue;
                 }
                 IO.Print(string.Format("{2}. {0}($${1}$cyan$) 다운로드를 시작합니다. ", webtoonInfo.WebtoonTitle, keys[i].TitleId, i + 1), true, true);
                 var task = Task.Run(() => downloader.DownloadAsync(imageKeys, (i + 1).ToString() + ". {0}($${1}$cyan$) [{2}/{3}] ($${9:0.00}$blue$ MB) ($${4:P}$green$) [{5}]", progress));
