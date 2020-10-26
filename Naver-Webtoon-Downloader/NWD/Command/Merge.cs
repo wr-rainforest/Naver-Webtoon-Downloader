@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Drawing.Imaging;
 using WRforest.NWD.DataType;
 using WRforest.NWD.Key;
 
@@ -63,10 +64,6 @@ namespace WRforest.NWD.Command
             {
                 Directory.CreateDirectory(webtoonDirectory);
             }
-            else
-            {
-
-            }
             for (int i = 0; i < episodeNoList.Length; i++)
             {
                 var imageCount = webtoonInfo.Episodes[episodeNoList[i]].EpisodeImageUrls.Length;
@@ -86,8 +83,10 @@ namespace WRforest.NWD.Command
                 {
                     webtoonImagePathList.Add(fileNameBuilder.BuildImageFileFullPath(new ImageKey(args[0], episodeNoList[i], j)));
                 }
-                byte[]buff = MergeImages(webtoonImagePathList);
-                File.WriteAllBytes(episodeFilePath, buff);
+
+                var bitmap = MergeImages(webtoonImagePathList);
+                bitmap.Save(episodeFilePath, ImageFormat.Png);
+                bitmap.Dispose();
                 progress.Report(string.Format("{0}($${1}$cyan$) [{3}/{4}] ($${5:P}$green$)  $${2}$cyan$장을 병합하였습니다. ", webtoonInfo.WebtoonTitle, args[0], webtoonInfo.Episodes[episodeNoList[i]].EpisodeImageUrls.Length + 1,i+1, episodeNoList.Length,(double)(i+1)/episodeNoList.Length));
                 GC.Collect();//
             }
@@ -95,50 +94,42 @@ namespace WRforest.NWD.Command
             Console.WriteLine("");
 
         }
-        private byte[] MergeImages(List<string> imagePathList)
+
+        private Bitmap MergeImages(List<string> imagePathList)
         {
-            ImageConverter imageConverter = new ImageConverter();
             List<Bitmap> images = new List<Bitmap>();
-            for(int i=0;i< imagePathList.Count;i++)
-            {
-                images.Add(new Bitmap(imagePathList[i]));
-            }
-            int maxwidth=0;
-            for(int i=0; i<imagePathList.Count;i++)
-            {
-                if (images[i].Width > maxwidth)
-                {
-                    maxwidth = images[i].Width;
-                }
-            }
-            int width = maxwidth;
+            int width = 0;
             int height = 0;
-            for (int i = 0; i < images.Count; i++)
+            for (int i=0;i< imagePathList.Count;i++)
             {
+                var image = new Bitmap(imagePathList[i]);
+                images.Add(image);
+                if (image.Width > width)
+                    width = image.Width;
                 height += images[i].Height;
             }
-            Bitmap bitmap = new Bitmap(width, height, System.Drawing.Imaging.PixelFormat.Format24bppRgb);
+            Bitmap bitmap = new Bitmap(width, height, PixelFormat.Format24bppRgb);
             bitmap.SetResolution(images[0].HorizontalResolution, images[0].VerticalResolution);
-
             using (Graphics g = Graphics.FromImage(bitmap))
             {
-                height = 0;
+                int verticalPosition = 0;
                 for (int i = 0; i < images.Count; i++)
                 {
                     Bitmap image = images[i];
                     image.SetResolution(images[i].HorizontalResolution, images[i].VerticalResolution);
-
-                    if(maxwidth>image.Width)
+                    if(width > image.Width)
                     {
-                        g.DrawImage(image, (maxwidth - image.Width) / 2, height);
-                        height += image.Height;
+                        g.DrawImage(image, (width - image.Width) / 2, verticalPosition);
+                        verticalPosition += image.Height;
+                        image.Dispose();
                         continue;
                     }
-                    g.DrawImage(image, 0, height);
-                    height += image.Height;
+                    g.DrawImage(image, 0, verticalPosition);
+                    verticalPosition += image.Height;
+                    image.Dispose();
                 }
             }
-            return (byte[])imageConverter.ConvertTo(bitmap, typeof(byte[]));
+            return bitmap;
         }
     }
 }
