@@ -81,6 +81,7 @@
     <Compile Include="Model\FooterModel.cs" />
     <Compile Include="Progress\DownloadProgress.cs" />
     <Compile Include="Progress\UpdateProgress.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="View\DownloadPanelItem.cs" />
     <Page Include="InformationWindow.xaml">
       <SubType>Designer</SubType>
@@ -112,11 +113,6 @@
     <Compile Include="NWD\Key\ImageKey.cs" />
     <Compile Include="NWD\Key\WebtoonKey.cs" />
     <Compile Include="NWD\Parser.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>AssemblyInfo.tt</DependentUpon>
-    </Compile>
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -146,16 +142,11 @@
   <ItemGroup>
     <None Include="Resources\OpenSourceLicence.txt" />
     <None Include="Resources\License.txt" />
-    <Resource Include="Properties\version.build.tree.txt" />
     <Resource Include="Resources\Pause_grey_16x.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Resource>
     <Resource Include="Resources\Cancel_16x.png" />
     <Resource Include="nwd_logo.ico" />
-    <Content Include="Properties\AssemblyInfo.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>AssemblyInfo.cs</LastGenOutput>
-    </Content>
     <Resource Include="Resources\Stop_16x.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Resource>
