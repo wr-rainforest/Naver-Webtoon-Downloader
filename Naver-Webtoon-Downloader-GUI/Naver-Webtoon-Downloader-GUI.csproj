@@ -81,8 +81,6 @@
     <Compile Include="Model\FooterModel.cs" />
     <Compile Include="Progress\DownloadProgress.cs" />
     <Compile Include="Progress\UpdateProgress.cs" />
-    <Compile Include="Token\PauseToken.cs" />
-    <Compile Include="Token\PauseTokenSource.cs" />
     <Compile Include="View\DownloadPanelItem.cs" />
     <Page Include="InformationWindow.xaml">
       <SubType>Designer</SubType>
