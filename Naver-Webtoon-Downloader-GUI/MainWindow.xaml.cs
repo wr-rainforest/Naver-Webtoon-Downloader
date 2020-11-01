@@ -91,11 +91,10 @@ namespace WRforest
         private async void Load()
         {
             Task cacheTask = LoadCache();
-            Task updateCheckTask = UpdateCheck();
+            UpdateCheck();
             await cacheTask;
-            await updateCheckTask;
         }
-        private async Task UpdateCheck()
+        private void UpdateCheck()
         {
             WebClient webClient = new WebClient();
             XmlDocument xmlDocument = new XmlDocument();
@@ -285,7 +284,7 @@ namespace WRforest
             {
                 uriText = "https://" + uriText;
             }
-            var result = await CheckUserInput(uriText);
+            var result = CheckUserInput(uriText);
             if (result != null)
             {
                 MessageBox.Show(result,"Error",MessageBoxButton.OK,MessageBoxImage.Error);
@@ -378,7 +377,7 @@ namespace WRforest
             return null;
         }
 
-        private async Task<string> CheckUserInput(string uriText)
+        private string CheckUserInput(string uriText)
         {
             if (uriText == "https://")
             {
@@ -494,12 +493,12 @@ namespace WRforest
             return false;
         }
 
-        private async void PauseButton_Click(object sender, RoutedEventArgs e)
+        private void PauseButton_Click(object sender, RoutedEventArgs e)
         {
             MessageBox.Show("throw;");
         }
 
-        private async void StopButton_Click(object sender, RoutedEventArgs e)
+        private void StopButton_Click(object sender, RoutedEventArgs e)
         {
             Button button = (Button)sender;
             DependencyObject dependencyObject = (DependencyObject)e.OriginalSource;
@@ -521,7 +520,7 @@ namespace WRforest
             item.SetStopDeleteButtonMode(StopDeleteButtonMode.Delete);
         }
 
-        private async void DeleteButton_Click(object sender, RoutedEventArgs e)
+        private void DeleteButton_Click(object sender, RoutedEventArgs e)
         {
             Button button = (Button)sender;
             DependencyObject dependencyObject = (DependencyObject)e.OriginalSource;
