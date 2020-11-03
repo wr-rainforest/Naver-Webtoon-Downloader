@@ -68,7 +68,7 @@ namespace WRforest.NWD.Command
             {
                 var imageCount = webtoonInfo.Episodes[episodeNoList[i]].EpisodeImageUrls.Length;
                 Key.EpisodeKey episodeKey = new Key.EpisodeKey(args[0], episodeNoList[i]);
-                string episodeFilePath = webtoonDirectory + "\\" + fileNameBuilder.BuildEpisodeDirectoryName(episodeKey)+".jpg" ;
+                string episodeFilePath = webtoonDirectory + "\\" + fileNameBuilder.BuildEpisodeDirectoryName(episodeKey)+".png" ;
                 if (File.Exists(episodeFilePath))
                 {
                     continue;
