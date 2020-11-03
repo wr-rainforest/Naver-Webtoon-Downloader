@@ -114,10 +114,13 @@ namespace WRforest.NWD.Command
             int height = 0;
             for (int i=0;i< imagePathList.Count;i++)
             {
-                var image = new Bitmap(imagePathList[i]);
-                images.Add(image);
-                if (image.Width > width)
-                    width = image.Width;
+                MemoryStream ms = new MemoryStream();
+                var jpgImage = new Bitmap(imagePathList[i]);
+                jpgImage.Save(ms, ImageFormat.Png);
+                var pngImage = new Bitmap(ms);
+                images.Add(pngImage);
+                if (pngImage.Width > width)
+                    width = pngImage.Width;
                 height += images[i].Height;
             }
             Bitmap bitmap = new Bitmap(width, height, PixelFormat.Format24bppRgb);
