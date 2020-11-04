@@ -2,10 +2,8 @@
 using HtmlAgilityPack;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Net;
 using System.Net.Http;
-using System.Text;
 using System.Threading.Tasks;
 using System.Web;
 
@@ -41,6 +39,15 @@ namespace WRforest.NWD
             return document;
         }
 
+        public async Task<WebtoonInfo> GetWebtoonInfoAsync(string titleId)
+        {
+            var document = await GetListPageDocumentAsync(titleId);
+            var title = document.DocumentNode.SelectSingleNode("//*[@property=\"og:title\"]").Attributes["content"].Value;
+            var writer = await GetWebtoonWriterAsync(titleId);
+            var webtoonInfo = new WebtoonInfo(titleId, title, writer, "", "");
+            return webtoonInfo;
+        }
+
         public async Task<string> GetWebtoonTitleAsync(string titleId)
         {
             var document = await GetListPageDocumentAsync(titleId);
@@ -50,7 +57,7 @@ namespace WRforest.NWD
 
         public async Task<string> GetWebtoonWriterAsync(string titleId)
         {
-            var document = await GetListPageDocumentAsync(titleId);
+            var document = await GetEpisodePageDocumentAsync(titleId, 1);
             var writer = document.DocumentNode.SelectSingleNode("//*[@name=\"itemWriterId\"]").Attributes["value"].Value;
             return writer;
         }
@@ -61,6 +68,22 @@ namespace WRforest.NWD
             var relativeUri = document.DocumentNode.SelectSingleNode("//td[@class=\"title\"]/a").Attributes["href"].Value;
             var absoluteUri = $"https://comic.naver.com{relativeUri}";
             return int.Parse(HttpUtility.ParseQueryString(new Uri(absoluteUri).Query).Get("no"));
+        }
+        // Episode
+        public async Task<EpisodeInfo> GetEpisodeInfoAsync(string titleId, int episodeNo)
+        {
+            var document = await GetEpisodePageDocumentAsync(titleId, episodeNo);
+            var title = document.DocumentNode.SelectSingleNode("//*[@property=\"og:description\"]").Attributes["content"].Value;
+            var date = document.DocumentNode.SelectSingleNode("//*[@class=\"date\"]").InnerText;
+            List<string> uris = new List<string>();
+            HtmlNodeCollection nodes = document.DocumentNode.SelectNodes("//*[@alt=\"comic content\"]");
+            for (int i = 0; i < nodes.Count; i++)
+            {
+                uris.Add(nodes[i].Attributes["src"].Value);
+            }
+            var imageUris = uris.ToArray();
+            var episodeInfo = new EpisodeInfo(titleId, episodeNo, title, date, imageUris);
+            return episodeInfo;
         }
 
         public async Task<string> GetEpisodeTitleAsync(string titleId, int episodeNo)
@@ -86,5 +109,6 @@ namespace WRforest.NWD
             }
             return uris.ToArray();
         }
+
     }
 }
