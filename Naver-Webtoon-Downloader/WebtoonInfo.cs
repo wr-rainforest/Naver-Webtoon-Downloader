@@ -1,10 +1,6 @@
-﻿using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-
-namespace wr_rainforest.WebtoonDownloader
+﻿namespace wr_rainforest.Naver_Webtoon_Downloader
 {
-    class WebtoonInfo
+    public class WebtoonInfo
     {
         /// <summary>
         /// 웹툰 제목입니다.

@@ -1,11 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.Serialization;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace wr_rainforest.WebtoonDownloader
+namespace wr_rainforest.Naver_Webtoon_Downloader
 {
     public class EpisodeNotFoundException : Exception
     {
@@ -28,10 +23,6 @@ namespace wr_rainforest.WebtoonDownloader
         }
 
         public EpisodeNotFoundException(string message, Exception innerException) : base(message, innerException)
-        {
-        }
-
-        protected EpisodeNotFoundException(SerializationInfo info, StreamingContext context) : base(info, context)
         {
         }
     }

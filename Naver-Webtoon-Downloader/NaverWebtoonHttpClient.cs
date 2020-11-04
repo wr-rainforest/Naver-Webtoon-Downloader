@@ -1,5 +1,4 @@
-﻿
-using HtmlAgilityPack;
+﻿using HtmlAgilityPack;
 using System;
 using System.Collections.Generic;
 using System.Net;
@@ -7,7 +6,7 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web;
 
-namespace wr_rainforest.WebtoonDownloader
+namespace wr_rainforest.Naver_Webtoon_Downloader
 {
     class NaverWebtoonHttpClient : HttpClient
     {

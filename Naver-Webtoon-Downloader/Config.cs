@@ -1,18 +1,10 @@
-﻿using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace wr_rainforest.WebtoonDownloader
+﻿namespace wr_rainforest.Naver_Webtoon_Downloader
 {
     /// <summary>
     /// <seealso cref="NaverWebtoonDownloader"/> 설정
     /// </summary>
     class Config
     {
-        [JsonIgnore]
         private string defaultDownloadDirectory;
         /// <summary>
         /// 기본 다운로드 위치를 설정합니다. 기본값은 실행 파일 위치의 download 폴더입니다.
@@ -31,7 +23,6 @@ namespace wr_rainforest.WebtoonDownloader
             }
         }
 
-        [JsonIgnore]
         private string imageFileNameFormat;
         /// <summary>
         /// 저장할 이미지의 파일 이름 포맷을 설정합니다. {0~4}는 중복되거나 누락시킬 수 있습니다. {0~4}이외의 다른 숫자는 올 수 없습니다.
@@ -58,7 +49,6 @@ namespace wr_rainforest.WebtoonDownloader
             }
         }
 
-        [JsonIgnore]
         private string episodeDirectoryNameFormat;
         /// <summary>
         /// 저장할 회차의 폴더 이름 포맷을 설정합니다. {0~5}은/는 중복되거나 누락시킬 수 있습니다. {0~5}이외의 다른 숫자는 올 수 없습니다.
@@ -85,7 +75,6 @@ namespace wr_rainforest.WebtoonDownloader
             }
         }
 
-        [JsonIgnore]
         private string webtoonDirectoryNameFormat;
         /// <summary>
         /// 저장할 웹툰의 폴더 이름 포맷을 설정합니다. {0~2}은/는 중복되거나 누락시킬 수 있습니다. {0~2}이외의 다른 숫자는 올 수 없습니다.
@@ -116,29 +105,6 @@ namespace wr_rainforest.WebtoonDownloader
         {
 
         }
-        /// <summary>
-        /// 직렬화된 Json 텍스트로 <seealso cref="Config"/>의 새 인스턴스를 초기화합니다. <paramref name="json"/>이 null일 경우 <seealso cref="ArgumentNullException"/>합니다.
-        /// </summary>
-        /// <param name="json">Json 텍스트입니다.</param>
-        public Config(string json)
-        {
-            if (string.IsNullOrEmpty(json))
-            {
-                throw new ArgumentNullException("json text가 null입니다.");
-            }
-            Config config = JsonConvert.DeserializeObject<Config>(json);
-            DefaultDownloadDirectory = config.DefaultDownloadDirectory;
-            ImageFileNameFormat = config.ImageFileNameFormat;
-            EpisodeDirectoryNameFormat = config.EpisodeDirectoryNameFormat;
-            WebtoonDirectoryNameFormat = config.WebtoonDirectoryNameFormat;
-        }
-        /// <summary>
-        /// 현재 인스턴스를 직렬화된 Json 문자열로 반환합니다.
-        /// </summary>
-        /// <returns><seealso cref="string"/> Json</returns>
-        public string ToJsonString()
-        {
-            return JsonConvert.SerializeObject(this, Formatting.Indented);
-        }
+
     }
 }

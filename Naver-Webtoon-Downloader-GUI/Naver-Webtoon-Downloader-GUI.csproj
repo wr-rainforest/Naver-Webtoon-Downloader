@@ -79,7 +79,6 @@
       <DependentUpon>InformationWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="Model\FooterModel.cs" />
-    <Compile Include="WebtoonDownloader\EpisodeNotFoundException.cs" />
     <Compile Include="Progress\DownloadProgress.cs" />
     <Compile Include="Progress\UpdateProgress.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -103,13 +102,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Model\DownloadInfo.cs" />
-    <Compile Include="WebtoonDownloader\NaverWebtoonHttpClient.cs" />
-    <Compile Include="WebtoonDownloader\Config.cs" />
-    <Compile Include="WebtoonDownloader\EpisodeInfo.cs" />
-    <Compile Include="WebtoonDownloader\WebtoonInfo.cs" />
-    <Compile Include="WebtoonDownloader\Downloader.cs" />
-    <Compile Include="WebtoonDownloader\FileNameBuilder.cs" />
-    <Compile Include="WebtoonDownloader\IO.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -157,7 +149,12 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Resource>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\Naver-Webtoon-Downloader\Naver-Webtoon-Downloader.csproj">
+      <Project>{fc4969b9-64fa-4d8b-86ac-b8957617f75c}</Project>
+      <Name>Naver-Webtoon-Downloader</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PreBuildEvent>
