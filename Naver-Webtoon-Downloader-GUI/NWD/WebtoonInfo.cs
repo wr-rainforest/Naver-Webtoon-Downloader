@@ -2,7 +2,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace WRforest.NWD
+namespace wr_rainforest.NWD
 {
     class WebtoonInfo
     {

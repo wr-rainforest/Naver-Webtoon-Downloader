@@ -6,7 +6,7 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{2C0B0BFD-F017-4E86-A21C-F2F2CD621E0F}</ProjectGuid>
     <OutputType>WinExe</OutputType>
-    <RootNamespace>WRforest</RootNamespace>
+    <RootNamespace>wr_rainforest</RootNamespace>
     <AssemblyName>Naver-Webtoon-Downloader-GUI</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>

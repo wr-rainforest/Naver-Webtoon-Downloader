@@ -21,14 +21,14 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Xml;
-using WRforest.Model;
-using WRforest.NWD;
-using WRforest.NWD.DataType;
-using WRforest.NWD.Key;
-using WRforest.Progress;
-using WRforest.View;
+using wr_rainforest.Model;
+using wr_rainforest.NWD;
+using wr_rainforest.NWD.DataType;
+using wr_rainforest.NWD.Key;
+using wr_rainforest.Progress;
+using wr_rainforest.View;
 
-namespace WRforest
+namespace wr_rainforest
 {
     /// <summary>
     /// MainWindow.xaml에 대한 상호 작용 논리

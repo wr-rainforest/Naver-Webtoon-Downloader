@@ -12,7 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 
-namespace WRforest
+namespace wr_rainforest
 {
     /// <summary>
     /// InformationWindow.xaml에 대한 상호 작용 논리

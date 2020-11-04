@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using WRforest.NWD.DataType;
-using WRforest.NWD.Key;
+using wr_rainforest.NWD.DataType;
+using wr_rainforest.NWD.Key;
 
-namespace WRforest.NWD
+namespace wr_rainforest.NWD
 {
     class FileNameBuilder
     {

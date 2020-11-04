@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace WRforest.Properties {
+namespace wr_rainforest.Properties {
     using System;
     
     
@@ -39,7 +39,7 @@ namespace WRforest.Properties {
         internal static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("WRforest.Properties.Resources", typeof(Resources).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("wr_rainforest.Properties.Resources", typeof(Resources).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -81,8 +81,7 @@ namespace WRforest.Properties {
         }
         
         /// <summary>
-        ///   MIT License
-        ///
+        ///   --------------------------------------------------------------------------
         ///Copyright (c) 2020 wr-rainforest
         ///
         ///Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -90,9 +89,7 @@ namespace WRforest.Properties {
         ///in the Software without restriction, including without limitation the rights
         ///to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
         ///copies of the Software, and to permit persons to whom the Software is
-        ///furnished to do so, subject to the following conditions:
-        ///
-        ///The above copyright [나머지 문자열은 잘림]&quot;;과(와) 유사한 지역화된 문자열을 찾습니다.
+        ///furnished to do so,[나머지 문자열은 잘림]&quot;;과(와) 유사한 지역화된 문자열을 찾습니다.
         /// </summary>
         internal static string License {
             get {
@@ -111,22 +108,18 @@ namespace WRforest.Properties {
         }
         
         /// <summary>
-        ///   
-        ///*Newtonsoft.Json
+        ///   *Newtonsoft.Json
         ///https://www.newtonsoft.com/json
-        ///	MIT License (MIT)
+        ///The MIT License (MIT)
         ///
+        ///Copyright (c) 2007 James Newton-King
         ///
-        ///*HtmlAgilityPack
-        ///https://html-agility-pack.net/
-        ///	The MIT License (MIT)
-        ///
-        ///*Microsoft.WindowsAPICodePack
-        ///https://github.com/aybe/Windows-API-Code-Pack-1.1
-        ///MICROSOFT SOFTWARE LICENSE TERMS
-        ///MICROSOFT WINDOWS API CODE PACK FOR MICROSOFT .NET FRAMEWORK
-        ///___________________________________________________
-        ///These license terms are an agreement between Microsoft Corporation (or based on where you live, one of its affiliates) and you. [나머지 문자열은 잘림]&quot;;과(와) 유사한 지역화된 문자열을 찾습니다.
+        ///Permission is hereby granted, free of charge, to any person obtaining a copy
+        ///of this software and associated documentation files (the &quot;Software&quot;), to deal
+        ///in the Software without restriction, including without limitation the rights
+        ///to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+        ///copies of the Software, and to permit persons to whom the Software is
+        ///furnished to do[나머지 문자열은 잘림]&quot;;과(와) 유사한 지역화된 문자열을 찾습니다.
         /// </summary>
         internal static string OpenSourceLicence {
             get {

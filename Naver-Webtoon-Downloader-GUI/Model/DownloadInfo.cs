@@ -15,9 +15,9 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
-using WRforest.NWD.DataType;
+using wr_rainforest.NWD.DataType;
 
-namespace WRforest.Model
+namespace wr_rainforest.Model
 {
     class DownloadInfo : INotifyPropertyChanged
     {

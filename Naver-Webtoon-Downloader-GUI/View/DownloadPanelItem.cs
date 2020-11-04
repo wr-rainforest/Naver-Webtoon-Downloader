@@ -15,10 +15,10 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
-using WRforest.Model;
-using WRforest.View;
+using wr_rainforest.Model;
+using wr_rainforest.View;
 
-namespace WRforest.View
+namespace wr_rainforest.View
 {
     class DownloadPanelItem : Border
     {

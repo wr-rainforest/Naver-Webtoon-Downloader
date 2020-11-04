@@ -7,10 +7,10 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
-using WRforest.NWD.DataType;
-using WRforest.NWD.Key;
+using wr_rainforest.NWD.DataType;
+using wr_rainforest.NWD.Key;
 
-namespace WRforest.NWD
+namespace wr_rainforest.NWD
 {
     class Downloader
     {

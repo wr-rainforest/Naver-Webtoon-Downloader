@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace WRforest.NWD
+namespace wr_rainforest.NWD
 {
     /// <summary>
     /// <seealso cref="NaverWebtoonDownloader"/> 설정

@@ -13,11 +13,11 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
-using WRforest.Model;
-using WRforest.NWD;
-using WRforest.View;
+using wr_rainforest.Model;
+using wr_rainforest.NWD;
+using wr_rainforest.View;
 
-namespace WRforest.Progress
+namespace wr_rainforest.Progress
 {
     class UpdateProgress : IProgress<object[]>
     {
