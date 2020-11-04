@@ -138,7 +138,7 @@ namespace wr_rainforest.WebtoonDownloader
         /// <returns><seealso cref="string"/> Json</returns>
         public string ToJsonString()
         {
-            return JsonConvert.SerializeObject(this);
+            return JsonConvert.SerializeObject(this, Formatting.Indented);
         }
     }
 }
