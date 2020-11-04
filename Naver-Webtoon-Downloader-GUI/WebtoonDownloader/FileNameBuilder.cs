@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using wr_rainforest.NWD.DataType;
-using wr_rainforest.NWD.Key;
+using wr_rainforest.WebtoonDownloader.DataType;
+using wr_rainforest.WebtoonDownloader.Key;
 
-namespace wr_rainforest.NWD
+namespace wr_rainforest.WebtoonDownloader
 {
     class FileNameBuilder
     {

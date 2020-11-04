@@ -5,7 +5,7 @@ using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace wr_rainforest.NWD
+namespace wr_rainforest.WebtoonDownloader
 {
     public class EpisodeNotFoundException : Exception
     {

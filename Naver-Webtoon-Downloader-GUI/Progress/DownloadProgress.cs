@@ -14,7 +14,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using wr_rainforest.Model;
-using wr_rainforest.NWD;
+using wr_rainforest.WebtoonDownloader;
 using wr_rainforest.View;
 
 namespace wr_rainforest.Progress

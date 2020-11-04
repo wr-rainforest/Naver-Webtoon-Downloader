@@ -7,7 +7,7 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web;
 
-namespace wr_rainforest.NWD
+namespace wr_rainforest.WebtoonDownloader
 {
     class NaverWebtoonHttpClient : HttpClient
     {

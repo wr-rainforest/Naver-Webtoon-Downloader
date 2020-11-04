@@ -22,9 +22,9 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Xml;
 using wr_rainforest.Model;
-using wr_rainforest.NWD;
-using wr_rainforest.NWD.DataType;
-using wr_rainforest.NWD.Key;
+using wr_rainforest.WebtoonDownloader;
+using wr_rainforest.WebtoonDownloader.DataType;
+using wr_rainforest.WebtoonDownloader.Key;
 using wr_rainforest.Progress;
 using wr_rainforest.View;
 

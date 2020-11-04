@@ -7,7 +7,7 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace wr_rainforest.NWD
+namespace wr_rainforest.WebtoonDownloader
 {
     class IO
     {
