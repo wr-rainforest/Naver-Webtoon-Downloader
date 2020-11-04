@@ -105,14 +105,11 @@
     <Compile Include="Model\DownloadInfo.cs" />
     <Compile Include="NWD\NaverWebtoonHttpClient.cs" />
     <Compile Include="NWD\Config.cs" />
-    <Compile Include="NWD\DataType\EpisodeInfo.cs" />
-    <Compile Include="NWD\DataType\WebtoonInfo.cs" />
+    <Compile Include="NWD\EpisodeInfo.cs" />
+    <Compile Include="NWD\WebtoonInfo.cs" />
     <Compile Include="NWD\Downloader.cs" />
     <Compile Include="NWD\FileNameBuilder.cs" />
     <Compile Include="NWD\IO.cs" />
-    <Compile Include="NWD\Key\EpisodeKey.cs" />
-    <Compile Include="NWD\Key\ImageKey.cs" />
-    <Compile Include="NWD\Key\WebtoonKey.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
