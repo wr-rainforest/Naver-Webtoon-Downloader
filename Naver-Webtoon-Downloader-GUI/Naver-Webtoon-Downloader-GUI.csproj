@@ -79,6 +79,7 @@
       <DependentUpon>InformationWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="Model\FooterModel.cs" />
+    <Compile Include="NWD\EpisodeNotFoundException.cs" />
     <Compile Include="Progress\DownloadProgress.cs" />
     <Compile Include="Progress\UpdateProgress.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -102,7 +103,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Model\DownloadInfo.cs" />
-    <Compile Include="NWD\Agent.cs" />
+    <Compile Include="NWD\NaverWebtoonHttpClient.cs" />
     <Compile Include="NWD\Config.cs" />
     <Compile Include="NWD\DataType\EpisodeInfo.cs" />
     <Compile Include="NWD\DataType\WebtoonInfo.cs" />
@@ -112,7 +113,6 @@
     <Compile Include="NWD\Key\EpisodeKey.cs" />
     <Compile Include="NWD\Key\ImageKey.cs" />
     <Compile Include="NWD\Key\WebtoonKey.cs" />
-    <Compile Include="NWD\Parser.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
