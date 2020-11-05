@@ -12,24 +12,12 @@ namespace wr_rainforest.Naver_Webtoon_Downloader
     /// </summary>
     public class Config
     {
+        [JsonProperty(PropertyName = "Version")]
+        private string versionString { get => version.ToString(); set => version = new Version(value); }
         [JsonIgnore]
-        private string defaultDownloadDirectory;
-        /// <summary>
-        /// 기본 다운로드 위치를 설정합니다. 기본값은 실행 파일 위치의 download 폴더입니다.
-        /// </summary>
-        public string DefaultDownloadDirectory
-        {
-            get
-            {
-                if (string.IsNullOrWhiteSpace(defaultDownloadDirectory))
-                    defaultDownloadDirectory = "Download";
-                return defaultDownloadDirectory;
-            }
-            set
-            {
-                defaultDownloadDirectory = value;
-            }
-        }
+        private Version version;
+        [JsonIgnore]
+        public Version Version { get=>version;}
 
         [JsonIgnore]
         private string imageFileNameFormat;
@@ -116,6 +104,7 @@ namespace wr_rainforest.Naver_Webtoon_Downloader
         {
 
         }
+
         /// <summary>
         /// 직렬화된 Json 텍스트로 <seealso cref="Config"/>의 새 인스턴스를 초기화합니다. <paramref name="json"/>이 null일 경우 <seealso cref="ArgumentNullException"/>합니다.
         /// </summary>
@@ -127,11 +116,11 @@ namespace wr_rainforest.Naver_Webtoon_Downloader
                 throw new ArgumentNullException("json text가 null입니다.");
             }
             Config config = JsonConvert.DeserializeObject<Config>(json);
-            DefaultDownloadDirectory = config.DefaultDownloadDirectory;
             ImageFileNameFormat = config.ImageFileNameFormat;
             EpisodeDirectoryNameFormat = config.EpisodeDirectoryNameFormat;
             WebtoonDirectoryNameFormat = config.WebtoonDirectoryNameFormat;
         }
+
         /// <summary>
         /// 현재 인스턴스를 직렬화된 Json 문자열로 반환합니다.
         /// </summary>
