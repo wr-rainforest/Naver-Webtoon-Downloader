@@ -1,6 +1,6 @@
 ﻿namespace wr_rainforest.Naver_Webtoon_Downloader
 {
-    class EpisodeInfo
+    public class EpisodeInfo
     {
         /// <summary>
         /// 웹툰 TitleId입니다.
