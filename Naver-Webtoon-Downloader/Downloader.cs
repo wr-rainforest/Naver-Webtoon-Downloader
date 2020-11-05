@@ -29,6 +29,7 @@ namespace wr_rainforest.Naver_Webtoon_Downloader
             }
             this.config = config;
             this.sqliteConnection = new SqliteConnection($"Data Source = {dataSource}");
+            sqliteConnection.Open();
             var selectMasterCommand = sqliteConnection.CreateCommand();
             selectMasterCommand.CommandText = "SELECT name from sqlite_master where type='table';";
             var tableNameReader = selectMasterCommand.ExecuteReader();
@@ -59,9 +60,12 @@ namespace wr_rainforest.Naver_Webtoon_Downloader
             }
             createTableCommand.CommandText += "COMMIT;";
             createTableCommand.ExecuteNonQuery();
+            sqliteConnection.Close();
         }
         public async Task UpdateOrCreateWebtoonDatabase(string titleId, IProgress<(int position, int count)> progress, CancellationToken ct)
         {
+            sqliteConnection.Open();
+            ct.Register(CancelationCallback);
             var selectWebtoonCommand = sqliteConnection.CreateCommand();
             selectWebtoonCommand.CommandText =
                 $"SELECT * from webtoons " +
@@ -111,6 +115,10 @@ namespace wr_rainforest.Naver_Webtoon_Downloader
                 $"BEGIN;";
             for (int i = lastEpisodeNo; i <= latestEpisodeNo; i++)
             {
+                if (ct.IsCancellationRequested)
+                {
+                    return;
+                }
                 EpisodeInfo episodeInfo;
                 try
                 {
@@ -139,9 +147,12 @@ namespace wr_rainforest.Naver_Webtoon_Downloader
             }
             insertEpisodeCommand.CommandText += "COMMIT;";
             insertEpisodeCommand.ExecuteNonQuery();
+            sqliteConnection.Close();
         }
         public async Task DownloadWebtoonAsync(string titleId, string downloadFolder, IProgress<(int position, int count)> progress, CancellationToken ct)
         {
+            sqliteConnection.Open();
+            ct.Register(CancelationCallback);
             var selectWebtoonCommand = sqliteConnection.CreateCommand();
             selectWebtoonCommand.CommandText =
                 $"SELECT * from webtoons " +
@@ -162,6 +173,8 @@ namespace wr_rainforest.Naver_Webtoon_Downloader
             var episodes = new Dictionary<int, EpisodeInfo>();
             while (episodeReader.Read())
             {
+                if (ct.IsCancellationRequested)
+                    return;
                 var episodeInfo = new EpisodeInfo()
                 {
                     TitleId = (string)episodeReader["titleId"],
@@ -175,12 +188,14 @@ namespace wr_rainforest.Naver_Webtoon_Downloader
             var selectImagesCommand = sqliteConnection.CreateCommand();
             selectImagesCommand.CommandText = 
                 $"SELECT * from images " +
-                $"WHERE titleId='{titleId}' " +
+                $"WHERE titleId='{titleId}' AND downloaded='0' " +
                 $"ORDER BY no,'image_index' ASC;";
             var imagesReader = selectImagesCommand.ExecuteReader();
             var imagesToDownload = new List<ImageInfo>();
             while (imagesReader.Read())
             {
+                if (ct.IsCancellationRequested)
+                    return;
                 var image = new ImageInfo()
                 {
                     TitleId = (string)imagesReader["titleId"],
@@ -194,9 +209,11 @@ namespace wr_rainforest.Naver_Webtoon_Downloader
             List<Task> saveFileTasks = new List<Task>();
             for(int i = 0; i < imagesToDownload.Count; i++)
             {
+                if (ct.IsCancellationRequested)
+                    return;
                 var image = imagesToDownload[i];
                 byte[] buff = await client.GetByteArrayAsync(image.Uri);
-                var episodeDirectory = Path.Combine(
+                var episodeDirectory = Path.Combine(downloadFolder,
                     BuildWebtoonFolderName(webtoonInfo),
                     BuildEpisodeFolderName(webtoonInfo, episodes[image.No]));
                 Directory.CreateDirectory(episodeDirectory);
@@ -223,9 +240,14 @@ namespace wr_rainforest.Naver_Webtoon_Downloader
                     updateImageCommand.ExecuteNonQuery();
 #endif
                     progress.Report((i + 1, imagesToDownload.Count));
-                }));
+                },ct));
             }
             await Task.WhenAll(saveFileTasks);
+            sqliteConnection.Close();
+        }
+        private void CancelationCallback()
+        {
+            sqliteConnection.Close();
         }
         private string BuildImageFileName(WebtoonInfo webtoonInfo, EpisodeInfo episodeInfo,ImageInfo imageInfo, string extension)
         {
