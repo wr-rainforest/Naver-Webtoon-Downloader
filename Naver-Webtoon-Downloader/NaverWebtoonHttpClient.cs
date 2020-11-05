@@ -12,7 +12,7 @@ using System.Web;
 
 namespace wr_rainforest.Naver_Webtoon_Downloader
 {
-    class NaverWebtoonHttpClient : HttpClient
+    public class NaverWebtoonHttpClient : HttpClient
     {
         public NaverWebtoonHttpClient() : base(new HttpClientHandler() { AllowAutoRedirect = false })
         {
@@ -73,7 +73,8 @@ namespace wr_rainforest.Naver_Webtoon_Downloader
             loginRequest.Headers.Add("Referer", "https://nid.naver.com/nidlogin.login");
             //미구현
         }
-        private async Task<HtmlDocument> GetListPageDocumentAsync(string titleId)
+
+        public async Task<HtmlDocument> GetListPageDocumentAsync(string titleId)
         {
             var uri = $"https://comic.naver.com/webtoon/list.nhn?titleId={titleId}";
             var responseString = await GetStringAsync(uri);
@@ -82,7 +83,7 @@ namespace wr_rainforest.Naver_Webtoon_Downloader
             return document;
         }
 
-        private async Task<HtmlDocument> GetEpisodePageDocumentAsync(string titleId, int episodeNo)
+        public async Task<HtmlDocument> GetEpisodePageDocumentAsync(string titleId, int episodeNo)
         {
             var uri = $"https://comic.naver.com/webtoon/detail.nhn?titleId={titleId}&no={episodeNo}";
             var response = await GetAsync(uri);
@@ -95,7 +96,7 @@ namespace wr_rainforest.Naver_Webtoon_Downloader
             document.LoadHtml(responseString);
             return document;
         }
-
+        //웹툰
         public async Task<WebtoonInfo> GetWebtoonInfoAsync(string titleId)
         {
             var document = await GetListPageDocumentAsync(titleId);
@@ -126,7 +127,7 @@ namespace wr_rainforest.Naver_Webtoon_Downloader
             var absoluteUri = $"https://comic.naver.com{relativeUri}";
             return int.Parse(HttpUtility.ParseQueryString(new Uri(absoluteUri).Query).Get("no"));
         }
-        // Episode
+        // 회차
         public async Task<EpisodeInfo> GetEpisodeInfoAsync(string titleId, int episodeNo)
         {
             var document = await GetEpisodePageDocumentAsync(titleId, episodeNo);
@@ -161,7 +162,7 @@ namespace wr_rainforest.Naver_Webtoon_Downloader
             var document = await GetEpisodePageDocumentAsync(titleId, episodeNo);
             return document.DocumentNode.SelectSingleNode("//*[@class=\"date\"]").InnerText;
         }
-
+        //이미지
         public async Task<string[]> GetEpisodeImageUriListAsync(string titleId, int episodeNo)
         {
             var document = await GetEpisodePageDocumentAsync(titleId, episodeNo);
@@ -173,6 +174,5 @@ namespace wr_rainforest.Naver_Webtoon_Downloader
             }
             return uris.ToArray();
         }
-
     }
 }
