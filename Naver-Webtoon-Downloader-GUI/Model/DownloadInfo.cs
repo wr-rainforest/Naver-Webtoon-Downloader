@@ -15,7 +15,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
-using wr_rainforest.WebtoonDownloader.DataType;
+using wr_rainforest.Naver_Webtoon_Downloader;
 
 namespace wr_rainforest.Model
 {
@@ -129,9 +129,9 @@ namespace wr_rainforest.Model
         {
             WebtoonInfo = webtoonInfo;
             CancellationTokenSource = cancellationTokenSource;
-            Title = webtoonInfo.WebtoonTitle;
-            TitleId = webtoonInfo.WebtoonTitleId;
-            Writer = webtoonInfo.WebtoonWriter;
+            Title = webtoonInfo.Title;
+            TitleId = webtoonInfo.TitleId;
+            Writer = webtoonInfo.Writer;
             LastEpisodeInfo = lastEpisodeInfo;
             Status = status;
             Progress = progress;
