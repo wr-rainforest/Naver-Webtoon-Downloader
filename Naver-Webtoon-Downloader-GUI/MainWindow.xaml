@@ -17,15 +17,6 @@
                 <RowDefinition Height="0" x:Name="imgRow"></RowDefinition>
             </Grid.RowDefinitions>
             <Menu Grid.Row="0" Background="White">
-                <MenuItem Header="파일" >
-                    <MenuItem Header="다운로드 폴더 열기" Click="OpenDownloadFoleder_MenuItem_Click"></MenuItem>
-                </MenuItem>
-                <MenuItem Header="도구" >
-                    <MenuItem Header="이미지 병합" Click="Merge_MenuItem_Click" IsEnabled="False"></MenuItem>
-                </MenuItem>
-                <MenuItem Header="설정">
-                    <MenuItem Header="다운로드 폴더 설정" Click="SetFolder_MenuItem_Click"></MenuItem>
-                </MenuItem>
                 <MenuItem Header="도움말">
                     <MenuItem Header="정보" Click="Information_MenuItem_Click"></MenuItem>
                     <MenuItem Header="GitHub" Click="GitHub_MenuItem_Click"></MenuItem>
@@ -90,7 +81,7 @@
                 </Grid>
             </Border>
             <ScrollViewer Grid.Row="3">
-                <StackPanel x:Name="WebtoonDownloadPanel" Orientation="Vertical">
+                <StackPanel x:Name="DownloadInfoPanel" Orientation="Vertical">
 
                 </StackPanel>
             </ScrollViewer>
