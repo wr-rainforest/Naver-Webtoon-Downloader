@@ -132,14 +132,21 @@ namespace wr_rainforest.Naver_Webtoon_Downloader
             var document = await GetEpisodePageDocumentAsync(titleId, episodeNo);
             var title = document.DocumentNode.SelectSingleNode("//*[@property=\"og:description\"]").Attributes["content"].Value;
             var date = document.DocumentNode.SelectSingleNode("//*[@class=\"date\"]").InnerText;
-            List<string> uris = new List<string>();
+            List<ImageInfo> images = new List<ImageInfo>();
             HtmlNodeCollection nodes = document.DocumentNode.SelectNodes("//*[@alt=\"comic content\"]");
             for (int i = 0; i < nodes.Count; i++)
             {
-                uris.Add(nodes[i].Attributes["src"].Value);
+                images.Add(new ImageInfo()
+                {
+                    TitleId = titleId,
+                    No = episodeNo,
+                    Downloaded = 0,
+                    Index = i,
+                    Size = -1,
+                    Uri = nodes[i].Attributes["src"].Value
+                });
             }
-            var imageUris = uris.ToArray();
-            var episodeInfo = new EpisodeInfo(titleId, episodeNo, title, date, imageUris);
+            var episodeInfo = new EpisodeInfo(titleId, episodeNo, title, date, images);
             return episodeInfo;
         }
 
