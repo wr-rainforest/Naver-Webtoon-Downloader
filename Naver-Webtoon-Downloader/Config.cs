@@ -15,7 +15,7 @@ namespace wr_rainforest.Naver_Webtoon_Downloader
         [JsonProperty(PropertyName = "Version")]
         private string versionString { get => version.ToString(); set => version = new Version(value); }
         [JsonIgnore]
-        private Version version;
+        private Version version = new Version("1.0.0");
         [JsonIgnore]
         public Version Version { get=>version;}
 
@@ -37,7 +37,7 @@ namespace wr_rainforest.Naver_Webtoon_Downloader
             get
             {
                 if (string.IsNullOrWhiteSpace(imageFileNameFormat))
-                    imageFileNameFormat = "[{5}] {3} - {4} ({2:D3}).jpg";
+                    imageFileNameFormat = "[{5}] {3} - {4} ({2:D3})";
                 return imageFileNameFormat;
             }
             set
