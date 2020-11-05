@@ -11,8 +11,9 @@ using System.IO;
 
 namespace wr_rainforest.Naver_Webtoon_Downloader
 {
-    class Downloader
+    public class Downloader
     {
+        Dictionary<string, string> unAvailableWebtoons = new Dictionary<string, string>();
         private Config config;
         private static readonly NaverWebtoonHttpClient client;
         private SqliteConnection sqliteConnection;
@@ -23,12 +24,14 @@ namespace wr_rainforest.Naver_Webtoon_Downloader
 
         public Downloader(Config config, string dataSource)
         {
+            unAvailableWebtoons.Add("670144", "애니매이션 효과가 적용된 웹툰은 다운로드가 불가능합니다.");
             if (config.Version.Major != 1)
             {
                 throw new Exception("지원하지 않는 설정 포맷입니다.");
             }
             this.config = config;
-            this.sqliteConnection = new SqliteConnection($"Data Source = {dataSource}");
+            dataSource = Path.GetFullPath(dataSource);
+            sqliteConnection = new SqliteConnection($"Data Source = {dataSource};Mode=ReadWriteCreate;");
             sqliteConnection.Open();
             var selectMasterCommand = sqliteConnection.CreateCommand();
             selectMasterCommand.CommandText = "SELECT name from sqlite_master where type='table';";
@@ -45,7 +48,7 @@ namespace wr_rainforest.Naver_Webtoon_Downloader
                     imagesTableExists = true;
             }
             var createTableCommand = sqliteConnection.CreateCommand();
-            createTableCommand.CommandText = "COMMIT;BEGIN; ";
+            createTableCommand.CommandText = "BEGIN; ";
             if (!webtoonsTableExists)
             {
                 createTableCommand.CommandText += "CREATE TABLE 'webtoons' ('titleId' TEXT, 'title' TEXT, 'writer' TEXT, 'genre' TEXT, 'description' TEXT, PRIMARY KEY(titleId));";
@@ -84,7 +87,7 @@ namespace wr_rainforest.Naver_Webtoon_Downloader
                 insertWebtoonCommand.Parameters.AddWithValue("@title", webtoonInfo.Title);
                 insertWebtoonCommand.Parameters.AddWithValue("@writer", webtoonInfo.Writer);
                 insertWebtoonCommand.ExecuteNonQuery();
-                lastEpisodeNo = 1;
+                lastEpisodeNo = 0;
             }
             else
             {
@@ -96,8 +99,9 @@ namespace wr_rainforest.Naver_Webtoon_Downloader
                 };
                 var selectLastEpisodeNoCommand = sqliteConnection.CreateCommand();
                 selectLastEpisodeNoCommand.CommandText =
-                    $"SELECT MAX(no) FROM episodes " +
-                    $"WHERE titleId='{titleId}';";
+                    $"SELECT no FROM episodes " +
+                    $"WHERE titleId='{titleId}'" +
+                    $"ORDER BY no DESC;";
                 var episodeReader = selectLastEpisodeNoCommand.ExecuteReader();
                 if (episodeReader.Read()) 
                 {
@@ -105,15 +109,15 @@ namespace wr_rainforest.Naver_Webtoon_Downloader
                 }
                 else
                 {
-                    lastEpisodeNo = 1;
+                    lastEpisodeNo = 0;
                 }
             }
             var latestEpisodeNo = await client.GetLatestEpisodeNoAsync(titleId);
             var insertEpisodeCommand = sqliteConnection.CreateCommand();
             insertEpisodeCommand.CommandText = 
-                $"COMMIT;" +
+                $"" +
                 $"BEGIN;";
-            for (int i = lastEpisodeNo; i <= latestEpisodeNo; i++)
+            for (int i = lastEpisodeNo+1; i <= latestEpisodeNo; i++)
             {
                 if (ct.IsCancellationRequested)
                 {
@@ -135,7 +139,7 @@ namespace wr_rainforest.Naver_Webtoon_Downloader
                     $"INSERT into episodes (titleId, no, title , date, image_count) " +
                     $"VALUES ('{episodeInfo.TitleId}', {episodeInfo.No}, @title_{episodeInfo.No}, @date_{episodeInfo.No}, {episodeInfo.Images.Count});";
                 insertEpisodeCommand.Parameters.AddWithValue($"@title_{episodeInfo.No}", episodeInfo.Title);
-                insertEpisodeCommand.Parameters.AddWithValue($"@date_{episodeInfo.No}", episodeInfo.Title);
+                insertEpisodeCommand.Parameters.AddWithValue($"@date_{episodeInfo.No}", episodeInfo.Date);
                 episodeInfo.Images.ForEach((image) =>
                 {
                     insertEpisodeCommand.CommandText +=
@@ -143,7 +147,7 @@ namespace wr_rainforest.Naver_Webtoon_Downloader
                     $"VALUES ('{image.TitleId}', {image.No}, {image.Index}, @uri_{image.No}_{image.Index}, {image.Size} ,0);";
                     insertEpisodeCommand.Parameters.AddWithValue($"@uri_{image.No}_{image.Index}", image.Uri);
                 });
-                progress.Report((i - lastEpisodeNo + 1, latestEpisodeNo - latestEpisodeNo + 1));
+                progress?.Report((i - lastEpisodeNo + 1, latestEpisodeNo - latestEpisodeNo + 1));
             }
             insertEpisodeCommand.CommandText += "COMMIT;";
             insertEpisodeCommand.ExecuteNonQuery();
@@ -158,6 +162,7 @@ namespace wr_rainforest.Naver_Webtoon_Downloader
                 $"SELECT * from webtoons " +
                 $"WHERE titleId='{titleId}';";
             var webtoonReader = selectWebtoonCommand.ExecuteReader();
+            webtoonReader.Read();
             WebtoonInfo webtoonInfo = new WebtoonInfo()
             {
                 TitleId = (string)webtoonReader["titleId"],
@@ -199,11 +204,13 @@ namespace wr_rainforest.Naver_Webtoon_Downloader
                 var image = new ImageInfo()
                 {
                     TitleId = (string)imagesReader["titleId"],
+                    Uri = (string)imagesReader["uri"],
                     No = (int)(long)imagesReader["no"],
                     Index = (int)(long)imagesReader["image_index"],
                     Size = (int)(long)imagesReader["size"],
                     Downloaded = (int)(long)imagesReader["downloaded"]
                 };
+                imagesToDownload.Add(image);
             }
 
             List<Task> saveFileTasks = new List<Task>();
@@ -221,6 +228,7 @@ namespace wr_rainforest.Naver_Webtoon_Downloader
                     episodeDirectory,
                     BuildImageFileName(webtoonInfo, episodes[image.No], image, 
                     ".jpg"));
+
                 saveFileTasks.Add(Task.Run(() =>
                 {
                     File.WriteAllBytes(imageFilePath, buff);
@@ -229,22 +237,37 @@ namespace wr_rainforest.Naver_Webtoon_Downloader
                         $"UPDATE images " +
                         $"SET size='{buff.Length}', downloaded='1' " +
                         $"WHERE titleId='{image.TitleId}' AND no='{image.No}' AND image_index='{image.Index}';";
-#if DEBUG
-                    var changed = updateImageCommand.ExecuteNonQuery();
-                    if (changed == 0)
-                    {
-                        throw new Exception();
-                    }
-#endif
-#if !DEBUG
                     updateImageCommand.ExecuteNonQuery();
-#endif
-                    progress.Report((i + 1, imagesToDownload.Count));
+                    progress?.Report((i + 1, imagesToDownload.Count));
                 },ct));
             }
             await Task.WhenAll(saveFileTasks);
             sqliteConnection.Close();
         }
+
+        public async Task<(bool value, string message)> CanDownload(string titleId)
+        {
+            var document = await client.GetListPageDocumentAsync(titleId);
+            if (document.DocumentNode.InnerHtml.Contains("완결까지 정주행!"))
+            {
+                return (false, "유료 웹툰");
+            }
+            if (document.DocumentNode.InnerHtml.Contains("18세 이상 이용 가능"))
+            {
+                return (false, "성인 웹툰");
+            }
+            if (document.DocumentNode.SelectSingleNode("//meta[@property='og:url']").Attributes["content"].Value.Contains("hallenge"))
+            {
+                return (false,"베스트도전/도전만화)");
+            }
+            if (unAvailableWebtoons.ContainsKey(titleId))
+            {
+                return (false,$"{unAvailableWebtoons[titleId]}");
+            }
+            return (true, "");
+        }
+
+
         private void CancelationCallback()
         {
             sqliteConnection.Close();
