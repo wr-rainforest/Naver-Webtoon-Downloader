@@ -44,7 +44,7 @@ namespace wr_rainforest.Naver_Webtoon_Downloader
                     imagesTableExists = true;
             }
             var createTableCommand = sqliteConnection.CreateCommand();
-            createTableCommand.CommandText = "BEGIN; ";
+            createTableCommand.CommandText = "COMMIT;BEGIN; ";
             if (!webtoonsTableExists)
             {
                 createTableCommand.CommandText += "CREATE TABLE 'webtoons' ('titleId' TEXT, 'title' TEXT, 'writer' TEXT, 'genre' TEXT, 'description' TEXT, PRIMARY KEY(titleId));";
@@ -60,26 +60,27 @@ namespace wr_rainforest.Naver_Webtoon_Downloader
             createTableCommand.CommandText += "COMMIT;";
             createTableCommand.ExecuteNonQuery();
         }
-
-        public async Task DownloadWebtoonAsync(string titleId, string downloadFolder, CancellationToken ct)
+        public async Task UpdateOrCreateWebtoonDatabase(string titleId, IProgress<(int position, int count)> progress, CancellationToken ct)
         {
             var selectWebtoonCommand = sqliteConnection.CreateCommand();
-            selectWebtoonCommand.CommandText= 
+            selectWebtoonCommand.CommandText =
                 $"SELECT * from webtoons " +
                 $"WHERE titleId='{titleId}';";
             var webtoonReader = selectWebtoonCommand.ExecuteReader();
             WebtoonInfo webtoonInfo;
-            if(!webtoonReader.Read())
+            int lastEpisodeNo;
+            if (!webtoonReader.Read())
             {
                 webtoonInfo = await client.GetWebtoonInfoAsync(titleId);
                 var insertWebtoonCommand = sqliteConnection.CreateCommand();
-                insertWebtoonCommand.CommandText = 
+                insertWebtoonCommand.CommandText =
                     $"INSERT into webtoons (titleId, title, writer) " +
                     $"VALUES (@titleId, @title, @writer);";
                 insertWebtoonCommand.Parameters.AddWithValue("@titleId", titleId);
                 insertWebtoonCommand.Parameters.AddWithValue("@title", webtoonInfo.Title);
                 insertWebtoonCommand.Parameters.AddWithValue("@writer", webtoonInfo.Writer);
                 insertWebtoonCommand.ExecuteNonQuery();
+                lastEpisodeNo = 1;
             }
             else
             {
@@ -89,35 +90,88 @@ namespace wr_rainforest.Naver_Webtoon_Downloader
                     Title = (string)webtoonReader["title"],
                     Writer = (string)webtoonReader["writer"]
                 };
+                var selectLastEpisodeNoCommand = sqliteConnection.CreateCommand();
+                selectLastEpisodeNoCommand.CommandText =
+                    $"SELECT MAX(no) FROM episodes " +
+                    $"WHERE titleId='{titleId}';";
+                var episodeReader = selectLastEpisodeNoCommand.ExecuteReader();
+                if (episodeReader.Read()) 
+                {
+                    lastEpisodeNo = (int)(long)episodeReader["no"];
+                }
+                else
+                {
+                    lastEpisodeNo = 1;
+                }
             }
-
+            var latestEpisodeNo = await client.GetLatestEpisodeNoAsync(titleId);
+            var insertEpisodeCommand = sqliteConnection.CreateCommand();
+            insertEpisodeCommand.CommandText = 
+                $"COMMIT;" +
+                $"BEGIN;";
+            for (int i = lastEpisodeNo; i <= latestEpisodeNo; i++)
+            {
+                EpisodeInfo episodeInfo;
+                try
+                {
+                    episodeInfo = await client.GetEpisodeInfoAsync(titleId, i);
+                }
+                catch (Exception e)
+                {
+                    if (e.GetType() == typeof(EpisodeNotFoundException))
+                        continue;
+                    else
+                        throw e;
+                }
+                insertEpisodeCommand.CommandText +=
+                    $"INSERT into episodes (titleId, no, title , date, image_count) " +
+                    $"VALUES ('{episodeInfo.TitleId}', {episodeInfo.No}, @title_{episodeInfo.No}, @date_{episodeInfo.No}, {episodeInfo.Images.Count});";
+                insertEpisodeCommand.Parameters.AddWithValue($"@title_{episodeInfo.No}", episodeInfo.Title);
+                insertEpisodeCommand.Parameters.AddWithValue($"@date_{episodeInfo.No}", episodeInfo.Title);
+                episodeInfo.Images.ForEach((image) =>
+                {
+                    insertEpisodeCommand.CommandText +=
+                    $"INSERT into images (titleId, no, 'image_index' , uri, size, downloaded) " +
+                    $"VALUES ('{image.TitleId}', {image.No}, {image.Index}, @uri_{image.No}_{image.Index}, {image.Size} ,0);";
+                    insertEpisodeCommand.Parameters.AddWithValue($"@uri_{image.No}_{image.Index}", image.Uri);
+                });
+                progress.Report((i - lastEpisodeNo + 1, latestEpisodeNo - latestEpisodeNo + 1));
+            }
+            insertEpisodeCommand.CommandText += "COMMIT;";
+            insertEpisodeCommand.ExecuteNonQuery();
+        }
+        public async Task DownloadWebtoonAsync(string titleId, string downloadFolder, IProgress<(int position, int count)> progress, CancellationToken ct)
+        {
+            var selectWebtoonCommand = sqliteConnection.CreateCommand();
+            selectWebtoonCommand.CommandText =
+                $"SELECT * from webtoons " +
+                $"WHERE titleId='{titleId}';";
+            var webtoonReader = selectWebtoonCommand.ExecuteReader();
+            WebtoonInfo webtoonInfo = new WebtoonInfo()
+            {
+                TitleId = (string)webtoonReader["titleId"],
+                Title = (string)webtoonReader["title"],
+                Writer = (string)webtoonReader["writer"]
+            };
             var selectEpisodesCommand = sqliteConnection.CreateCommand();
-            selectEpisodesCommand.CommandText = 
+            selectEpisodesCommand.CommandText =
                 $"SELECT * FROM episodes " +
                 $"WHERE titleId='{titleId}' " +
                 $"ORDER BY no ASC;";
             var episodeReader = selectEpisodesCommand.ExecuteReader();
-            var episodes = new Dictionary<int,EpisodeInfo>();
+            var episodes = new Dictionary<int, EpisodeInfo>();
             while (episodeReader.Read())
             {
                 var episodeInfo = new EpisodeInfo()
                 {
-                    TitleId=(string)episodeReader["titleId"],
-                    No=(int)(long)episodeReader["no"],
-                    Title=(string)episodeReader["title"],
-                    Date=(string)episodeReader["date"]
+                    TitleId = (string)episodeReader["titleId"],
+                    No = (int)(long)episodeReader["no"],
+                    Title = (string)episodeReader["title"],
+                    Date = (string)episodeReader["date"]
                 };
                 episodes.Add(episodeInfo.No, episodeInfo);
             }
-            int lastEpisodeNo;
-            if (episodes.Count == 0)
-            {
-                lastEpisodeNo = 0;
-            }
-            else
-            {
-                lastEpisodeNo = episodes.Keys.Max();
-            }
+
             var selectImagesCommand = sqliteConnection.CreateCommand();
             selectImagesCommand.CommandText = 
                 $"SELECT * from images " +
@@ -135,43 +189,9 @@ namespace wr_rainforest.Naver_Webtoon_Downloader
                     Size = (int)(long)imagesReader["size"],
                     Downloaded = (int)(long)imagesReader["downloaded"]
                 };
-                if (image.Downloaded == 0)
-                {
-                    imagesToDownload.Add(image);
-                }
-                episodes[(int)(long)imagesReader["no"]].Images.Add(image);
             }
-            var latestEpisodeNo = await client.GetLatestEpisodeNoAsync(titleId);
-            for(int i = lastEpisodeNo; i<=latestEpisodeNo; i++)
-            {
-                EpisodeInfo episodeInfo;
-                try
-                {
-                   episodeInfo = await client.GetEpisodeInfoAsync(titleId, i);
-                }
-                catch(Exception e)
-                {
-                    if (e.GetType() == typeof(EpisodeNotFoundException))
-                        continue;
-                    else
-                        throw e;
-                }
-                var insertEpisodeCommand = sqliteConnection.CreateCommand();
-                insertEpisodeCommand.CommandText = 
-                    $"INSERT into episodes (titleId, no, title , date, image_count) " +
-                    $"VALUES ('{episodeInfo.TitleId}', {episodeInfo.No}, @title, @date, {episodeInfo.Images.Count});";
-                insertEpisodeCommand.Parameters.AddWithValue("@title", episodeInfo.Title);
-                insertEpisodeCommand.Parameters.AddWithValue("@date", episodeInfo.Title);
-                episodeInfo.Images.ForEach((image) => 
-                {
-                    insertEpisodeCommand.CommandText +=
-                    $"INSERT into images (titleId, no, 'image_index' , uri, size, downloaded) " +
-                    $"VALUES ('{image.TitleId}', {image.No}, {image.Index}, @uri, {image.Size} ,0);";
-                    insertEpisodeCommand.Parameters.AddWithValue("@uri", image.Uri);
-                    imagesToDownload.Add(image);
-                });
-                insertEpisodeCommand.ExecuteNonQuery();
-            }
+
+            List<Task> saveFileTasks = new List<Task>();
             for(int i = 0; i < imagesToDownload.Count; i++)
             {
                 var image = imagesToDownload[i];
@@ -184,14 +204,28 @@ namespace wr_rainforest.Naver_Webtoon_Downloader
                     episodeDirectory,
                     BuildImageFileName(webtoonInfo, episodes[image.No], image, 
                     ".jpg"));
-                File.WriteAllBytes(imageFilePath, buff);
-                var updateImageCommand = sqliteConnection.CreateCommand();
-                updateImageCommand.CommandText =
-                    $"UPDATE images " +
-                    $"SET size='{buff.Length}', downloaded='1' " +
-                    $"WHERE titleId='{image.TitleId}' AND no='{image.No}' AND image_index='{image.Index}';";
-                updateImageCommand.ExecuteNonQuery();
+                saveFileTasks.Add(Task.Run(() =>
+                {
+                    File.WriteAllBytes(imageFilePath, buff);
+                    var updateImageCommand = sqliteConnection.CreateCommand();
+                    updateImageCommand.CommandText =
+                        $"UPDATE images " +
+                        $"SET size='{buff.Length}', downloaded='1' " +
+                        $"WHERE titleId='{image.TitleId}' AND no='{image.No}' AND image_index='{image.Index}';";
+#if DEBUG
+                    var changed = updateImageCommand.ExecuteNonQuery();
+                    if (changed == 0)
+                    {
+                        throw new Exception();
+                    }
+#endif
+#if !DEBUG
+                    updateImageCommand.ExecuteNonQuery();
+#endif
+                    progress.Report((i + 1, imagesToDownload.Count));
+                }));
             }
+            await Task.WhenAll(saveFileTasks);
         }
         private string BuildImageFileName(WebtoonInfo webtoonInfo, EpisodeInfo episodeInfo,ImageInfo imageInfo, string extension)
         {
