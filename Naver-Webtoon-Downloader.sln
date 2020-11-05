@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.30309.148
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Naver-Webtoon-Downloader", "Naver-Webtoon-Downloader\Naver-Webtoon-Downloader.csproj", "{C15F9A2B-E0D0-4CE4-8D2D-7D0CAC5A58C3}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Naver-Webtoon-Downloader-CLI", "Naver-Webtoon-Downloader-CLI\Naver-Webtoon-Downloader-CLI.csproj", "{C15F9A2B-E0D0-4CE4-8D2D-7D0CAC5A58C3}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

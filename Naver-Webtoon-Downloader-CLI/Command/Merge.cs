@@ -8,10 +8,8 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Drawing.Imaging;
-using WRforest.NWD.DataType;
-using WRforest.NWD.Key;
 
-namespace WRforest.NWD.Command
+namespace wr_rainforest.Naver_Webtoon_Downloader_CLI.Command
 {
     class Merge : Command
     {

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace WRforest.NWD.Command
+namespace wr_rainforest.Naver_Webtoon_Downloader_CLI.Command
 {
     class Get : Command
     {

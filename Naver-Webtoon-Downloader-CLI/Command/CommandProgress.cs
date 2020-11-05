@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace WRforest.NWD.Command
+namespace wr_rainforest.Naver_Webtoon_Downloader_CLI.Command
 {
     class CommandProgress : IProgress<string>
     {

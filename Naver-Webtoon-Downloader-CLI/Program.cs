@@ -6,10 +6,8 @@ using System.Net;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using WRforest.NWD;
-using WRforest.NWD.Command;
 
-namespace WRforest.NWD
+namespace wr_rainforest.Naver_Webtoon_Downloader_CLI
 {
     class Program
     {

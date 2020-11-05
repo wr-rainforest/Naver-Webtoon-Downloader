@@ -6,7 +6,7 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{C15F9A2B-E0D0-4CE4-8D2D-7D0CAC5A58C3}</ProjectGuid>
     <OutputType>Exe</OutputType>
-    <RootNamespace>WRforest</RootNamespace>
+    <RootNamespace>wr_rainforest</RootNamespace>
     <AssemblyName>Naver-Webtoon-Downloader</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
@@ -58,31 +58,14 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="NWD\Agent.cs" />
-    <Compile Include="NWD\Command\CommandManger.cs" />
-    <Compile Include="NWD\Command\CommandProgress.cs" />
-    <Compile Include="NWD\Command\Download.cs" />
-    <Compile Include="NWD\Command\Get.cs" />
-    <Compile Include="NWD\Command\Merge.cs" />
-    <Compile Include="NWD\Command\SetFolder.cs" />
-    <Compile Include="NWD\FileNameBuilder.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>AssemblyInfo.tt</DependentUpon>
-    </Compile>
-    <Compile Include="NWD\Command\Command.cs" />
-    <Compile Include="NWD\Program.cs" />
-    <Compile Include="NWD\Config.cs" />
-    <Compile Include="NWD\DataType\EpisodeInfo.cs" />
-    <Compile Include="NWD\DataType\WebtoonInfo.cs" />
-    <Compile Include="NWD\IO.cs" />
-    <Compile Include="NWD\Downloader.cs" />
-    <Compile Include="NWD\Key\EpisodeKey.cs" />
-    <Compile Include="NWD\Key\ImageKey.cs" />
-    <Compile Include="NWD\Key\WebtoonKey.cs" />
-    <Compile Include="NWD\Parser.cs" />
-    <Compile Include="unused\Merge.cs" />
+    <Compile Include="Command\CommandManger.cs" />
+    <Compile Include="Command\CommandProgress.cs" />
+    <Compile Include="Command\Download.cs" />
+    <Compile Include="Command\Get.cs" />
+    <Compile Include="Command\Merge.cs" />
+    <Compile Include="Command\Command.cs" />
+    <Compile Include="Program.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
@@ -90,14 +73,6 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="nwd_logo.ico" />
-    <Content Include="Properties\AssemblyInfo.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>AssemblyInfo.cs</LastGenOutput>
-    </Content>
-    <Content Include="Properties\version.build.tree.txt" />
-    <Content Include="unused\regex.txt" />
-    <Content Include="unused\Command.txt" />
-    <Content Include="unused\parser.txt" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
