@@ -1,0 +1,104 @@
+﻿<Window x:Class="wr_rainforest.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:wr_rainforest"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="675" Width="1200" MinHeight="675" MinWidth="1200" WindowStartupLocation="CenterScreen" WindowState="Maximized">
+    <Grid>
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="19" x:Name="MenuRow"></RowDefinition>
+                <RowDefinition Height="40" x:Name="UrlTextBoxRow"></RowDefinition>
+                <RowDefinition Height="20" x:Name="ColumHeaderRow"></RowDefinition>
+                <RowDefinition Height="1*" x:Name="DownloadListViewRow"></RowDefinition>
+                <RowDefinition Height="20" x:Name="FooterRow"></RowDefinition>
+                <RowDefinition Height="0" x:Name="imgRow"></RowDefinition>
+            </Grid.RowDefinitions>
+            <Menu Grid.Row="0" Background="White">
+                <MenuItem Header="도움말">
+                    <MenuItem Header="정보" Click="Information_MenuItem_Click"></MenuItem>
+                    <MenuItem Header="GitHub" Click="GitHub_MenuItem_Click"></MenuItem>
+                </MenuItem>
+            </Menu>
+            <Border Grid.Row="1" Background="#f0f0f0" BorderBrush="White" BorderThickness="0,1,0,0" Padding="0">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="40"></ColumnDefinition>
+                        <ColumnDefinition Width="1*" MinWidth="400"></ColumnDefinition>
+                        <ColumnDefinition Width="5"></ColumnDefinition>
+                        <ColumnDefinition Width="100"></ColumnDefinition>
+                        <ColumnDefinition Width="5"></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="5"></RowDefinition>
+                        <RowDefinition Height="1*"></RowDefinition>
+                        <RowDefinition Height="5"></RowDefinition>
+                    </Grid.RowDefinitions>
+                    <Image Grid.Column="0" Grid.Row="1" Margin="5"  Source="/Resources/Link_16x.png" VerticalAlignment="Center" HorizontalAlignment="Center">
+                    </Image>
+                    <TextBox x:Name="UriTextBox" Grid.Column="1" Grid.Row="1" VerticalContentAlignment="Center" KeyDown="UriTextBox_KeyDown">
+                        <TextBox.Resources>
+                            <Style TargetType="{x:Type Border}">
+                                <Setter Property="CornerRadius" Value="3"/>
+                            </Style>
+                        </TextBox.Resources>
+                    </TextBox>
+                    <Button x:Name="AddButton" Grid.Column="3" Grid.Row="1" BorderThickness="0" Content="추가" Click="AddButton_Click">
+                        <Button.Resources>
+                            <Style TargetType="{x:Type Border}">
+                                <Setter Property="CornerRadius" Value="3"/>
+                            </Style>
+                        </Button.Resources>
+                    </Button>
+                </Grid>
+            </Border>
+            <Border Grid.Row="2" BorderBrush="White" BorderThickness="0,1,0,0" Background="#f0f0f0">
+                <Grid x:Name="RowInfoGrid">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="25" x:Name="CheckBoxColumn"></ColumnDefinition>
+                        <ColumnDefinition Width="150" Name="TitleColumn"></ColumnDefinition>
+                        <ColumnDefinition Width="90" x:Name="WriterColumn"></ColumnDefinition>
+                        <ColumnDefinition Width="250" x:Name="LastEpisodeInfoColumn"></ColumnDefinition>
+                        <ColumnDefinition Width="150" x:Name="StatusColumn"></ColumnDefinition>
+                        <ColumnDefinition Width="280*" x:Name="ProgressColumn"></ColumnDefinition>
+                        <ColumnDefinition Width="90" x:Name="SizeColumn"></ColumnDefinition>
+                        <ColumnDefinition Width="30" x:Name="RunPauseButtonColumn"></ColumnDefinition>
+                        <ColumnDefinition Width="30" x:Name="StopDeleteButtonColumn"></ColumnDefinition>
+                        <ColumnDefinition Width="18" x:Name="MarginColumn"></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
+                    <Label Grid.Column="0" BorderBrush="White" BorderThickness="0,0,1,0" Padding="0" HorizontalContentAlignment="Center"></Label>
+                    <Label Grid.Column="1" BorderBrush="White" BorderThickness="0,0,1,0" Padding="0" HorizontalContentAlignment="Center">웹툰명</Label>
+                    <Label Grid.Column="2" BorderBrush="White" BorderThickness="0,0,1,0" Padding="0" HorizontalContentAlignment="Center">작가명</Label>
+                    <Label Grid.Column="3" BorderBrush="White" BorderThickness="0,0,1,0" Padding="0" HorizontalContentAlignment="Center">최신 회차</Label>
+                    <Label Grid.Column="4" BorderBrush="White" BorderThickness="0,0,1,0" Padding="0" HorizontalContentAlignment="Center">상태</Label>
+                    <Label Grid.Column="5" BorderBrush="White" BorderThickness="0,0,1,0" Padding="0" HorizontalContentAlignment="Center">진행상황</Label>
+                    <Label Grid.Column="6" BorderBrush="White" BorderThickness="0,0,1,0" Padding="0" HorizontalContentAlignment="Center">용량</Label>
+                    <Label Grid.Column="7" BorderBrush="White" BorderThickness="0,0,1,0" Padding="0" HorizontalContentAlignment="Center"></Label>
+                    <Label Grid.Column="8" BorderBrush="White" BorderThickness="0,0,1,0" Padding="0" HorizontalContentAlignment="Center"></Label>
+                    <Label Grid.Column="9" BorderBrush="White" BorderThickness="0,0,1,0" Padding="0" HorizontalContentAlignment="Center"></Label>
+                </Grid>
+            </Border>
+            <ScrollViewer Grid.Row="3">
+                <StackPanel x:Name="DownloadInfoPanel" Orientation="Vertical">
+
+                </StackPanel>
+            </ScrollViewer>
+            <Border Grid.Row="4" BorderBrush="White" BorderThickness="0" Background="#f0f0f0">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="1*"></ColumnDefinition>
+                        <ColumnDefinition Width="150"></ColumnDefinition>
+                        <ColumnDefinition Width="150"></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
+                    <Label Name="Footer1" Grid.Column="0" BorderBrush="White" BorderThickness="0,0,1,0" Padding="0" HorizontalContentAlignment="Left" VerticalContentAlignment="Center"></Label>
+                    <Label Name="Footer2" Grid.Column="1" BorderBrush="White" BorderThickness="0,0,1,0" Padding="0" HorizontalContentAlignment="Left" VerticalContentAlignment="Center"></Label>
+                    <Label Name="Footer3" Grid.Column="2" BorderBrush="White" BorderThickness="0,0,1,0" Padding="0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"></Label>
+                </Grid>
+            </Border>
+        </Grid>
+        <Label Name="Loading" Content="로딩중.." VerticalAlignment="Center" HorizontalAlignment="Center" Visibility="Hidden" Panel.ZIndex="2"></Label>
+        
+    </Grid>
+</Window>
