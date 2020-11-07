@@ -15,7 +15,7 @@ namespace NaverWebtoonDownloader.CoreLib
     public class Downloader
     {
         Dictionary<string, string> unAvailableWebtoons = new Dictionary<string, string>();
-        private Config config;
+        private NameFormat format;
         private static readonly NaverWebtoonHttpClient client;
         private SqliteConnection sqliteConnection;
         static Downloader()
@@ -23,10 +23,10 @@ namespace NaverWebtoonDownloader.CoreLib
             client = new NaverWebtoonHttpClient();
         }
 
-        public Downloader(Config config, string dataSource)
+        public Downloader(NameFormat format, string dataSource)
         {
             unAvailableWebtoons.Add("670144", "애니매이션 효과가 적용된 웹툰은 다운로드가 불가능합니다.");
-            this.config = config;
+            this.format = format;
             dataSource = Path.GetFullPath(dataSource);
             sqliteConnection = new SqliteConnection($"Data Source = {dataSource};Mode=ReadWriteCreate;");
             sqliteConnection.Open();
@@ -275,19 +275,19 @@ namespace NaverWebtoonDownloader.CoreLib
         }
         private string BuildImageFileName(WebtoonInfo webtoonInfo, EpisodeInfo episodeInfo,ImageInfo imageInfo, string extension)
         {
-            return ReplaceFileName(string.Format(config.ImageFileNameFormat, episodeInfo.TitleId, episodeInfo.No, imageInfo.Index, webtoonInfo.Title, episodeInfo.Title, episodeInfo.Date) + extension);
+            return ReplaceFileName(string.Format(format.ImageFileNameFormat, episodeInfo.TitleId, episodeInfo.No, imageInfo.Index, webtoonInfo.Title, episodeInfo.Title, episodeInfo.Date) + extension);
         }
         private string BuildEpisodeFileName(WebtoonInfo webtoonInfo, EpisodeInfo episodeInfo, string extension)
         {
-            return ReplaceFileName(string.Format(config.EpisodeDirectoryNameFormat, webtoonInfo.TitleId, episodeInfo.No, episodeInfo.Date, webtoonInfo.Title, episodeInfo.Title, webtoonInfo.Writer)+extension);
+            return ReplaceFileName(string.Format(format.EpisodeDirectoryNameFormat, webtoonInfo.TitleId, episodeInfo.No, episodeInfo.Date, webtoonInfo.Title, episodeInfo.Title, webtoonInfo.Writer)+extension);
         }
         private string BuildEpisodeFolderName(WebtoonInfo webtoonInfo, EpisodeInfo episodeInfo)
         {
-            return ReplaceFolderName(string.Format(config.EpisodeDirectoryNameFormat, episodeInfo.TitleId, episodeInfo.No, episodeInfo.Date, webtoonInfo.Title, episodeInfo.Title, webtoonInfo.Writer));
+            return ReplaceFolderName(string.Format(format.EpisodeDirectoryNameFormat, episodeInfo.TitleId, episodeInfo.No, episodeInfo.Date, webtoonInfo.Title, episodeInfo.Title, webtoonInfo.Writer));
         }
         private string BuildWebtoonFolderName(WebtoonInfo webtoonInfo)
         {
-            return ReplaceFolderName(string.Format(config.WebtoonDirectoryNameFormat, webtoonInfo.TitleId, webtoonInfo.Title, webtoonInfo.Writer));
+            return ReplaceFolderName(string.Format(format.WebtoonDirectoryNameFormat, webtoonInfo.TitleId, webtoonInfo.Title, webtoonInfo.Writer));
         }
         private string ReplaceFolderName(string name)
         {

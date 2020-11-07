@@ -11,7 +11,7 @@ namespace NaverWebtoonDownloader.CoreLib
     /// <summary>
     /// <seealso cref="NaverWebtoonDownloader"/> 설정
     /// </summary>
-    public class Config
+    public class NameFormat
     {
         private string imageFileNameFormat;
         [JsonPropertyName("ImageFileNameFormat")]
@@ -92,24 +92,24 @@ namespace NaverWebtoonDownloader.CoreLib
         }
 
         /// <summary>
-        /// <seealso cref="Config"/>의 새 인스턴스를 초기화합니다. 하드코딩된 설정을 적용합니다.
+        /// <seealso cref="NameFormat"/>의 새 인스턴스를 초기화합니다. 하드코딩된 설정을 적용합니다.
         /// </summary>
-        public Config()
+        public NameFormat()
         {
 
         }
 
         /// <summary>
-        /// 직렬화된 Json 텍스트로 <seealso cref="Config"/>의 새 인스턴스를 초기화합니다. <paramref name="json"/>이 null일 경우 <seealso cref="ArgumentNullException"/>합니다.
+        /// 직렬화된 Json 텍스트로 <seealso cref="NameFormat"/>의 새 인스턴스를 초기화합니다. <paramref name="json"/>이 null일 경우 <seealso cref="ArgumentNullException"/>합니다.
         /// </summary>
         /// <param name="json">Json 텍스트입니다.</param>
-        public Config(string json)
+        public NameFormat(string json)
         {
             if (string.IsNullOrEmpty(json))
             {
                 throw new ArgumentNullException("json text가 null입니다.");
             }
-            Config config = JsonSerializer.Deserialize<Config>(json);
+            NameFormat config = JsonSerializer.Deserialize<NameFormat>(json);
             ImageFileNameFormat = config.ImageFileNameFormat;
             EpisodeDirectoryNameFormat = config.EpisodeDirectoryNameFormat;
             WebtoonDirectoryNameFormat = config.WebtoonDirectoryNameFormat;
