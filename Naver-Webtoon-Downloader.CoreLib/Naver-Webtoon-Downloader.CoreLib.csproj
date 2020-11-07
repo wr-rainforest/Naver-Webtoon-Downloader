@@ -1,0 +1,25 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <RootNamespace>NaverWebtoonDownloader.CoreLib</RootNamespace>
+    <AssemblyName>nw-dl</AssemblyName>
+    <Version>0.1.0</Version>
+    <Authors>wr-rainforest</Authors>
+    <Description>Naver-Webtoon-Downloader Core Library</Description>
+    <Copyright>Copyright 2020. wr-rainforest all rights reserved</Copyright>
+    <PackageProjectUrl></PackageProjectUrl>
+    <RepositoryUrl></RepositoryUrl>
+    <PackageId>NaverWebtoonDownloader.CoreLib</PackageId>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DocumentationFile></DocumentationFile>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="HtmlAgilityPack" Version="1.11.26" />
+    <PackageReference Include="Microsoft.Data.Sqlite" Version="3.1.9" />
+  </ItemGroup>
+
+</Project>

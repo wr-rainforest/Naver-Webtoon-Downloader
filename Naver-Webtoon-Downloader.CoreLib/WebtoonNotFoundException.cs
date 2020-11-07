@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace wr_rainforest.Naver_Webtoon_Downloader
+namespace NaverWebtoonDownloader.CoreLib
 {
     class WebtoonNotFoundException : Exception
     {

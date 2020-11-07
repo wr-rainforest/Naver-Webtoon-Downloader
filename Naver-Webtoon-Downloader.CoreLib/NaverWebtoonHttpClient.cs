@@ -1,5 +1,4 @@
 ﻿using HtmlAgilityPack;
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,10 +6,11 @@ using System.Net;
 using System.Net.Http;
 using System.Security.Cryptography;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 using System.Web;
 
-namespace wr_rainforest.Naver_Webtoon_Downloader
+namespace NaverWebtoonDownloader.CoreLib
 {
     public class NaverWebtoonHttpClient : HttpClient
     {
@@ -62,7 +62,7 @@ namespace wr_rainforest.Naver_Webtoon_Downloader
                 uuid = "b7763c36-2a93-4a96-a4df-a85679a575e1-0",
                 encData= ""
             };
-            keyValuePairs.Add("bvsd", JsonConvert.SerializeObject(bvsd));
+            keyValuePairs.Add("bvsd", JsonSerializer.Serialize(bvsd));
             keyValuePairs.Add("smart_LEVEL", "-1");
             keyValuePairs.Add("encnm", sessionName);
             keyValuePairs.Add("locale", "ko_KR");

@@ -1,26 +1,20 @@
-﻿using Newtonsoft.Json;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
-namespace wr_rainforest.Naver_Webtoon_Downloader
+namespace NaverWebtoonDownloader.CoreLib
 {
     /// <summary>
     /// <seealso cref="NaverWebtoonDownloader"/> 설정
     /// </summary>
     public class Config
     {
-        [JsonProperty(PropertyName = "Version")]
-        private string versionString { get => version.ToString(); set => version = new Version(value); }
-        [JsonIgnore]
-        private Version version = new Version("1.0.0");
-        [JsonIgnore]
-        public Version Version { get=>version;}
-
-        [JsonIgnore]
         private string imageFileNameFormat;
+        [JsonPropertyName("ImageFileNameFormat")]
         /// <summary>
         /// 저장할 이미지의 파일 이름 포맷을 설정합니다. {0~4}는 중복되거나 누락시킬 수 있습니다. {0~4}이외의 다른 숫자는 올 수 없습니다.
         /// <code>포맷 : {0}-{1:D4}-{2:D4}-{3}-{4}.jpg</code>
@@ -46,8 +40,8 @@ namespace wr_rainforest.Naver_Webtoon_Downloader
             }
         }
 
-        [JsonIgnore]
         private string episodeDirectoryNameFormat;
+        [JsonPropertyName("EpisodeDirectoryNameFormat")]
         /// <summary>
         /// 저장할 회차의 폴더 이름 포맷을 설정합니다. {0~5}은/는 중복되거나 누락시킬 수 있습니다. {0~5}이외의 다른 숫자는 올 수 없습니다.
         /// <code>포맷 : {0}-{1:D4}-{2}-{3}-{4}</code>
@@ -73,8 +67,8 @@ namespace wr_rainforest.Naver_Webtoon_Downloader
             }
         }
 
-        [JsonIgnore]
         private string webtoonDirectoryNameFormat;
+        [JsonPropertyName("WebtoonDirectoryNameFormat")]
         /// <summary>
         /// 저장할 웹툰의 폴더 이름 포맷을 설정합니다. {0~2}은/는 중복되거나 누락시킬 수 있습니다. {0~2}이외의 다른 숫자는 올 수 없습니다.
         /// <code>포맷 : {0}-{1}</code>
@@ -115,7 +109,7 @@ namespace wr_rainforest.Naver_Webtoon_Downloader
             {
                 throw new ArgumentNullException("json text가 null입니다.");
             }
-            Config config = JsonConvert.DeserializeObject<Config>(json);
+            Config config = JsonSerializer.Deserialize<Config>(json);
             ImageFileNameFormat = config.ImageFileNameFormat;
             EpisodeDirectoryNameFormat = config.EpisodeDirectoryNameFormat;
             WebtoonDirectoryNameFormat = config.WebtoonDirectoryNameFormat;
@@ -127,7 +121,7 @@ namespace wr_rainforest.Naver_Webtoon_Downloader
         /// <returns><seealso cref="string"/> Json</returns>
         public string ToJsonString()
         {
-            return JsonConvert.SerializeObject(this, Formatting.Indented);
+            return JsonSerializer.Serialize(this, new JsonSerializerOptions() { WriteIndented = true }) ;
         }
     }
 }

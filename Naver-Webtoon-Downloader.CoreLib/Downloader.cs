@@ -10,7 +10,7 @@ using Microsoft.Data.Sqlite;
 using System.IO;
 using HtmlAgilityPack;
 
-namespace wr_rainforest.Naver_Webtoon_Downloader
+namespace NaverWebtoonDownloader.CoreLib
 {
     public class Downloader
     {
@@ -26,10 +26,6 @@ namespace wr_rainforest.Naver_Webtoon_Downloader
         public Downloader(Config config, string dataSource)
         {
             unAvailableWebtoons.Add("670144", "애니매이션 효과가 적용된 웹툰은 다운로드가 불가능합니다.");
-            if (config.Version.Major != 1)
-            {
-                throw new Exception("지원하지 않는 설정 포맷입니다.");
-            }
             this.config = config;
             dataSource = Path.GetFullPath(dataSource);
             sqliteConnection = new SqliteConnection($"Data Source = {dataSource};Mode=ReadWriteCreate;");

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace wr_rainforest.Naver_Webtoon_Downloader
+namespace NaverWebtoonDownloader.CoreLib
 {
     public class EpisodeNotFoundException : Exception
     {
