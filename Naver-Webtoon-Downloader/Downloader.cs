@@ -8,6 +8,7 @@ using System.Net;
 using System.Net.Http;
 using Microsoft.Data.Sqlite;
 using System.IO;
+using HtmlAgilityPack;
 
 namespace wr_rainforest.Naver_Webtoon_Downloader
 {
@@ -68,7 +69,6 @@ namespace wr_rainforest.Naver_Webtoon_Downloader
         public async Task UpdateOrCreateWebtoonDatabase(string titleId, IProgress<(int position, int count)> progress, CancellationToken ct)
         {
             sqliteConnection.Open();
-            ct.Register(CancelationCallback);
             var selectWebtoonCommand = sqliteConnection.CreateCommand();
             selectWebtoonCommand.CommandText =
                 $"SELECT * from webtoons " +
@@ -147,7 +147,7 @@ namespace wr_rainforest.Naver_Webtoon_Downloader
                     $"VALUES ('{image.TitleId}', {image.No}, {image.Index}, @uri_{image.No}_{image.Index}, {image.Size} ,0);";
                     insertEpisodeCommand.Parameters.AddWithValue($"@uri_{image.No}_{image.Index}", image.Uri);
                 });
-                progress?.Report((i - lastEpisodeNo + 1, latestEpisodeNo - latestEpisodeNo + 1));
+                progress?.Report((i - lastEpisodeNo , latestEpisodeNo - lastEpisodeNo));
             }
             insertEpisodeCommand.CommandText += "COMMIT;";
             insertEpisodeCommand.ExecuteNonQuery();
@@ -156,7 +156,6 @@ namespace wr_rainforest.Naver_Webtoon_Downloader
         public async Task DownloadWebtoonAsync(string titleId, string downloadFolder, IProgress<(int position, int count)> progress, CancellationToken ct)
         {
             sqliteConnection.Open();
-            ct.Register(CancelationCallback);
             var selectWebtoonCommand = sqliteConnection.CreateCommand();
             selectWebtoonCommand.CommandText =
                 $"SELECT * from webtoons " +
@@ -178,8 +177,6 @@ namespace wr_rainforest.Naver_Webtoon_Downloader
             var episodes = new Dictionary<int, EpisodeInfo>();
             while (episodeReader.Read())
             {
-                if (ct.IsCancellationRequested)
-                    return;
                 var episodeInfo = new EpisodeInfo()
                 {
                     TitleId = (string)episodeReader["titleId"],
@@ -199,8 +196,6 @@ namespace wr_rainforest.Naver_Webtoon_Downloader
             var imagesToDownload = new List<ImageInfo>();
             while (imagesReader.Read())
             {
-                if (ct.IsCancellationRequested)
-                    return;
                 var image = new ImageInfo()
                 {
                     TitleId = (string)imagesReader["titleId"],
@@ -238,8 +233,8 @@ namespace wr_rainforest.Naver_Webtoon_Downloader
                         $"SET size='{buff.Length}', downloaded='1' " +
                         $"WHERE titleId='{image.TitleId}' AND no='{image.No}' AND image_index='{image.Index}';";
                     updateImageCommand.ExecuteNonQuery();
-                    progress?.Report((i + 1, imagesToDownload.Count));
                 },ct));
+                progress?.Report((i + 1, imagesToDownload.Count));
             }
             await Task.WhenAll(saveFileTasks);
             sqliteConnection.Close();
@@ -247,30 +242,40 @@ namespace wr_rainforest.Naver_Webtoon_Downloader
 
         public async Task<(bool value, string message)> CanDownload(string titleId)
         {
-            var document = await client.GetListPageDocumentAsync(titleId);
+            HtmlDocument document;
+            try
+            {
+                document = await client.GetListPageDocumentAsync(titleId);
+            }
+            catch(Exception e)
+            {
+                if (e.GetType() == typeof(WebtoonNotFoundException))
+                {
+                    return (false, "웹툰 정보가 존재하지 않습니다.");
+                }
+                else
+                {
+                    throw e;
+                }
+            }
+            
             if (document.DocumentNode.InnerHtml.Contains("완결까지 정주행!"))
             {
-                return (false, "유료 웹툰");
+                return (false, "유료 웹툰은 다운로드가 불가능합니다.");
             }
             if (document.DocumentNode.InnerHtml.Contains("18세 이상 이용 가능"))
             {
-                return (false, "성인 웹툰");
+                return (false, "성인 웹툰은 다운로드가 불가능합니다.");
             }
             if (document.DocumentNode.SelectSingleNode("//meta[@property='og:url']").Attributes["content"].Value.Contains("hallenge"))
             {
-                return (false,"베스트도전/도전만화)");
+                return (false, "베스트도전/도전만화는 다운로드가 불가능합니다.");
             }
             if (unAvailableWebtoons.ContainsKey(titleId))
             {
                 return (false,$"{unAvailableWebtoons[titleId]}");
             }
             return (true, "");
-        }
-
-
-        private void CancelationCallback()
-        {
-            sqliteConnection.Close();
         }
         private string BuildImageFileName(WebtoonInfo webtoonInfo, EpisodeInfo episodeInfo,ImageInfo imageInfo, string extension)
         {

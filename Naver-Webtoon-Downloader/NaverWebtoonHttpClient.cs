@@ -77,7 +77,13 @@ namespace wr_rainforest.Naver_Webtoon_Downloader
         public async Task<HtmlDocument> GetListPageDocumentAsync(string titleId)
         {
             var uri = $"https://comic.naver.com/webtoon/list.nhn?titleId={titleId}";
-            var responseString = await GetStringAsync(uri);
+            var response = await GetAsync(uri);
+            if (response.StatusCode == HttpStatusCode.Redirect)
+            {
+                throw new WebtoonNotFoundException(titleId);
+            }
+            response.EnsureSuccessStatusCode();
+            var responseString = await response.Content.ReadAsStringAsync();
             HtmlDocument document = new HtmlDocument();
             document.LoadHtml(responseString);
             return document;
@@ -91,7 +97,8 @@ namespace wr_rainforest.Naver_Webtoon_Downloader
             {
                 throw new EpisodeNotFoundException(titleId, episodeNo);
             }
-            var responseString = await GetStringAsync(uri);
+            response.EnsureSuccessStatusCode();
+            var responseString = await response.Content.ReadAsStringAsync();
             HtmlDocument document = new HtmlDocument();
             document.LoadHtml(responseString);
             return document;
