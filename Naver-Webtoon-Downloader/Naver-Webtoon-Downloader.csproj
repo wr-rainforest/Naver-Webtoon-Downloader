@@ -11,4 +11,8 @@
     <PackageReference Include="Microsoft.Data.Sqlite" Version="3.1.9" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Naver-Webtoon-Downloader.CoreLib\Naver-Webtoon-Downloader.CoreLib.csproj" />
+  </ItemGroup>
+
 </Project>

@@ -6,6 +6,9 @@ MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Naver-Webtoon-Downloader.CoreLib", "Naver-Webtoon-Downloader.CoreLib\Naver-Webtoon-Downloader.CoreLib.csproj", "{DB78C181-1918-437A-A21B-15C041181DBE}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Naver-Webtoon-Downloader", "Naver-Webtoon-Downloader\Naver-Webtoon-Downloader.csproj", "{2DDAFD54-22E5-44BC-8B8D-3F8B6C8349D8}"
+	ProjectSection(ProjectDependencies) = postProject
+		{DB78C181-1918-437A-A21B-15C041181DBE} = {DB78C181-1918-437A-A21B-15C041181DBE}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
