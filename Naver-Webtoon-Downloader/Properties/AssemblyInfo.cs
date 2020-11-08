@@ -1,14 +1,14 @@
-ï»¿
+
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Resources;
 
-// ì–´ì…ˆë¸”ë¦¬ì— ëŒ€í•œ ì¼ë°˜ ì •ë³´ëŠ” ë‹¤ìŒ íŠ¹ì„± ì§‘í•©ì„ í†µí•´ 
-// ì œì–´ë©ë‹ˆë‹¤. ì–´ì…ˆë¸”ë¦¬ì™€ ê´€ë ¨ëœ ì •ë³´ë¥¼ ìˆ˜ì •í•˜ë ¤ë©´
-// ì´ëŸ¬í•œ íŠ¹ì„± ê°’ì„ ë³€ê²½í•˜ì„¸ìš”.
+// ¾î¼Àºí¸®¿¡ ´ëÇÑ ÀÏ¹İ Á¤º¸´Â ´ÙÀ½ Æ¯¼º ÁıÇÕÀ» ÅëÇØ 
+// Á¦¾îµË´Ï´Ù. ¾î¼Àºí¸®¿Í °ü·ÃµÈ Á¤º¸¸¦ ¼öÁ¤ÇÏ·Á¸é
+// ÀÌ·¯ÇÑ Æ¯¼º °ªÀ» º¯°æÇÏ¼¼¿ä.
 [assembly: AssemblyTitle("Naver-Webtoon-Downloader")]
-[assembly: AssemblyDescription("ë„¤ì´ë²„ ì›¹íˆ° ë‹¤ìš´ë¡œë”.")]
+[assembly: AssemblyDescription("³×ÀÌ¹ö À¥Å÷ ´Ù¿î·Î´õ.")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("wrforest.com")]
 [assembly: AssemblyProduct("Naver-Webtoon-Downloader")]
@@ -16,23 +16,23 @@ using System.Resources;
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
-// ComVisibleì„ falseë¡œ ì„¤ì •í•˜ë©´ ì´ ì–´ì…ˆë¸”ë¦¬ì˜ í˜•ì‹ì´ COM êµ¬ì„± ìš”ì†Œì— 
-// í‘œì‹œë˜ì§€ ì•ŠìŠµë‹ˆë‹¤. COMì—ì„œ ì´ ì–´ì…ˆë¸”ë¦¬ì˜ í˜•ì‹ì— ì•¡ì„¸ìŠ¤í•˜ë ¤ë©´
-// í•´ë‹¹ í˜•ì‹ì— ëŒ€í•´ ComVisible íŠ¹ì„±ì„ trueë¡œ ì„¤ì •í•˜ì„¸ìš”.
+// ComVisibleÀ» false·Î ¼³Á¤ÇÏ¸é ÀÌ ¾î¼Àºí¸®ÀÇ Çü½ÄÀÌ COM ±¸¼º ¿ä¼Ò¿¡ 
+// Ç¥½ÃµÇÁö ¾Ê½À´Ï´Ù. COM¿¡¼­ ÀÌ ¾î¼Àºí¸®ÀÇ Çü½Ä¿¡ ¾×¼¼½ºÇÏ·Á¸é
+// ÇØ´ç Çü½Ä¿¡ ´ëÇØ ComVisible Æ¯¼ºÀ» true·Î ¼³Á¤ÇÏ¼¼¿ä.
 [assembly: ComVisible(false)]
 
-// ì´ í”„ë¡œì íŠ¸ê°€ COMì— ë…¸ì¶œë˜ëŠ” ê²½ìš° ë‹¤ìŒ GUIDëŠ” typelibì˜ IDë¥¼ ë‚˜íƒ€ëƒ…ë‹ˆë‹¤.
+// ÀÌ ÇÁ·ÎÁ§Æ®°¡ COM¿¡ ³ëÃâµÇ´Â °æ¿ì ´ÙÀ½ GUID´Â typelibÀÇ ID¸¦ ³ªÅ¸³À´Ï´Ù.
 [assembly: Guid("c15f9a2b-e0d0-4ce4-8d2d-7d0cac5a58c3")]
 
-// ì–´ì…ˆë¸”ë¦¬ì˜ ë²„ì „ ì •ë³´ëŠ” ë‹¤ìŒ ë„¤ ê°€ì§€ ê°’ìœ¼ë¡œ êµ¬ì„±ë©ë‹ˆë‹¤.
+// ¾î¼Àºí¸®ÀÇ ¹öÀü Á¤º¸´Â ´ÙÀ½ ³× °¡Áö °ªÀ¸·Î ±¸¼ºµË´Ï´Ù.
 //
-//      ì£¼ ë²„ì „
-//      ë¶€ ë²„ì „ 
-//      ë¹Œë“œ ë²ˆí˜¸
-//      ìˆ˜ì • ë²„ì „
+//      ÁÖ ¹öÀü
+//      ºÎ ¹öÀü 
+//      ºôµå ¹øÈ£
+//      ¼öÁ¤ ¹öÀü
 //
-// ëª¨ë“  ê°’ì„ ì§€ì •í•˜ê±°ë‚˜ ì•„ë˜ì™€ ê°™ì´ '*'ë¥¼ ì‚¬ìš©í•˜ì—¬ ë¹Œë“œ ë²ˆí˜¸ ë° ìˆ˜ì • ë²ˆí˜¸ë¥¼
-// ê¸°ë³¸ê°’ìœ¼ë¡œ í•  ìˆ˜ ìˆìŠµë‹ˆë‹¤.
+// ¸ğµç °ªÀ» ÁöÁ¤ÇÏ°Å³ª ¾Æ·¡¿Í °°ÀÌ '*'¸¦ »ç¿ëÇÏ¿© ºôµå ¹øÈ£ ¹× ¼öÁ¤ ¹øÈ£¸¦
+// ±âº»°ªÀ¸·Î ÇÒ ¼ö ÀÖ½À´Ï´Ù.
 
-[assembly: AssemblyVersion("2.1.3.1")]
+[assembly: AssemblyVersion("2.2.1.1")]
 

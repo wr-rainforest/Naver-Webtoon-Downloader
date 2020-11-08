@@ -48,15 +48,14 @@ namespace WRforest.NWD
             IO.Print($" 연락처   : contact@wrforest.com");
             IO.Print(new string('-',100));
             IO.Print(" 명령어   : download [$$titleId$green$] 웹툰을 다운로드합니다. / (단축 명령어 : d)");
-            IO.Print("            예) download $$20853$green$ ");
-            IO.Print("                d $$183559$green$ $$20853$green$ ");
-            IO.Print("            comic.naver.com/webtoon/list.nhn?titleId=$$20853$green$"); 
+            IO.Print("            예) download $$000000$green$ ");
+            IO.Print("                d $$000000$green$ $$000000$green$ ");
             IO.Print("");
             IO.Print("            get [$$weekday$green$] 선택한 요일(mon/tue/wed/thu/fri/sat/sun)의 웹툰 목록을 불러옵니다.");
             IO.Print("            예) get $$mon$green$ ");
             IO.Print("");
             IO.Print("            merge [$$titleId$green$] 다운로드된 이미지를 하나의 파일로 병합합니다. / [$$titleId$green$] :병합할 웹툰의 $$titleId$green$입니다. ");
-            IO.Print("            예) merge $$748105$green$ ");
+            IO.Print("            예) merge $$000000$green$ ");
             IO.Print("");
             IO.Print("            setfolder [$$folder$green$] / [$$folder$green$]를 기본 다운로드 폴더로 설정합니다.");
             IO.Print("            예) setfolder $$d\\webtoons$green$ ");
@@ -98,12 +97,8 @@ namespace WRforest.NWD
             try
             {
                 WebClient webClient = new WebClient();
-                HtmlAgilityPack.HtmlDocument document = new HtmlAgilityPack.HtmlDocument();
-                document.LoadHtml(webClient.DownloadString("https://wr-rainforest.github.io/Naver-Webtoon-Downloader/info/latest_version.html"));
-                //document.LoadHtml(webClient.DownloadString("https://wr-rainforest.github.io/Naver-Webtoon-Downloader/Properties/version.latest.build.txt"));
-                Version latestVersion = new Version(document.DocumentNode.SelectSingleNode("/html/body").InnerText);
-                if (string.IsNullOrEmpty(document.DocumentNode.SelectSingleNode("/html/body").InnerText))
-                    throw new Exception();
+                var vsstr = webClient.DownloadString("https://wr-rainforest.github.io/Naver-Webtoon-Downloader/Pages/version.info.0.2.txt");
+                Version latestVersion = new Version(vsstr);
                 Version currentVersion = new Version(assemblyVersion);
                 int compareResult=currentVersion.CompareTo(latestVersion);
                 if(compareResult<0)
