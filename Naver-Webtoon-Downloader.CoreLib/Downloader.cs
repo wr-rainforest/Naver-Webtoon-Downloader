@@ -15,7 +15,8 @@ namespace NaverWebtoonDownloader.CoreLib
     public class Downloader
     {
         private static readonly NaverWebtoonHttpClient client;
-        private WebtoonDatabase database;
+        public static NaverWebtoonHttpClient Client => client;
+        private Database database;
         private NameFormat format;
 
         static Downloader()
@@ -23,12 +24,28 @@ namespace NaverWebtoonDownloader.CoreLib
             client = new NaverWebtoonHttpClient();
         }
 
-        public Downloader(NameFormat format, string dataSource)
+        /// <summary>
+        /// <seealso cref="Downloader"/>의 새 인스턴스를 초기화합니다. 
+        /// </summary>
+        /// <param name="dataSource">SQLite 데이터베이스 파일 위치입니다. 상대경로 또는 절대경로가 가능합니다.</param>
+        /// <param name="format"></param>
+        public Downloader(string dataSource, NameFormat format)
         {
+            dataSource = Path.GetFullPath(dataSource);
+            database = new Database(dataSource);
             this.format = format;
         }
 
-        public async Task UpdateOrCreateWebtoonDatabase(string titleId, IProgress<(int position, int count)> progress, CancellationToken ct)
+        /// <summary>
+        /// 웹툰의 로컬 데이터베이스를 갱신합니다. 데이터베이스에 해당 웹툰이 존재하지 않는 경우 새로 추가합니다.
+        /// </summary>
+        /// <param name="titleId"></param>
+        /// <param name="progress"></param>
+        /// <param name="ct"></param>
+        /// <returns></returns>
+        /// <exception cref="WebtoonNotFoundException"></exception>
+        /// <exception cref="Exception"></exception>
+        public async Task UpdateOrInsertWebtoonDatabase(string titleId, IProgress<(int position, int count)> progress, CancellationToken ct)
         {
             WebtoonInfo webtoonInfo = database.SelectWebtoon(titleId);
             int lastEpisodeNo = 0;
@@ -67,6 +84,14 @@ namespace NaverWebtoonDownloader.CoreLib
             }
         }
 
+        /// <summary>
+        /// 웹툰을 다운로드합니다. 
+        /// </summary>
+        /// <param name="titleId">다운로드할 웹툰의 titleId입니다.</param>
+        /// <param name="downloadFolder"></param>
+        /// <param name="progress"></param>
+        /// <param name="ct"></param>
+        /// <returns></returns>
         public async Task DownloadWebtoonAsync(string titleId, string downloadFolder, IProgress<(int position, int count)> progress, CancellationToken ct)
         {
             WebtoonInfo webtoonInfo = database.SelectWebtoon(titleId);
@@ -101,7 +126,14 @@ namespace NaverWebtoonDownloader.CoreLib
         }
 
         private readonly static string[] parallax = new string[] { "670144" };
-        public async Task<(bool value, string message)> CanDownload(string titleId)
+        /*
+        /// <summary>
+        /// 지정한 웹툰의 다운로드 가능 여부를 확인합니다.<br/>
+        /// 
+        /// </summary>
+        /// <param name="titleId"></param>
+        /// <returns></returns>
+        public async Task CheckDownloadableAsync(string titleId)
         {
             HtmlDocument document;
             try
@@ -131,9 +163,9 @@ namespace NaverWebtoonDownloader.CoreLib
             {
                 return (false, "애니매이션 효과가 적용된 웹툰은 다운로드가 불가능합니다.");
             }
-            return (true, "");
+            return (true, null);
         }
-
+        */
         private string BuildImageFileName(WebtoonInfo webtoonInfo, EpisodeInfo episodeInfo,ImageInfo imageInfo, string extension)
             => ReplaceFileName(string.Format(format.ImageFileNameFormat, episodeInfo.TitleId, episodeInfo.No, imageInfo.Index, webtoonInfo.Title, episodeInfo.Title, episodeInfo.Date) + extension);
 

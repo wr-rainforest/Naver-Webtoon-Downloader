@@ -12,13 +12,27 @@ using System.Web;
 
 namespace NaverWebtoonDownloader.CoreLib
 {
+
     public class NaverWebtoonHttpClient : HttpClient
     {
-        public NaverWebtoonHttpClient() : base(new HttpClientHandler() { AllowAutoRedirect = false })
+        internal NaverWebtoonHttpClient() : base(new HttpClientHandler() { AllowAutoRedirect = false })
         {
-            var version = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version;
-            DefaultRequestHeaders.Add("User-Agent",$"NaverWebtoonDownloader/{version.Major}.{version.Minor}");
+            var assemblyName = System.Reflection.Assembly.GetExecutingAssembly().GetName().Name;
+            var assemblyVersion = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version;
+            string userAgent =
+                $"{assemblyName}/{assemblyVersion.Major}.{assemblyVersion.Minor} " +
+                $"(Windows NT {Environment.OSVersion.Version.Major}.{Environment.OSVersion.Version.Minor};" +
+                $".Net Core {Environment.Version.Major}.{Environment.Version.Minor})";
+            DefaultRequestHeaders.Add("User-Agent", userAgent);
         }
+
+        /// <summary>
+        /// 구현되지 않은 기능
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="password"></param>
+        /// <returns></returns>
+        /// <exception cref="NotImplementedException"></exception>
         public async Task<bool> Login(string id, string password)
         {
             throw new NotImplementedException("구현되지 않은 기능");
@@ -74,6 +88,13 @@ namespace NaverWebtoonDownloader.CoreLib
             //미구현
         }
 
+        /// <summary>
+        /// <paramref name="titleId"/>가 지정하는 웹툰의 목록 페이지(webtoon/list.nhn?titleId=)를 <seealso cref="HtmlDocument"/>로 반환합니다.
+        /// </summary>
+        /// <param name="titleId"></param>
+        /// <returns></returns>
+        /// <exception cref="WebtoonNotFoundException"></exception>
+        /// <exception cref="HttpRequestException">
         public async Task<HtmlDocument> GetListPageDocumentAsync(string titleId)
         {
             var uri = $"https://comic.naver.com/webtoon/list.nhn?titleId={titleId}";
@@ -89,7 +110,13 @@ namespace NaverWebtoonDownloader.CoreLib
             return document;
         }
 
-        public async Task<HtmlDocument> GetEpisodePageDocumentAsync(string titleId, int episodeNo)
+        /// <summary>
+        /// <paramref name="titleId"/>, <paramref name="episodeNo"/>가 지정하는 회차의 페이지(https://comic.naver.com/webtoon/detail.nhn?titleId=amp;no=)의 <seealso cref="HtmlDocument"/>를 반환합니다.
+        /// </summary>
+        /// <param name="titleId"></param>
+        /// <param name="episodeNo"></param>
+        /// <returns></returns>
+        public async Task<HtmlDocument> GetDetailPageDocumentAsync(string titleId, int episodeNo)
         {
             var uri = $"https://comic.naver.com/webtoon/detail.nhn?titleId={titleId}&no={episodeNo}";
             var response = await GetAsync(uri);
@@ -103,7 +130,13 @@ namespace NaverWebtoonDownloader.CoreLib
             document.LoadHtml(responseString);
             return document;
         }
-        //웹툰
+
+        /// <summary>
+        /// <seealso cref="WebtoonInfo"/>를 반환합니다.
+        /// </summary>
+        /// <param name="titleId"></param>
+        /// <returns></returns>
+        /// <exception cref="WebtoonNotFoundException"></exception>
         public async Task<WebtoonInfo> GetWebtoonInfoAsync(string titleId)
         {
             var document = await GetListPageDocumentAsync(titleId);
@@ -113,6 +146,11 @@ namespace NaverWebtoonDownloader.CoreLib
             return webtoonInfo;
         }
 
+        /// <summary>
+        /// 웹툰 제목을 불러옵니다.
+        /// </summary>
+        /// <param name="titleId"></param>
+        /// <returns></returns>
         public async Task<string> GetWebtoonTitleAsync(string titleId)
         {
             var document = await GetListPageDocumentAsync(titleId);
@@ -120,13 +158,23 @@ namespace NaverWebtoonDownloader.CoreLib
             return title;
         }
 
+        /// <summary>
+        /// 웹툰 작가를 불러옵니다.
+        /// </summary>
+        /// <param name="titleId"></param>
+        /// <returns></returns>
         public async Task<string> GetWebtoonWriterAsync(string titleId)
         {
-            var document = await GetEpisodePageDocumentAsync(titleId, 1);
+            var document = await GetDetailPageDocumentAsync(titleId, 1);
             var writer = document.DocumentNode.SelectSingleNode("//*[@name=\"itemWriterId\"]").Attributes["value"].Value;
             return writer;
         }
 
+        /// <summary>
+        /// 웹툰의 마지막 회차 번호를 불러옵니다.
+        /// </summary>
+        /// <param name="titleId"></param>
+        /// <returns></returns>
         public async Task<int> GetLatestEpisodeNoAsync(string titleId)
         {
             var document = await GetListPageDocumentAsync(titleId);
@@ -134,10 +182,15 @@ namespace NaverWebtoonDownloader.CoreLib
             var absoluteUri = $"https://comic.naver.com{relativeUri}";
             return int.Parse(HttpUtility.ParseQueryString(new Uri(absoluteUri).Query).Get("no"));
         }
-        // 회차
+        /// <summary>
+        /// <seealso cref="EpisodeInfo"/>를 불러옵니다.
+        /// </summary>
+        /// <param name="titleId"></param>
+        /// <param name="episodeNo"></param>
+        /// <returns></returns>
         public async Task<EpisodeInfo> GetEpisodeInfoAsync(string titleId, int episodeNo)
         {
-            var document = await GetEpisodePageDocumentAsync(titleId, episodeNo);
+            var document = await GetDetailPageDocumentAsync(titleId, episodeNo);
             var title = document.DocumentNode.SelectSingleNode("//*[@property=\"og:description\"]").Attributes["content"].Value;
             var date = document.DocumentNode.SelectSingleNode("//*[@class=\"date\"]").InnerText;
             List<ImageInfo> images = new List<ImageInfo>();
@@ -160,19 +213,25 @@ namespace NaverWebtoonDownloader.CoreLib
 
         public async Task<string> GetEpisodeTitleAsync(string titleId, int episodeNo)
         {
-            var document = await GetEpisodePageDocumentAsync(titleId, episodeNo);
+            var document = await GetDetailPageDocumentAsync(titleId, episodeNo);
             return document.DocumentNode.SelectSingleNode("//*[@property=\"og:description\"]").Attributes["content"].Value;
         }
 
         public async Task<string> GetEpisodeDateAsync(string titleId, int episodeNo)
         {
-            var document = await GetEpisodePageDocumentAsync(titleId, episodeNo);
+            var document = await GetDetailPageDocumentAsync(titleId, episodeNo);
             return document.DocumentNode.SelectSingleNode("//*[@class=\"date\"]").InnerText;
         }
-        //이미지
+
+        /// <summary>
+        /// 회차의 이미지 uri을 반환합니다.
+        /// </summary>
+        /// <param name="titleId"></param>
+        /// <param name="episodeNo"></param>
+        /// <returns></returns>
         public async Task<string[]> GetEpisodeImageUriListAsync(string titleId, int episodeNo)
         {
-            var document = await GetEpisodePageDocumentAsync(titleId, episodeNo);
+            var document = await GetDetailPageDocumentAsync(titleId, episodeNo);
             List<string> uris = new List<string>();
             HtmlNodeCollection nodes = document.DocumentNode.SelectNodes("//*[@alt=\"comic content\"]");
             for (int i = 0; i < nodes.Count; i++)
