@@ -97,7 +97,7 @@ namespace WRforest.NWD
             try
             {
                 WebClient webClient = new WebClient();
-                var vsstr = webClient.DownloadString("https://wr-rainforest.github.io/Naver-Webtoon-Downloader/Pages/version.info.0.2.txt");
+                var vsstr = webClient.DownloadString("https://raw.githubusercontent.com/wr-rainforest/Naver-Webtoon-Downloader/v2.2.1.1/Pages/version.info.0.2.txt");
                 Version latestVersion = new Version(vsstr);
                 Version currentVersion = new Version(assemblyVersion);
                 int compareResult=currentVersion.CompareTo(latestVersion);
