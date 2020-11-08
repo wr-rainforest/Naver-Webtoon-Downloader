@@ -7,14 +7,13 @@ using Microsoft.Data.Sqlite;
 
 namespace NaverWebtoonDownloader.CoreLib
 {
-    internal class WebtoonDatabase
+    internal class Database
     {
         private SqliteConnection sqliteConnection;
 
-        public WebtoonDatabase(string dataSource)
+
+        public Database(string dataSource)
         {
-            //dataSource를 절대경로로 변환합니다.
-            dataSource = Path.GetFullPath(dataSource);
             sqliteConnection = new SqliteConnection($"Data Source = {dataSource};Mode=ReadWriteCreate;");
             sqliteConnection.Open();
             //master 테이블에서 존재하는 테이블 name 컬럼을 불러옵니다.

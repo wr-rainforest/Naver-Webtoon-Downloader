@@ -3,14 +3,15 @@
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <RootNamespace>NaverWebtoonDownloader.CoreLib</RootNamespace>
-    <AssemblyName>nw-dl</AssemblyName>
+    <AssemblyName>Naver-Webtoon-Downloader.CoreLib</AssemblyName>
     <Version>0.1.0</Version>
     <Authors>wr-rainforest</Authors>
     <Description>Naver-Webtoon-Downloader Core Library</Description>
     <Copyright>Copyright 2020. wr-rainforest all rights reserved</Copyright>
     <PackageProjectUrl></PackageProjectUrl>
     <RepositoryUrl></RepositoryUrl>
-    <PackageId>NaverWebtoonDownloader.CoreLib</PackageId>
+    <PackageId>Naver-Webtoon-Downloader.CoreLib</PackageId>
+    <Product>Naver-Webtoon-Downloader.CoreLib</Product>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
