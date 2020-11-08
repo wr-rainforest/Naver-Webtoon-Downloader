@@ -3,7 +3,31 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.30309.148
 MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Naver-Webtoon-Downloader.CoreLib", "Naver-Webtoon-Downloader.CoreLib\Naver-Webtoon-Downloader.CoreLib.csproj", "{DB78C181-1918-437A-A21B-15C041181DBE}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Naver-Webtoon-Downloader.UnitTest", "Naver-Webtoon-Downloader.UnitTest\Naver-Webtoon-Downloader.UnitTest.csproj", "{1AE7B809-79E8-434D-9E43-E8141FC6D36E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Naver-Webtoon-Downloader", "Naver-Webtoon-Downloader\Naver-Webtoon-Downloader.csproj", "{5BB3BF19-25AF-4DDA-B936-34CD735634FB}"
+EndProject
 Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{DB78C181-1918-437A-A21B-15C041181DBE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DB78C181-1918-437A-A21B-15C041181DBE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DB78C181-1918-437A-A21B-15C041181DBE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DB78C181-1918-437A-A21B-15C041181DBE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1AE7B809-79E8-434D-9E43-E8141FC6D36E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1AE7B809-79E8-434D-9E43-E8141FC6D36E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1AE7B809-79E8-434D-9E43-E8141FC6D36E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1AE7B809-79E8-434D-9E43-E8141FC6D36E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5BB3BF19-25AF-4DDA-B936-34CD735634FB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5BB3BF19-25AF-4DDA-B936-34CD735634FB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5BB3BF19-25AF-4DDA-B936-34CD735634FB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5BB3BF19-25AF-4DDA-B936-34CD735634FB}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
