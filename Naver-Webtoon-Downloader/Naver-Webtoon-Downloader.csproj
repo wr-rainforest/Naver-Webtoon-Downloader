@@ -1,10 +1,22 @@
-﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <OutputType>WinExe</OutputType>
+    <OutputType>Exe</OutputType>
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <RootNamespace>NaverWebtoonDownloader</RootNamespace>
-    <UseWPF>true</UseWPF>
+    <ApplicationIcon>nwd_logo.ico</ApplicationIcon>
+    <AssemblyVersion>3.0.0.0</AssemblyVersion>
+    <Version>3.0</Version>
+    <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
+    <Authors>wr-rainforest</Authors>
+    <Product>Naver-Webtoon-Downloader</Product>
+    <Copyright>Copyright 2020. wr-rainforest all rights reserved</Copyright>
+    <Description>Naver-Webtoon-Downloader</Description>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <GenerateSerializationAssemblies>Auto</GenerateSerializationAssemblies>
   </PropertyGroup>
 
   <ItemGroup>
