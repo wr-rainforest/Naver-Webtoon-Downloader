@@ -154,7 +154,7 @@ namespace NaverWebtoonDownloader.CoreLib
                     Uri = nodes[i].Attributes["src"].Value
                 });
             }
-            var episodeInfo = new EpisodeInfo(titleId, episodeNo, title, date, images);
+            var episodeInfo = new EpisodeInfo(titleId, episodeNo, title, date, images.ToArray());
             return episodeInfo;
         }
 

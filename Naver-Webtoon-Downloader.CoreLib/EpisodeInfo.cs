@@ -8,7 +8,7 @@ namespace NaverWebtoonDownloader.CoreLib
         {
         }
 
-        public EpisodeInfo(string titleId, int episodeNo, string title, string date, List<ImageInfo> images)
+        public EpisodeInfo(string titleId, int episodeNo, string title, string date, ImageInfo[] images)
         {
             TitleId = titleId;
             No = episodeNo;
@@ -40,7 +40,7 @@ namespace NaverWebtoonDownloader.CoreLib
         /// <summary>
         /// 웹툰 이미지 Uri 목록입니다.
         /// </summary>
-        public List<ImageInfo> Images { get; set; }
+        public ImageInfo[] Images { get; set; }
 
     }
 }
