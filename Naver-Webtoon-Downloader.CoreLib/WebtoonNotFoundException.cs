@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace NaverWebtoonDownloader.CoreLib
 {
-    class WebtoonNotFoundException : Exception
+    public class WebtoonNotFoundException : Exception
     {
         public string TitleId { get; set; }
 

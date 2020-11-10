@@ -126,14 +126,15 @@ namespace NaverWebtoonDownloader.CoreLib
         }
 
         private readonly static string[] parallax = new string[] { "670144" };
-        /*
+
         /// <summary>
-        /// 지정한 웹툰의 다운로드 가능 여부를 확인합니다.<br/>
-        /// 
+        /// 지정한 웹툰의 다운로드 가능 여부를 확인합니다. 
+        /// 다운로드 가능한 웹툰일 경우 null, 불가능한 웹툰일 경우 오류 메세지를 반환합니다.
         /// </summary>
         /// <param name="titleId"></param>
         /// <returns></returns>
-        public async Task CheckDownloadableAsync(string titleId)
+        /// <exception cref="HttpRequestException"></exception>
+        public async Task<string> CanDownload(string titleId)
         {
             HtmlDocument document;
             try
@@ -143,29 +144,28 @@ namespace NaverWebtoonDownloader.CoreLib
             catch(Exception e)
             {
                 if (e.GetType() == typeof(WebtoonNotFoundException))
-                    return (false, "웹툰 정보가 존재하지 않습니다.");
+                    return "웹툰 정보가 존재하지 않습니다.";
                 else
                     throw e;
             }
             if (document.DocumentNode.InnerHtml.Contains("완결까지 정주행!"))
             {
-                return (false, "유료 웹툰은 다운로드가 불가능합니다.");
+                return "유료 웹툰은 다운로드가 불가능합니다.";
             }
             if (document.DocumentNode.InnerHtml.Contains("18세 이상 이용 가능"))
             {
-                return (false, "성인 웹툰은 다운로드가 불가능합니다.");
+                return "성인 웹툰은 다운로드가 불가능합니다.";
             }
             if (document.DocumentNode.SelectSingleNode("//meta[@property='og:url']").Attributes["content"].Value.Contains("hallenge"))
             {
-                return (false, "베스트도전/도전만화는 다운로드가 불가능합니다.");
+                return "베스트도전/도전만화는 다운로드가 불가능합니다.";
             }
             if (parallax.Contains(titleId))
             {
-                return (false, "애니매이션 효과가 적용된 웹툰은 다운로드가 불가능합니다.");
+                return "애니매이션 효과가 적용된 웹툰은 다운로드가 불가능합니다.";
             }
-            return (true, null);
+            return null;
         }
-        */
         private string BuildImageFileName(WebtoonInfo webtoonInfo, EpisodeInfo episodeInfo,ImageInfo imageInfo, string extension)
             => ReplaceFileName(string.Format(format.ImageFileNameFormat, episodeInfo.TitleId, episodeInfo.No, imageInfo.Index, webtoonInfo.Title, episodeInfo.Title, episodeInfo.Date) + extension);
 

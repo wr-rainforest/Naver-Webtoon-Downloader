@@ -7,13 +7,14 @@ using Microsoft.Data.Sqlite;
 
 namespace NaverWebtoonDownloader.CoreLib
 {
-    internal class Database
+    public class Database
     {
         private SqliteConnection sqliteConnection;
 
 
         public Database(string dataSource)
         {
+            dataSource = Path.GetFullPath(dataSource);
             sqliteConnection = new SqliteConnection($"Data Source = {dataSource};Mode=ReadWriteCreate;");
             sqliteConnection.Open();
             //master 테이블에서 존재하는 테이블 name 컬럼을 불러옵니다.
@@ -104,6 +105,26 @@ namespace NaverWebtoonDownloader.CoreLib
                 Writer = (string)reader["writer"]
             };
             return webtoonInfo;
+        }
+
+        public WebtoonInfo[] SelectWebtoons()
+        {
+            var selectCommand = sqliteConnection.CreateCommand();
+            selectCommand.CommandText =
+                $"SELECT titleId, title, writer from webtoons;";
+            var reader = selectCommand.ExecuteReader();
+            var webtoons = new List<WebtoonInfo>();
+            while (reader.Read())
+            {
+                var webtoonInfo = new WebtoonInfo()
+                {
+                    TitleId = (string)reader["titleId"],
+                    Title = (string)reader["title"],
+                    Writer = (string)reader["writer"]
+                };
+                webtoons.Add(webtoonInfo);
+            }
+            return webtoons.ToArray() ;
         }
 
         public EpisodeInfo[] SelectEpisodes(string titleId)
