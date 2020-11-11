@@ -17,6 +17,7 @@ namespace NaverWebtoonDownloader.CoreLib
         private static readonly NaverWebtoonHttpClient client;
         public static NaverWebtoonHttpClient Client => client;
         private Database database;
+        public Database Database => database;
         private NameFormat format;
 
         static Downloader()
@@ -58,7 +59,7 @@ namespace NaverWebtoonDownloader.CoreLib
             else
             {
                 var lastEpisode = database.SelectLastEpisode(titleId);
-                lastEpisodeNo = lastEpisode.No;
+                lastEpisodeNo = lastEpisode?.No ?? 0;
             }
             for (int i = lastEpisodeNo+1; i <= latestEpisodeNo; i++)
             {
@@ -80,7 +81,7 @@ namespace NaverWebtoonDownloader.CoreLib
                     }
                 }
                 database.InsertEpisode(episode);
-                progress?.Report((i - lastEpisodeNo , latestEpisodeNo - lastEpisodeNo));
+                progress?.Report((i, latestEpisodeNo));
             }
         }
 
@@ -89,10 +90,10 @@ namespace NaverWebtoonDownloader.CoreLib
         /// </summary>
         /// <param name="titleId">다운로드할 웹툰의 titleId입니다.</param>
         /// <param name="downloadFolder"></param>
-        /// <param name="progress"></param>
+        /// <param name="progress">[0] int position, [1] int count, [2] int imageSize</param>
         /// <param name="ct"></param>
         /// <returns></returns>
-        public async Task DownloadWebtoonAsync(string titleId, string downloadFolder, IProgress<(int position, int count)> progress, CancellationToken ct)
+        public async Task DownloadWebtoonAsync(string titleId, string downloadFolder, IProgress<object[]> progress, CancellationToken ct)
         {
             WebtoonInfo webtoonInfo = database.SelectWebtoon(titleId);
             var episodes = new Dictionary<int, EpisodeInfo>();
@@ -109,18 +110,23 @@ namespace NaverWebtoonDownloader.CoreLib
             for(int i = 0; i < imagesToDownload.Count; i++)
             {
                 if (ct.IsCancellationRequested)
+                {
+                    await Task.WhenAll(saveFileTasks);
                     return;
+                }
                 var image = imagesToDownload[i];
                 byte[] buff = await client.GetByteArrayAsync(image.Uri);
                 string episodeDirectory = Path.Combine(downloadFolder, BuildWebtoonFolderName(webtoonInfo), BuildEpisodeFolderName(webtoonInfo, episodes[image.No]));
                 string imageFilePath = Path.Combine(episodeDirectory, BuildImageFileName(webtoonInfo, episodes[image.No], image, ".jpg"));
                 saveFileTasks.Add(Task.Run(() =>
                 {
-                    Directory.CreateDirectory(episodeDirectory);
+                    if (!Directory.Exists(episodeDirectory)) { Directory.CreateDirectory(episodeDirectory); }
                     File.WriteAllBytes(imageFilePath, buff);
-
-                },ct));
-                progress?.Report((i + 1, imagesToDownload.Count));
+                    image.Downloaded = 1;
+                    image.Size = buff.Length;
+                    database.UpdateImage(image);
+                    progress?.Report(new object[] { i + 1, imagesToDownload.Count, image.Size });
+                }));
             }
             await Task.WhenAll(saveFileTasks);
         }

@@ -12,11 +12,14 @@ namespace NaverWebtoonDownloader.CoreLib
         private SqliteConnection sqliteConnection;
 
 
-        public Database(string dataSource)
+        internal Database(string dataSource)
         {
             dataSource = Path.GetFullPath(dataSource);
-            sqliteConnection = new SqliteConnection($"Data Source = {dataSource};Mode=ReadWriteCreate;");
+            sqliteConnection = new SqliteConnection($"Data Source = {dataSource};Mode=ReadWriteCreate; Cache=Shared;");
             sqliteConnection.Open();
+            var walCommand = sqliteConnection.CreateCommand();
+            walCommand.CommandText = "PRAGMA journal_mode = 'wal'";
+            walCommand.ExecuteNonQuery();
             //master 테이블에서 존재하는 테이블 name 컬럼을 불러옵니다.
             var selectMasterCommand = sqliteConnection.CreateCommand();
             selectMasterCommand.CommandText = "SELECT name from sqlite_master where type='table';";
@@ -39,7 +42,7 @@ namespace NaverWebtoonDownloader.CoreLib
                 createTableCommand.CommandText =
                     "BEGIN;" +
                     "CREATE TABLE 'webtoons' ('titleId' TEXT, 'title' TEXT, 'writer' TEXT, 'genre' TEXT, 'description' TEXT, PRIMARY KEY(titleId));" +
-                    "CREATE TABLE 'episodes' ( 'titleId' TEXT, 'no' INTEGER, 'title' INTEGER, 'date' INTEGER, PRIMARY KEY(titleId, no));" +
+                    "CREATE TABLE 'episodes' ( 'titleId' TEXT, 'no' INTEGER, 'title' TEXT, 'date' TEXT, PRIMARY KEY(titleId, no));" +
                     "CREATE TABLE 'images' ('titleId' TEXT, 'no' INTEGER, 'image_index' INTEGER, 'uri' TEXT, 'size' INTEGER, 'downloaded' INTEGER, PRIMARY KEY(titleId, no , image_index));" +
                     "COMMIT";
                 createTableCommand.ExecuteNonQuery();
@@ -135,7 +138,7 @@ namespace NaverWebtoonDownloader.CoreLib
                 $"WHERE titleId='{titleId}' " +
                 $"ORDER BY no ASC;";
             var episodeReader = selectEpisodesCommand.ExecuteReader();
-            List<EpisodeInfo> episodes = new List<EpisodeInfo>();
+            Dictionary<int, EpisodeInfo> episodes = new Dictionary<int, EpisodeInfo>();
             while (episodeReader.Read())
             {
                 var episodeInfo = new EpisodeInfo()
@@ -145,6 +148,7 @@ namespace NaverWebtoonDownloader.CoreLib
                     Title = (string)episodeReader["title"],
                     Date = (string)episodeReader["date"],
                 };
+                episodes.Add(episodeInfo.No, episodeInfo);
             }
             var selectImagesCommand = sqliteConnection.CreateCommand();
             selectImagesCommand.CommandText =
@@ -152,7 +156,7 @@ namespace NaverWebtoonDownloader.CoreLib
                 $"WHERE titleId='{titleId}' " +
                 $"ORDER BY no, image_index ASC;";
             var imageReader = selectImagesCommand.ExecuteReader();
-            List<ImageInfo> images = new List<ImageInfo>();
+            Dictionary<int, List<ImageInfo>> keyValues = new Dictionary<int, List<ImageInfo>>();
             while (imageReader.Read())
             {
                 var image = new ImageInfo()
@@ -164,10 +168,15 @@ namespace NaverWebtoonDownloader.CoreLib
                     Downloaded = (int)(long)imageReader["downloaded"],
                     Size = (int)(long)imageReader["size"]
                 };
-                images.Add(image);
-                episodes[image.No].Images = images.ToArray();
+                if (!keyValues.ContainsKey(image.No))
+                    keyValues.Add(image.No, new List<ImageInfo>());
+                keyValues[image.No].Add(image);
             }
-            return episodes.ToArray();
+            keyValues.ToList().ForEach((item) =>
+            {
+                episodes[item.Key].Images = item.Value.ToArray();
+            });
+            return episodes.Values.ToArray();
         }
 
         public EpisodeInfo SelectLastEpisode(string titleId)
@@ -176,7 +185,7 @@ namespace NaverWebtoonDownloader.CoreLib
             selectEpisodeCommand.CommandText =
                 $"SELECT titleId, no, title, date FROM episodes " +
                 $"WHERE titleId='{titleId}' " +
-                $"ORDER BY no DESC" +
+                $"ORDER BY no DESC " +
                 $"LIMIT 1;";
             var episodeReader = selectEpisodeCommand.ExecuteReader();
             EpisodeInfo episode;
@@ -235,6 +244,7 @@ namespace NaverWebtoonDownloader.CoreLib
                 $"DELETE FROM webtoons WHERE titleId='{titleId}';" +
                 $"DELETE FROM episodes WHERE titleId='{titleId}';" +
                 $"DELETE FROM images WHERE titleId='{titleId}';";
+            deleteCommand.ExecuteNonQuery();
         }
 
         public void DeleteEpisodes(string titleId)
@@ -243,7 +253,42 @@ namespace NaverWebtoonDownloader.CoreLib
             deleteCommand.CommandText =
                 $"DELETE FROM episodes WHERE titleId='{titleId}';" +
                 $"DELETE FROM images WHERE titleId='{titleId}';";
+            deleteCommand.ExecuteNonQuery();
         }
 
+        public int GetImageCount(string titleId)
+        {
+            var selectCommand = sqliteConnection.CreateCommand();
+            selectCommand.CommandText =
+                $"SELECT count(no) FROM images WHERE titleId='{titleId}';";
+            var reader = selectCommand.ExecuteReader();
+            reader.Read();
+            return (int)(long)reader["count(no)"];
+        }
+
+        public int GetDownloadedImageCount(string titleId)
+        {
+            var selectCommand = sqliteConnection.CreateCommand();
+            selectCommand.CommandText =
+                $"SELECT count(no) FROM images WHERE titleId='{titleId}' AND downloaded='1';";
+            var reader = selectCommand.ExecuteReader();
+            reader.Read();
+            return (int)(long)reader["count(no)"];
+        }
+
+        public int GetDownloadedImageSize(string titleId)
+        {
+            var selectCommand = sqliteConnection.CreateCommand();
+            selectCommand.CommandText =
+                $"SELECT sum(size) from images WHERE titleId='{titleId}';";
+            var reader = selectCommand.ExecuteReader();
+            reader.Read();
+            return (int)(long)reader["sum(size)"];
+        }
+
+        public void Close()
+        {
+            sqliteConnection.Close();
+        }
     }
 }

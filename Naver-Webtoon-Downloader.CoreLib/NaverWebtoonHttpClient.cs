@@ -20,7 +20,7 @@ namespace NaverWebtoonDownloader.CoreLib
             var assemblyName = System.Reflection.Assembly.GetExecutingAssembly().GetName().Name;
             var assemblyVersion = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version;
             string userAgent =
-                $"{assemblyName}/{assemblyVersion.Major}.{assemblyVersion.Minor} " +
+                $"NaverWebtoonDownloader/{assemblyVersion.Major}.{assemblyVersion.Minor} " +
                 $"(Windows NT {Environment.OSVersion.Version.Major}.{Environment.OSVersion.Version.Minor};" +
                 $".Net Core {Environment.Version.Major}.{Environment.Version.Minor})";
             DefaultRequestHeaders.Add("User-Agent", userAgent);
@@ -201,7 +201,7 @@ namespace NaverWebtoonDownloader.CoreLib
                     No = episodeNo,
                     Downloaded = 0,
                     Index = i,
-                    Size = -1,
+                    Size = 0,
                     Uri = nodes[i].Attributes["src"].Value
                 });
             }
