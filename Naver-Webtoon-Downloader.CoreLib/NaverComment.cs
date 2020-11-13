@@ -1,247 +1,248 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using System.Text.Json.Serialization;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace NaverWebtoonDownloader.CoreLib
 {
     public class NaverComment
     {
-        [JsonPropertyName("ticket")]
+        [JsonProperty(PropertyName = "ticket")]
         public string Ticket { get; set; }
 
-        [JsonPropertyName("objectId")]
+        [JsonProperty(PropertyName = "objectId")]
         public string ObjectId { get; set; }
 
-        [JsonPropertyName("categoryId")]
+        [JsonProperty(PropertyName = "categoryId")]
         public string CategoryId { get; set; }
 
-        [JsonPropertyName("templateId")]
+        [JsonProperty(PropertyName = "templateId")]
         public string TemplateId { get; set; }
 
-        [JsonPropertyName("commentNo")]
+        [JsonProperty(PropertyName = "commentNo")]
         public int CommentNo { get; set; }
 
-        [JsonPropertyName("parentCommentNo")]
+        [JsonProperty(PropertyName = "parentCommentNo")]
         public int ParentCommentNo { get; set; }
 
-        [JsonPropertyName("replyLevel")]
+        [JsonProperty(PropertyName = "replyLevel")]
         public int ReplyLevel { get; set; }
 
-        [JsonPropertyName("replyCount")]
+        [JsonProperty(PropertyName = "replyCount")]
         public int ReplyCount { get; set; }
 
-        [JsonPropertyName("replyAllCount")]
+        [JsonProperty(PropertyName = "replyAllCount")]
         public int ReplyAllCount { get; set; }
 
-        [JsonPropertyName("replyPreviewNo")]
+        [JsonProperty(PropertyName = "replyPreviewNo")]
         public object ReplyPreviewNo { get; set; }
 
-        [JsonPropertyName("replyList")]
+        [JsonProperty(PropertyName = "replyList")]
         public object ReplyList { get; set; }
 
-        [JsonPropertyName("imageCount")]
+        [JsonProperty(PropertyName = "imageCount")]
         public int ImageCount { get; set; }
 
-        [JsonPropertyName("imageList")]
+        [JsonProperty(PropertyName = "imageList")]
         public object ImageList { get; set; }
 
-        [JsonPropertyName("imagePathList")]
+        [JsonProperty(PropertyName = "imagePathList")]
         public object ImagePathList { get; set; }
 
-        [JsonPropertyName("imageWidthList")]
+        [JsonProperty(PropertyName = "imageWidthList")]
         public object ImageWidthList { get; set; }
 
-        [JsonPropertyName("imageHeightList")]
+        [JsonProperty(PropertyName = "imageHeightList")]
         public object ImageHeightList { get; set; }
 
-        [JsonPropertyName("commentType")]
+        [JsonProperty(PropertyName = "commentType")]
         public string CommentType { get; set; }
 
-        [JsonPropertyName("stickerId")]
+        [JsonProperty(PropertyName = "stickerId")]
         public object StickerId { get; set; }
 
-        [JsonPropertyName("sticker")]
+        [JsonProperty(PropertyName = "sticker")]
         public object Sticker { get; set; }
 
-        [JsonPropertyName("sortValue")]
+        [JsonProperty(PropertyName = "sortValue")]
         public long SortValue { get; set; }
 
-        [JsonPropertyName("contents")]
+        [JsonProperty(PropertyName = "contents")]
         public string Contents { get; set; }
 
-        [JsonPropertyName("userIdNo")]
+        [JsonProperty(PropertyName = "userIdNo")]
         public string UserIdNo { get; set; }
 
-        [JsonPropertyName("exposedUserIp")]
+        [JsonProperty(PropertyName = "exposedUserIp")]
         public object ExposedUserIp { get; set; }
 
-        [JsonPropertyName("lang")]
+        [JsonProperty(PropertyName = "lang")]
         public string Lang { get; set; }
 
-        [JsonPropertyName("country")]
+        [JsonProperty(PropertyName = "country")]
         public string Country { get; set; }
 
-        [JsonPropertyName("idType")]
+        [JsonProperty(PropertyName = "idType")]
         public string IdType { get; set; }
 
-        [JsonPropertyName("idProvider")]
+        [JsonProperty(PropertyName = "idProvider")]
         public string IdProvider { get; set; }
 
-        [JsonPropertyName("userName")]
+        [JsonProperty(PropertyName = "userName")]
         public string UserName { get; set; }
 
-        [JsonPropertyName("userProfileImage")]
+        [JsonProperty(PropertyName = "userProfileImage")]
         public string UserProfileImage { get; set; }
 
-        [JsonPropertyName("profileType")]
+        [JsonProperty(PropertyName = "profileType")]
         public string ProfileType { get; set; }
 
-        [JsonPropertyName("modTime")]
+        [JsonProperty(PropertyName = "modTime")]
         public DateTime ModTime { get; set; }
 
-        [JsonPropertyName("modTimeGmt")]
+        [JsonProperty(PropertyName = "modTimeGmt")]
         public DateTime ModTimeGmt { get; set; }
 
-        [JsonPropertyName("regTime")]
+        [JsonProperty(PropertyName = "regTime")]
         public DateTime RegTime { get; set; }
 
-        [JsonPropertyName("regTimeGmt")]
+        [JsonProperty(PropertyName = "regTimeGmt")]
         public DateTime RegTimeGmt { get; set; }
 
-        [JsonPropertyName("sympathyCount")]
+        [JsonProperty(PropertyName = "sympathyCount")]
         public int SympathyCount { get; set; }
 
-        [JsonPropertyName("antipathyCount")]
+        [JsonProperty(PropertyName = "antipathyCount")]
         public int AntipathyCount { get; set; }
 
-        [JsonPropertyName("hideReplyButton")]
+        [JsonProperty(PropertyName = "hideReplyButton")]
         public bool HideReplyButton { get; set; }
 
-        [JsonPropertyName("status")]
+        [JsonProperty(PropertyName = "status")]
         public int Status { get; set; }
 
-        [JsonPropertyName("mine")]
+        [JsonProperty(PropertyName = "mine")]
         public bool Mine { get; set; }
 
-        [JsonPropertyName("best")]
+        [JsonProperty(PropertyName = "best")]
         public bool Best { get; set; }
 
-        [JsonPropertyName("mentions")]
+        [JsonProperty(PropertyName = "mentions")]
         public object Mentions { get; set; }
 
-        [JsonPropertyName("toUser")]
+        [JsonProperty(PropertyName = "toUser")]
         public object ToUser { get; set; }
 
-        [JsonPropertyName("userStatus")]
+        [JsonProperty(PropertyName = "userStatus")]
         public int UserStatus { get; set; }
 
-        [JsonPropertyName("categoryImage")]
+        [JsonProperty(PropertyName = "categoryImage")]
         public object CategoryImage { get; set; }
 
-        [JsonPropertyName("open")]
+        [JsonProperty(PropertyName = "open")]
         public bool Open { get; set; }
 
-        [JsonPropertyName("levelCode")]
+        [JsonProperty(PropertyName = "levelCode")]
         public object LevelCode { get; set; }
 
-        [JsonPropertyName("grades")]
+        [JsonProperty(PropertyName = "grades")]
         public object Grades { get; set; }
 
-        [JsonPropertyName("sympathy")]
+        [JsonProperty(PropertyName = "sympathy")]
         public bool Sympathy { get; set; }
 
-        [JsonPropertyName("antipathy")]
+        [JsonProperty(PropertyName = "antipathy")]
         public bool Antipathy { get; set; }
 
-        [JsonPropertyName("snsList")]
+        [JsonProperty(PropertyName = "snsList")]
         public object SnsList { get; set; }
 
-        [JsonPropertyName("metaInfo")]
+        [JsonProperty(PropertyName = "metaInfo")]
         public object MetaInfo { get; set; }
 
-        [JsonPropertyName("extension")]
+        [JsonProperty(PropertyName = "extension")]
         public object Extension { get; set; }
 
-        [JsonPropertyName("audioInfoList")]
+        [JsonProperty(PropertyName = "audioInfoList")]
         public object AudioInfoList { get; set; }
 
-        [JsonPropertyName("translation")]
+        [JsonProperty(PropertyName = "translation")]
         public object Translation { get; set; }
 
-        [JsonPropertyName("report")]
+        [JsonProperty(PropertyName = "report")]
         public object Report { get; set; }
 
-        [JsonPropertyName("middleBlindReport")]
+        [JsonProperty(PropertyName = "middleBlindReport")]
         public bool MiddleBlindReport { get; set; }
 
-        [JsonPropertyName("spamInfo")]
+        [JsonProperty(PropertyName = "spamInfo")]
         public object SpamInfo { get; set; }
 
-        [JsonPropertyName("userHomepageUrl")]
+        [JsonProperty(PropertyName = "userHomepageUrl")]
         public object UserHomepageUrl { get; set; }
 
-        [JsonPropertyName("defamation")]
+        [JsonProperty(PropertyName = "defamation")]
         public bool Defamation { get; set; }
 
-        [JsonPropertyName("hiddenByCleanbot")]
+        [JsonProperty(PropertyName = "hiddenByCleanbot")]
         public bool HiddenByCleanbot { get; set; }
 
-        [JsonPropertyName("evalScore")]
+        [JsonProperty(PropertyName = "evalScore")]
         public object EvalScore { get; set; }
 
-        [JsonPropertyName("visible")]
+        [JsonProperty(PropertyName = "visible")]
         public bool Visible { get; set; }
 
-        [JsonPropertyName("serviceId")]
+        [JsonProperty(PropertyName = "serviceId")]
         public object ServiceId { get; set; }
 
-        [JsonPropertyName("idNo")]
+        [JsonProperty(PropertyName = "idNo")]
         public string IdNo { get; set; }
 
-        [JsonPropertyName("deleted")]
+        [JsonProperty(PropertyName = "deleted")]
         public bool Deleted { get; set; }
 
-        [JsonPropertyName("anonymous")]
+        [JsonProperty(PropertyName = "anonymous")]
         public bool Anonymous { get; set; }
 
-        [JsonPropertyName("expose")]
+        [JsonProperty(PropertyName = "expose")]
         public bool Expose { get; set; }
 
-        [JsonPropertyName("manager")]
+        [JsonProperty(PropertyName = "manager")]
         public bool Manager { get; set; }
 
-        [JsonPropertyName("blindReport")]
+        [JsonProperty(PropertyName = "blindReport")]
         public bool BlindReport { get; set; }
 
-        [JsonPropertyName("secret")]
+        [JsonProperty(PropertyName = "secret")]
         public bool Secret { get; set; }
 
-        [JsonPropertyName("blind")]
+        [JsonProperty(PropertyName = "blind")]
         public bool Blind { get; set; }
 
-        [JsonPropertyName("containText")]
+        [JsonProperty(PropertyName = "containText")]
         public bool ContainText { get; set; }
 
-        [JsonPropertyName("exposeByCountry")]
+        [JsonProperty(PropertyName = "exposeByCountry")]
         public bool ExposeByCountry { get; set; }
 
-        [JsonPropertyName("userBlocked")]
+        [JsonProperty(PropertyName = "userBlocked")]
         public bool UserBlocked { get; set; }
 
-        [JsonPropertyName("validateBanWords")]
+        [JsonProperty(PropertyName = "validateBanWords")]
         public bool ValidateBanWords { get; set; }
 
-        [JsonPropertyName("profileUserId")]
+        [JsonProperty(PropertyName = "profileUserId")]
         public object ProfileUserId { get; set; }
 
-        [JsonPropertyName("virtual")]
+        [JsonProperty(PropertyName = "virtual")]
         public bool Virtual { get; set; }
 
-        [JsonPropertyName("maskedUserId")]
+        [JsonProperty(PropertyName = "maskedUserId")]
         public string MaskedUserId { get; set; }
 
-        [JsonPropertyName("maskedUserName")]
+        [JsonProperty(PropertyName = "maskedUserName")]
         public string MaskedUserName { get; set; }
     }
 }
