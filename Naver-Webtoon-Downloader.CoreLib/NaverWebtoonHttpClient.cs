@@ -6,15 +6,17 @@ using System.Net;
 using System.Net.Http;
 using System.Security.Cryptography;
 using System.Text;
-using System.Text.Json;
 using System.Threading.Tasks;
 using System.Web;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace NaverWebtoonDownloader.CoreLib
 {
 
     public class NaverWebtoonHttpClient : HttpClient
     {
+#if !DEBUG
         internal NaverWebtoonHttpClient() : base(new HttpClientHandler() { AllowAutoRedirect = false })
         {
             var assemblyName = System.Reflection.Assembly.GetExecutingAssembly().GetName().Name;
@@ -25,6 +27,20 @@ namespace NaverWebtoonDownloader.CoreLib
                 $".Net Core {Environment.Version.Major}.{Environment.Version.Minor})";
             DefaultRequestHeaders.Add("User-Agent", userAgent);
         }
+#endif
+
+#if DEBUG
+        public NaverWebtoonHttpClient() : base(new HttpClientHandler() { AllowAutoRedirect = false })
+        {
+            var assemblyName = System.Reflection.Assembly.GetExecutingAssembly().GetName().Name;
+            var assemblyVersion = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version;
+            string userAgent =
+                $"NaverWebtoonDownloader/{assemblyVersion.Major}.{assemblyVersion.Minor} " +
+                $"(Windows NT {Environment.OSVersion.Version.Major}.{Environment.OSVersion.Version.Minor};" +
+                $".Net Core {Environment.Version.Major}.{Environment.Version.Minor})";
+            DefaultRequestHeaders.Add("User-Agent", userAgent);
+        }
+#endif
 
         /// <summary>
         /// 구현되지 않은 기능
@@ -76,7 +92,7 @@ namespace NaverWebtoonDownloader.CoreLib
                 uuid = "b7763c36-2a93-4a96-a4df-a85679a575e1-0",
                 encData= ""
             };
-            keyValuePairs.Add("bvsd", JsonSerializer.Serialize(bvsd));
+            keyValuePairs.Add("bvsd", JsonConvert.SerializeObject(bvsd));
             keyValuePairs.Add("smart_LEVEL", "-1");
             keyValuePairs.Add("encnm", sessionName);
             keyValuePairs.Add("locale", "ko_KR");
@@ -207,6 +223,66 @@ namespace NaverWebtoonDownloader.CoreLib
             }
             var episodeInfo = new EpisodeInfo(titleId, episodeNo, title, date, images.ToArray());
             return episodeInfo;
+        }
+
+        public async Task<NaverComment[]> GetCommentsAsync(string titleId, int episodeNo)
+        {
+            string baseUri = 
+                $"https://apis.naver.com/commentBox/cbox/web_naver_list_jsonp.json" +
+                $"?ticket=comic" +
+                $"&templateId=webtoon" +
+                $"&pool=cbox3" +
+                $"&_callback=jQuery112407502628653793267_1605270066791" +
+                $"&lang=ko" +
+                $"&country=KR" +
+                $"&objectId={titleId}_{episodeNo}" +
+                $"&categoryId=" +
+                $"&pageSize=100" +
+                $"&indexSize=10" +
+                $"&groupId=" +
+                $"&listType=OBJECT" +
+                $"&pageType=default" +
+                $"&page={{0}}" +
+                $"&refresh=true" +
+                $"&sort=NEW" +
+                $"&_=1605270066793";
+            HttpRequestMessage firstRequest = new HttpRequestMessage(HttpMethod.Get, string.Format(baseUri, 1));
+            firstRequest.Headers.Add("Referer", $"https://comic.naver.com/detail.nhn?titleId={titleId}&no={episodeNo}");
+            HttpResponseMessage firstResponse = await SendAsync(firstRequest);
+            if (firstResponse.IsSuccessStatusCode)
+            {
+                firstResponse.EnsureSuccessStatusCode();
+            }
+            string firstResponseString = await firstResponse.Content.ReadAsStringAsync();
+            firstResponseString = firstResponseString.Replace("jQuery112407502628653793267_1605270066791(", "").Replace("});", "}");
+            JObject firstResponseJObject = JsonConvert.DeserializeObject<JObject>(firstResponseString);
+            if(!(bool)firstResponseJObject["success"])
+            {
+
+            }
+            int totalPages = (int)firstResponseJObject["result"]["pageModel"]["totalPages"];
+            var comments = new List<NaverComment>();
+            comments.AddRange(JsonConvert.DeserializeObject<List<NaverComment>>(firstResponseJObject["result"]["commentList"].ToString()));
+            for (int i = 2; i <= totalPages; i++) 
+            {
+                var request = new HttpRequestMessage(HttpMethod.Get, string.Format(baseUri, i));
+                request.Headers.Add("Referer", $"https://comic.naver.com/detail.nhn?titleId={titleId}&no={episodeNo}");
+                var response = await SendAsync(request);
+                if (response.IsSuccessStatusCode)
+                {
+
+                }
+                var responseString = await response.Content.ReadAsStringAsync();
+                responseString = responseString.Replace("jQuery112407502628653793267_1605270066791(", "").Replace("});", "}");
+                var responseJObject = JsonConvert.DeserializeObject<JObject>(responseString);
+                if (!(bool)responseJObject["success"])
+                {
+
+                }
+                List<NaverComment> pageComments = JsonConvert.DeserializeObject<List<NaverComment>>(responseJObject["result"]["commentList"].ToString());
+                comments.AddRange(pageComments);
+            }
+            return comments.ToArray();
         }
     }
 }
