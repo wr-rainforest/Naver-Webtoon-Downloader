@@ -115,7 +115,7 @@ namespace NaverWebtoonDownloader.CoreLib
         {
             var uri = $"https://comic.naver.com/webtoon/list.nhn?titleId={titleId}";
             var response = await GetAsync(uri);
-            if (response.StatusCode == HttpStatusCode.Redirect)
+            if (response.StatusCode == HttpStatusCode.Redirect && response.Headers.Location.OriginalString.Contains("main.nhn"))
             {
                 throw new WebtoonNotFoundException(titleId);
             }
@@ -132,13 +132,25 @@ namespace NaverWebtoonDownloader.CoreLib
         /// <param name="titleId"></param>
         /// <param name="episodeNo"></param>
         /// <returns></returns>
+        /// <exception cref="WebtoonNotFoundException"></exception>
         /// <exception cref="EpisodeNotFoundException"></exception>
         /// <exception cref="HttpRequestException"></exception>
         public async Task<HtmlDocument> GetDetailPageDocumentAsync(string titleId, int episodeNo)
         {
             var uri = $"https://comic.naver.com/webtoon/detail.nhn?titleId={titleId}&no={episodeNo}";
             var response = await GetAsync(uri);
-            if(response.StatusCode==HttpStatusCode.Redirect)
+            // 존재하지 않는 titleId일 경우 메인페이지로 리다이렉트
+            if(response.StatusCode == HttpStatusCode.Redirect && response.Headers.Location.OriginalString.Contains("main.nhn"))
+            {
+                throw new WebtoonNotFoundException(titleId);
+            }
+            // 존재하지 않는 no일 경우 최신 회차 페이지로 리다이렉트
+            else if (response.StatusCode == HttpStatusCode.Redirect && response.Headers.Location.OriginalString.Contains("detail.nhn"))
+            {
+                throw new EpisodeNotFoundException(titleId, episodeNo);
+            }
+            // 유료화된 회차에 접근시 목록으로 리다이렉트
+            else if (response.StatusCode == HttpStatusCode.Redirect && response.Headers.Location.OriginalString.Contains("list.nhn"))
             {
                 throw new EpisodeNotFoundException(titleId, episodeNo);
             }
@@ -200,8 +212,9 @@ namespace NaverWebtoonDownloader.CoreLib
         /// <param name="titleId"></param>
         /// <param name="episodeNo"></param>
         /// <returns></returns>
-        /// <exception cref="EpisodeNotFoundException"></exception>
         /// <exception cref="HttpRequestException"></exception>
+        /// <exception cref="WebtoonNotFoundException"></exception>
+        /// <exception cref="EpisodeNotFoundException"></exception>
         public async Task<EpisodeInfo> GetEpisodeInfoAsync(string titleId, int episodeNo)
         {
             var document = await GetDetailPageDocumentAsync(titleId, episodeNo);
@@ -225,6 +238,16 @@ namespace NaverWebtoonDownloader.CoreLib
             return episodeInfo;
         }
 
+        /// <summary>
+        /// 해당 웹툰의 전체 댓글 리스트를 가져옵니다.
+        /// </summary>
+        /// <param name="titleId"></param>
+        /// <param name="episodeNo"></param>
+        /// <returns></returns>
+        /// <exception cref="HttpRequestException"></exception>
+        /// <exception cref="WebtoonNotFoundException"></exception>
+        /// <exception cref="EpisodeNotFoundException"></exception>
+        /// <exception cref="NaverApiException"></exception>
         public async Task<NaverComment[]> GetCommentsAsync(string titleId, int episodeNo)
         {
             string baseUri = 
@@ -246,40 +269,34 @@ namespace NaverWebtoonDownloader.CoreLib
                 $"&refresh=true" +
                 $"&sort=NEW" +
                 $"&_=1605270066793";
-            HttpRequestMessage firstRequest = new HttpRequestMessage(HttpMethod.Get, string.Format(baseUri, 1));
+            var firstRequest = new HttpRequestMessage(HttpMethod.Get, string.Format(baseUri, 1));
             firstRequest.Headers.Add("Referer", $"https://comic.naver.com/detail.nhn?titleId={titleId}&no={episodeNo}");
-            HttpResponseMessage firstResponse = await SendAsync(firstRequest);
-            if (firstResponse.IsSuccessStatusCode)
-            {
-                firstResponse.EnsureSuccessStatusCode();
-            }
-            string firstResponseString = await firstResponse.Content.ReadAsStringAsync();
+            var firstResponse = await SendAsync(firstRequest);
+            firstResponse.EnsureSuccessStatusCode();
+            var firstResponseString = await firstResponse.Content.ReadAsStringAsync();
             firstResponseString = firstResponseString.Replace("jQuery112407502628653793267_1605270066791(", "").Replace("});", "}");
-            JObject firstResponseJObject = JsonConvert.DeserializeObject<JObject>(firstResponseString);
+            var firstResponseJObject = JsonConvert.DeserializeObject<JObject>(firstResponseString);
             if(!(bool)firstResponseJObject["success"])
             {
-
+                throw new NaverApiException((string)firstResponseJObject["code"], (string)firstResponseJObject["message"]);
             }
             int totalPages = (int)firstResponseJObject["result"]["pageModel"]["totalPages"];
             var comments = new List<NaverComment>();
-            comments.AddRange(JsonConvert.DeserializeObject<List<NaverComment>>(firstResponseJObject["result"]["commentList"].ToString()));
+            comments.AddRange(JsonConvert.DeserializeObject<NaverComment[]>(firstResponseJObject["result"]["commentList"].ToString()));
             for (int i = 2; i <= totalPages; i++) 
             {
                 var request = new HttpRequestMessage(HttpMethod.Get, string.Format(baseUri, i));
                 request.Headers.Add("Referer", $"https://comic.naver.com/detail.nhn?titleId={titleId}&no={episodeNo}");
                 var response = await SendAsync(request);
-                if (response.IsSuccessStatusCode)
-                {
-
-                }
+                response.EnsureSuccessStatusCode();
                 var responseString = await response.Content.ReadAsStringAsync();
                 responseString = responseString.Replace("jQuery112407502628653793267_1605270066791(", "").Replace("});", "}");
                 var responseJObject = JsonConvert.DeserializeObject<JObject>(responseString);
                 if (!(bool)responseJObject["success"])
                 {
-
+                    throw new NaverApiException((string)responseJObject["code"], (string)responseJObject["message"]);
                 }
-                List<NaverComment> pageComments = JsonConvert.DeserializeObject<List<NaverComment>>(responseJObject["result"]["commentList"].ToString());
+                NaverComment[] pageComments = JsonConvert.DeserializeObject<NaverComment[]>(responseJObject["result"]["commentList"].ToString());
                 comments.AddRange(pageComments);
             }
             return comments.ToArray();
