@@ -248,7 +248,7 @@ namespace NaverWebtoonDownloader.CoreLib
         /// <exception cref="WebtoonNotFoundException"></exception>
         /// <exception cref="EpisodeNotFoundException"></exception>
         /// <exception cref="NaverApiException"></exception>
-        public async Task<NaverComment[]> GetCommentsAsync(string titleId, int episodeNo)
+        public async Task<NaverComment[]> GetCommentsAsync(string titleId, int episodeNo, IProgress<object[]> progress)
         {
             string baseUri = 
                 $"https://apis.naver.com/commentBox/cbox/web_naver_list_jsonp.json" +
@@ -298,6 +298,7 @@ namespace NaverWebtoonDownloader.CoreLib
                 }
                 NaverComment[] pageComments = JsonConvert.DeserializeObject<NaverComment[]>(responseJObject["result"]["commentList"].ToString());
                 comments.AddRange(pageComments);
+                progress.Report(new object[] { i, totalPages });
             }
             return comments.ToArray();
         }
