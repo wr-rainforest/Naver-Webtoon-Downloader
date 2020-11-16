@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Text;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
 namespace NaverWebtoonDownloader.CoreLib
 {
-    public class NaverComment
+    public class NaverComment : IEquatable<NaverComment>, IComparable<NaverComment>
     {
         [JsonProperty(PropertyName = "ticket")]
         public string Ticket { get; set; }
@@ -244,5 +245,26 @@ namespace NaverWebtoonDownloader.CoreLib
 
         [JsonProperty(PropertyName = "maskedUserName")]
         public string MaskedUserName { get; set; }
+
+        public int CompareTo([AllowNull] NaverComment other)
+        {
+            return SortValue.CompareTo(other.SortValue);
+        }
+
+        public override bool Equals(object obj)
+        {
+            return Equals(obj as NaverComment);
+        }
+
+        public bool Equals(NaverComment other)
+        {
+            return other != null &&
+                   CommentNo == other.CommentNo;
+        }
+
+        public override int GetHashCode()
+        {
+            return HashCode.Combine(CommentNo);
+        }
     }
 }
