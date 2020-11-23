@@ -39,7 +39,7 @@ namespace NaverWebtoonDownloader.CoreLib
             }
         }
 
-        private string episodeDirectoryNameFormat;
+        private string episodeFolderNameFormat;
         /// <summary>
         /// 저장할 회차의 폴더 이름 포맷을 설정합니다. {0~5}는 중복되거나 누락시킬 수 있습니다. {0~5}이외의 다른 숫자는 올 수 없습니다.<br/>
         /// 포맷 : {0}-{1:D4}-{2}-{3}-{4}<br/>
@@ -51,21 +51,21 @@ namespace NaverWebtoonDownloader.CoreLib
         /// {4} : 회차 제목(episodeTitle)입니다.<br/>
         /// {5} : 작가 이름(WebtoonWriter)입니다.<br/>
         /// </summary>
-        public string EpisodeDirectoryNameFormat
+        public string EpisodeFolderNameFormat
         {
             get
             {
-                if (string.IsNullOrWhiteSpace(episodeDirectoryNameFormat))
-                    episodeDirectoryNameFormat = "[{2}] {4}";
-                return episodeDirectoryNameFormat;
+                if (string.IsNullOrWhiteSpace(episodeFolderNameFormat))
+                    episodeFolderNameFormat = "[{2}] {4}";
+                return episodeFolderNameFormat;
             }
             set
             {
-                episodeDirectoryNameFormat = value;
+                episodeFolderNameFormat = value;
             }
         }
 
-        private string webtoonDirectoryNameFormat;
+        private string webtoonFolderNameFormat;
         /// <summary>
         /// 저장할 웹툰의 폴더 이름 포맷을 설정합니다. {0~2}은/는 중복되거나 누락시킬 수 있습니다. {0~2}이외의 다른 숫자는 올 수 없습니다.<br/>
         /// 포맷 : {0}-{1}<br/>
@@ -74,17 +74,17 @@ namespace NaverWebtoonDownloader.CoreLib
         /// {1} : 웹툰 제목(title)입니다.<br/>
         /// {2} : 작가 이름(WebtoonWriter)입니다.<br/>
         /// </summary>
-        public string WebtoonDirectoryNameFormat
+        public string WebtoonFolderNameFormat
         {
             get
             {
-                if (string.IsNullOrWhiteSpace(webtoonDirectoryNameFormat))
-                    webtoonDirectoryNameFormat = "{1}";
-                return webtoonDirectoryNameFormat;
+                if (string.IsNullOrWhiteSpace(webtoonFolderNameFormat))
+                    webtoonFolderNameFormat = "{1}";
+                return webtoonFolderNameFormat;
             }
             set
             {
-                webtoonDirectoryNameFormat = value;
+                webtoonFolderNameFormat = value;
             }
         }
 
