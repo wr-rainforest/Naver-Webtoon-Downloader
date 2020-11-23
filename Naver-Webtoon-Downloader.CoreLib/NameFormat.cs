@@ -9,22 +9,21 @@ using System.Threading.Tasks;
 namespace NaverWebtoonDownloader.CoreLib
 {
     /// <summary>
-    /// <seealso cref="NaverWebtoonDownloader"/> 설정
+    /// <seealso cref="NaverWebtoonDownloader"/> 설정<br/>
     /// </summary>
     public class NameFormat
     {
         private string imageFileNameFormat;
-        [JsonPropertyName("ImageFileNameFormat")]
         /// <summary>
-        /// 저장할 이미지의 파일 이름 포맷을 설정합니다. {0~4}는 중복되거나 누락시킬 수 있습니다. {0~4}이외의 다른 숫자는 올 수 없습니다.
-        /// <code>포맷 : {0}-{1:D4}-{2:D4}-{3}-{4}.jpg</code>
-        /// <code>기본값 : [{0}-{1:D4}-{2:D4}] {3} - {4}.jpg</code>
-        /// <c>{0} : 웹툰의 titleId 입니다.</c>
-        /// <code>{1} : 회차 번호(episodeNo)입니다. / ":Dn" : n자리수가 되도록 0을 패딩합니다.(episodeNo = 9, n = 4 => ex:0009)</code>
-        /// <code>{2} : 이미지 인덱스(imageIndex)입니다. / ":Dn" : n자리수가 되도록 0을 패딩합니다.(imageIndex = 3, n = 3 => ex:003)</code>
-        /// <code>{3} : 웹툰 제목(title)입니다.</code>
-        /// <code>{4} : 회차 제목(episodeTitle)입니다.</code>
-        /// /// <code>{5} : (episodeDate)입니다.</code>
+        /// 저장할 이미지의 파일 이름 포맷을 설정합니다. {0~4}는 중복되거나 누락시킬 수 있습니다. {0~4}이외의 다른 숫자는 올 수 없습니다.<br/>
+        /// 포맷 : {0}-{1:D4}-{2:D4}-{3}-{4}<br/>
+        /// 기본값 : [{5}] {3} - {4} ({2:D3})<br/>
+        /// {0} : 웹툰의 titleId 입니다.<br/>
+        /// {1} : 회차 번호(episodeNo)입니다. / ":Dn" : n자리수가 되도록 0을 패딩합니다.(episodeNo = 9, n = 4 => ex:0009)<br/>
+        /// {2} : 이미지 인덱스(imageIndex)입니다. / ":Dn" : n자리수가 되도록 0을 패딩합니다.(imageIndex = 3, n = 3 => ex:003)<br/>
+        /// {3} : 웹툰 제목(title)입니다.<br/>
+        /// {4} : 회차 제목(episodeTitle)입니다.<br/>
+        /// {5} : (episodeDate)입니다.<br/>
         /// </summary>
         public string ImageFileNameFormat
         {
@@ -41,17 +40,16 @@ namespace NaverWebtoonDownloader.CoreLib
         }
 
         private string episodeDirectoryNameFormat;
-        [JsonPropertyName("EpisodeDirectoryNameFormat")]
         /// <summary>
-        /// 저장할 회차의 폴더 이름 포맷을 설정합니다. {0~5}은/는 중복되거나 누락시킬 수 있습니다. {0~5}이외의 다른 숫자는 올 수 없습니다.
-        /// <code>포맷 : {0}-{1:D4}-{2}-{3}-{4}</code>
-        /// <code>기본값 : [{2}] {4}</code>
-        /// <c>{0} : 웹툰의 titleId 입니다.</c>
-        /// <code>{1} : 회차 번호(episodeNo)입니다. / ":Dn" : n자리수가 되도록 0을 패딩합니다.(episodeNo = 9, n = 4 => ex:0009)</code>
-        /// <code>{2} : 회차 업로드 날짜(date)입니다</code>
-        /// <code>{3} : 웹툰 제목(title)입니다.</code>
-        /// <code>{4} : 회차 제목(episodeTitle)입니다.</code>
-        /// <code>{5} : 작가 이름(WebtoonWriter)입니다.</code>
+        /// 저장할 회차의 폴더 이름 포맷을 설정합니다. {0~5}는 중복되거나 누락시킬 수 있습니다. {0~5}이외의 다른 숫자는 올 수 없습니다.<br/>
+        /// 포맷 : {0}-{1:D4}-{2}-{3}-{4}<br/>
+        /// 기본값 : [{2}] {4}<br/>
+        /// {0} : 웹툰의 titleId 입니다.<br/>
+        /// {1} : 회차 번호(episodeNo)입니다. / ":Dn" : n자리수가 되도록 0을 패딩합니다.(episodeNo = 9, n = 4 = ex:0009)<br/>
+        /// {2} : 회차 업로드 날짜(date)입니다<br/>
+        /// {3} : 웹툰 제목(title)입니다.<br/>
+        /// {4} : 회차 제목(episodeTitle)입니다.<br/>
+        /// {5} : 작가 이름(WebtoonWriter)입니다.<br/>
         /// </summary>
         public string EpisodeDirectoryNameFormat
         {
@@ -68,14 +66,13 @@ namespace NaverWebtoonDownloader.CoreLib
         }
 
         private string webtoonDirectoryNameFormat;
-        [JsonPropertyName("WebtoonDirectoryNameFormat")]
         /// <summary>
-        /// 저장할 웹툰의 폴더 이름 포맷을 설정합니다. {0~2}은/는 중복되거나 누락시킬 수 있습니다. {0~2}이외의 다른 숫자는 올 수 없습니다.
-        /// <code>포맷 : {0}-{1}</code>
-        /// <code>기본값 : {1}</code>
-        /// <c>{0} : 웹툰의 titleId 입니다.</c>
-        /// <code>{1} : 웹툰 제목(title)입니다.</code>
-        /// <code>{2} : 작가 이름(WebtoonWriter)입니다.</code>
+        /// 저장할 웹툰의 폴더 이름 포맷을 설정합니다. {0~2}은/는 중복되거나 누락시킬 수 있습니다. {0~2}이외의 다른 숫자는 올 수 없습니다.<br/>
+        /// 포맷 : {0}-{1}<br/>
+        /// 기본값 : {1}<br/>
+        /// {0} : 웹툰의 titleId 입니다.<br/>
+        /// {1} : 웹툰 제목(title)입니다.<br/>
+        /// {2} : 작가 이름(WebtoonWriter)입니다.<br/>
         /// </summary>
         public string WebtoonDirectoryNameFormat
         {
@@ -97,31 +94,6 @@ namespace NaverWebtoonDownloader.CoreLib
         public NameFormat()
         {
 
-        }
-
-        /// <summary>
-        /// 직렬화된 Json 텍스트로 <seealso cref="NameFormat"/>의 새 인스턴스를 초기화합니다. <paramref name="json"/>이 null일 경우 <seealso cref="ArgumentNullException"/>합니다.
-        /// </summary>
-        /// <param name="json">Json 텍스트입니다.</param>
-        public NameFormat(string json)
-        {
-            if (string.IsNullOrEmpty(json))
-            {
-                throw new ArgumentNullException("json text가 null입니다.");
-            }
-            NameFormat config = JsonSerializer.Deserialize<NameFormat>(json);
-            ImageFileNameFormat = config.ImageFileNameFormat;
-            EpisodeDirectoryNameFormat = config.EpisodeDirectoryNameFormat;
-            WebtoonDirectoryNameFormat = config.WebtoonDirectoryNameFormat;
-        }
-
-        /// <summary>
-        /// 현재 인스턴스를 직렬화된 Json 문자열로 반환합니다.
-        /// </summary>
-        /// <returns><seealso cref="string"/> Json</returns>
-        public string ToJsonString()
-        {
-            return JsonSerializer.Serialize(this, new JsonSerializerOptions() { WriteIndented = true }) ;
         }
     }
 }
