@@ -1,0 +1,28 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <RootNamespace>NaverWebtoonDownloader</RootNamespace>
+    <Version>3.0.0</Version>
+    <Authors>wr-rainforest</Authors>
+    <Description>네이버 웹툰 다운로더</Description>
+    <Copyright>Copyright 2020. wr-rainforest all rights reserved</Copyright>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageProjectUrl>https://github.com/wr-rainforest/Naver-Webtoon-Downloader</PackageProjectUrl>
+    <PackageIcon>nwd_logo.ico</PackageIcon>
+    <RepositoryUrl>https://github.com/wr-rainforest/Naver-Webtoon-Downloader</RepositoryUrl>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="..\..\nwd_logo.ico">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Naver-Webtoon-Downloader.CoreLib\Naver-Webtoon-Downloader.CoreLib.csproj" />
+  </ItemGroup>
+
+</Project>
