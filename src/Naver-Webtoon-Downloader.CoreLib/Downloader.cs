@@ -11,36 +11,104 @@ namespace NaverWebtoonDownloader.CoreLib
 {
     public class Downloader
     {
-        private static NaverWebtoonClient _client;
+        private static readonly NaverWebtoonClient _client = new NaverWebtoonClient();
 
-        public Config Config { get; }
-
-        static Downloader()
-        {
-            _client = new NaverWebtoonClient();
-        }
+        private readonly Config _config;
 
         public Downloader(Config config)
         {
-            Config = config;
+            _config = config;
         }
 
-        public async Task UpdateDbAsync(Webtoon webtoon,
-                                        int from,
-                                        Action<string> log,
-                                        IProgress<(int Pos, int Count, Episode episode)> progress,
+        public async Task DownloadAsync(Webtoon webtoon,
+                                        IProgress<(int Pos, int Count, Image Image)> progress,
                                         CancellationToken ct)
         {
-            List<Episode> episodes = new List<Episode>();
-            int to = await _client.GetLatestEpisodeNoAsync((int)webtoon.ID);
-            log("이미지 URI 추출중..");
-            foreach (int no in Enumerable.Range(from, to - from + 1))
+            int count;
+            List<Image> images;
+            using (var context = new WebtoonDbContext())
             {
+                var countQuery = from i in context.Images
+                                 where i.WebtoonID == webtoon.ID
+                                 select 0;
+                count = countQuery.Count();
+                var query = from i in context.Images.Include(x => x.Webtoon).Include(x => x.Episode)
+                            where i.WebtoonID == webtoon.ID && !i.IsDownloaded
+                            select i;
+                images = await query.ToListAsync();
+            }
+            if (images.Count == 0)
+                return;
+
+            List<Task> downloadTasks = new List<Task>();
+            for (int i = 0, runningTaskCount = 0, pos = count - images.Count; i < images.Count; i++)
+            {
+                Image image = images[i];
+                ct.ThrowIfCancellationRequested();
+                if (runningTaskCount >= _config.MaxConnections)
+                    await Task.WhenAny(downloadTasks);
+
+                Task downloadTask = Task.Run(async () =>
+                {
+                    runningTaskCount++;
+                    byte[] buff = await _client.GetImageFileAsync(image);
+                    string directory =
+                        $"{_config.DownloadFolder}\\" +
+                        $"{_config.NameFormat.BuildWebtoonFolderName(webtoon)}\\" +
+                        $"{_config.NameFormat.BuildEpisodeFolderName(image.Episode)}";
+                    if (!Directory.Exists(directory))
+                        Directory.CreateDirectory(directory);
+                    await File.WriteAllBytesAsync(
+                            directory + "\\" +
+                            $"{_config.NameFormat.BuildImageFileName(image)}",
+                            buff, ct);
+                    image.Size = buff.Length;
+                    image.IsDownloaded = true;
+                    progress.Report((++pos, count, image));
+                    runningTaskCount--;
+                });
+
+                downloadTasks.Add(downloadTask);
+            }
+            await Task.WhenAll(downloadTasks);
+            using (var context = new WebtoonDbContext())
+            {
+
+                context.Images.UpdateRange(images);
+                await context.SaveChangesAsync(ct);
+            }
+        }
+
+        public async Task<int> UpdateWebtoonDbAsync(Webtoon webtoon,
+                                                    IProgress<(int Pos, int Count, Episode Episode)> progress,
+                                                    CancellationToken ct)
+        {
+            int lastEpisodeNo = await Task.Run(() =>
+            {
+                var context = new WebtoonDbContext();
+                var query = from e in context.Episodes
+                            where e.WebtoonID == webtoon.ID
+                            select e.No;
+                if (!query.Any())
+                    return 0;
+                else
+                    return (int)query.Max();
+            });
+            int latestEpisodeNo = await _client.GetLatestEpisodeNoAsync((int)webtoon.ID);
+
+            if (latestEpisodeNo == lastEpisodeNo)
+                return 0;
+            else if (latestEpisodeNo < lastEpisodeNo)
+                return -1;
+            List<Episode> episodes = new List<Episode>();
+            foreach (int no in Enumerable.Range(lastEpisodeNo + 1, latestEpisodeNo - lastEpisodeNo))
+            {
+                ct.ThrowIfCancellationRequested();
                 try
                 {
                     var episode = await _client.GetEpisodeAsync((int)webtoon.ID, no);
                     episodes.Add(episode);
-                    progress.Report((no, to, episode));
+                    progress.Report((no, latestEpisodeNo, episode));
                 }
                 catch (Exception e)
                 {
@@ -53,71 +121,9 @@ namespace NaverWebtoonDownloader.CoreLib
             using (var context = new WebtoonDbContext())
             {
                 await context.Episodes.AddRangeAsync(episodes);
-                await context.SaveChangesAsync();
+                await context.SaveChangesAsync(ct);
             }
-            log("이미지 URI 추출 완료.");
-        }
-
-        public async Task DownloadAsync(Webtoon webtoon,
-                                        Action<string> log,
-                                        IProgress<(int Pos, int Count, int Size)> progress,
-                                        CancellationToken ct)
-        {
-            Image[] images;
-            using (var context = new WebtoonDbContext())
-            {
-                images =
-                    (from img in context.Images.Include(x => x.Episode).Include(x => x.Webtoon)
-                     where !img.IsDownloaded && img.WebtoonID == webtoon.ID
-                     select img).ToArray();
-            }
-            if (images.Length == 0)
-            {
-                log($"다운로드할 이미지가 존재하지 않습니다.");
-                return;
-            }
-
-            log("다운로드중..");
-            List<Task> downloadTasks = new List<Task>();
-            for (int i = 0, runningTaskCount = 0, position = 0, totalSize = 0; i < images.Length; i++)
-            {
-                Image image = images[i];
-                if (ct.IsCancellationRequested)
-                    break;
-                if (runningTaskCount >= Config.MaxConnections)
-                    await Task.WhenAny(downloadTasks);
-
-                Task downloadTask = Task.Run(async () =>
-                {
-                    runningTaskCount++;
-                    byte[] buff = await _client.GetImageFileAsync(image);
-                    string folder =
-                        $"{Config.DownloadFolder}\\" +
-                        $"{Config.NameFormat.BuildWebtoonFolderName(webtoon)}\\" +
-                        $"{Config.NameFormat.BuildEpisodeFolderName(image.Episode)}";
-                    if (!Directory.Exists(folder))
-                        Directory.CreateDirectory(folder);
-                    await File.WriteAllBytesAsync(
-                            folder + "\\" +
-                            $"{Config.NameFormat.BuildImageFileName(image)}",
-                            buff);
-                    using (var context = new WebtoonDbContext())
-                    {
-                        image.Size = buff.Length;
-                        image.IsDownloaded = true;
-                        context.Update(image);
-                        await context.SaveChangesAsync();
-                    }
-
-                    progress.Report((++position, images.Length, totalSize += buff.Length));
-                    runningTaskCount--;
-                });
-
-                downloadTasks.Add(downloadTask);
-            }
-            log("마무리 작업 진행중..");
-            await Task.WhenAll(downloadTasks);
-            log("다운로드 완료");
+            return episodes.Count;
         }
     }
 }

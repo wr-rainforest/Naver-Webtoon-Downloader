@@ -7,7 +7,7 @@ namespace NaverWebtoonDownloader
 {
     public class Config
     {
-        public int MaxConnections { get; set; } = 16;
+        public int MaxConnections { get; set; } = 4;
 
         public string DownloadFolder { get; set; } = "Downloads";
 
