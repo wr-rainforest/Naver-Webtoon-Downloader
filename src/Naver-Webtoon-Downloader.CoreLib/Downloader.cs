@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using HtmlAgilityPack;
 using Microsoft.EntityFrameworkCore;
 using NaverWebtoonDownloader.CoreLib.Database;
 
@@ -18,6 +19,35 @@ namespace NaverWebtoonDownloader.CoreLib
         public Downloader(Config config)
         {
             _config = config;
+        }
+
+        public async Task<string> CanDownload(int titleId)
+        {
+            HtmlDocument document;
+            try
+            {
+                document = await _client.GetListPageDocumentAsync(titleId);
+            }
+            catch (Exception e)
+            {
+                if (e.GetType() == typeof(WebtoonNotFoundException))
+                    return "웹툰 정보가 존재하지 않습니다.";
+                else
+                    throw;
+            }
+            if (document.DocumentNode.InnerHtml.Contains("완결까지 정주행!"))
+            {
+                return "유료 웹툰은 다운로드가 불가능합니다.";
+            }
+            if (document.DocumentNode.InnerHtml.Contains("18세 이상 이용 가능") && !NaverWebtoonClient.IsLogined)
+            {
+                return "쿠키 적용 후 다운로드를 진행해 주세요.";
+            }
+            if (document.DocumentNode.SelectSingleNode("//meta[@property='og:url']").Attributes["content"].Value.Contains("hallenge"))
+            {
+                return "베스트도전/도전만화는 다운로드가 불가능합니다.";
+            }
+            return null;
         }
 
         public async Task DownloadAsync(Webtoon webtoon,

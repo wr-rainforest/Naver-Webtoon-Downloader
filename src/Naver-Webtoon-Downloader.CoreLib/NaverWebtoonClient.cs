@@ -19,6 +19,8 @@ namespace NaverWebtoonDownloader.CoreLib
 
         private static CookieContainer _cookieContainer;
 
+        public static bool IsLogined { get; set; } = false;
+
         static NaverWebtoonClient()
         {
             _cookieContainer = new CookieContainer() { };
@@ -60,6 +62,7 @@ namespace NaverWebtoonDownloader.CoreLib
                 if (innerText.StartsWith("window.nmain.gv=isLogin"))
                 {
                     isLogin = innerText.Split(',')[0].Replace("window.nmain.gv=isLogin:", string.Empty);
+                    IsLogined = true;
                     break;
                 };
             };
@@ -120,7 +123,7 @@ namespace NaverWebtoonDownloader.CoreLib
             return buff;
         }
 
-        private async Task<HtmlDocument> GetListPageDocumentAsync(int titleID)
+        public async Task<HtmlDocument> GetListPageDocumentAsync(int titleID)
         {
             var uri = $"https://comic.naver.com/webtoon/list.nhn?titleId={titleID}";
             var response = await _client.GetAsync(uri);
@@ -135,7 +138,7 @@ namespace NaverWebtoonDownloader.CoreLib
             return document;
         }
 
-        private async Task<HtmlDocument> GetDetailPageDocumentAsync(int titleID, int episodeNo)
+        public async Task<HtmlDocument> GetDetailPageDocumentAsync(int titleID, int episodeNo)
         {
             var uri = $"https://comic.naver.com/webtoon/detail.nhn?titleId={titleID}&no={episodeNo}";
             var response = await _client.GetAsync(uri);
