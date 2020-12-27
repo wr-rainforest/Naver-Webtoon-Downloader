@@ -81,11 +81,11 @@ namespace NaverWebtoonDownloader.CoreLib
                     await Task.WhenAny(downloadTasks);
                     continue;
                 }
+                runningTaskCount++;
                 Task downloadTask = Task.Run(async () =>
                 {
                     if (ct.IsCancellationRequested)
                         return;
-                    runningTaskCount++;
                     byte[] buff = await _client.GetImageFileAsync(image);
                     string directory =
                         $"{_config.DownloadFolder}\\" +
