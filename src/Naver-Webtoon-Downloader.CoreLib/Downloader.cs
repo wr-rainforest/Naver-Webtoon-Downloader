@@ -75,12 +75,25 @@ namespace NaverWebtoonDownloader.CoreLib
             {
                 if (ct.IsCancellationRequested)
                     break;
-                Image image = images[i];
                 if (runningTaskCount >= _config.MaxConnections)
                 {
-                    await Task.WhenAny(downloadTasks);
+                    try
+                    {
+                        await Task.WhenAny(downloadTasks);
+                    }
+                    catch
+                    {
+                        using (var context = new WebtoonDbContext())
+                        {
+                            context.Images.UpdateRange(images);
+                            await context.SaveChangesAsync();
+                        }
+                        throw;
+                    }
+                    i--;
                     continue;
                 }
+                Image image = images[i];
                 runningTaskCount++;
                 Task downloadTask = Task.Run(async () =>
                 {
