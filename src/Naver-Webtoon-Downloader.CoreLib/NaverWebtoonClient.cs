@@ -3,6 +3,7 @@ using NaverWebtoonDownloader.CoreLib.Database;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Reflection;
@@ -16,12 +17,16 @@ namespace NaverWebtoonDownloader.CoreLib
     {
         private static HttpClient _client;
 
+        private static CookieContainer _cookieContainer;
+
         static NaverWebtoonClient()
         {
+            _cookieContainer = new CookieContainer() { };
             var handler = new SocketsHttpHandler()
             {
                 AllowAutoRedirect = false,
-                AutomaticDecompression = DecompressionMethods.GZip
+                AutomaticDecompression = DecompressionMethods.GZip,
+                CookieContainer = _cookieContainer
             };
             _client = new HttpClient(handler);
             _client.DefaultRequestHeaders.Add("Accept-Encoding", "gzip");
@@ -35,7 +40,30 @@ namespace NaverWebtoonDownloader.CoreLib
 
         public NaverWebtoonClient()
         {
+            
+        }
 
+        public async Task<string> SetCookieAsync(string nid_aut, string nid_ses)
+        {
+            _cookieContainer.Add(new Cookie("NID_AUT", nid_aut, "/", ".naver.com"));
+            _cookieContainer.Add(new Cookie("NID_SES", nid_ses, "/", ".naver.com"));
+            var responseString = await _client.GetStringAsync("https://www.naver.com");
+            HtmlDocument document = new HtmlDocument();
+            document.LoadHtml(responseString);
+            string isLogin = null;
+            foreach(var x in document.DocumentNode.SelectNodes("//script"))
+            {
+                var innerText = x.InnerText.Replace(" ", string.Empty)
+                                           .Replace("\"", string.Empty)
+                                           .Replace("{", string.Empty)
+                                           .Replace("}", string.Empty);
+                if (innerText.StartsWith("window.nmain.gv=isLogin"))
+                {
+                    isLogin = innerText.Split(',')[0].Replace("window.nmain.gv=isLogin:", string.Empty);
+                    break;
+                };
+            };
+            return isLogin == "false" ? null : isLogin;
         }
 
         public async Task<Webtoon> GetWebtoonAsync(int titleID)
