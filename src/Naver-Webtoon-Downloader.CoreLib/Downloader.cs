@@ -43,13 +43,18 @@ namespace NaverWebtoonDownloader.CoreLib
             List<Task> downloadTasks = new List<Task>();
             for (int i = 0, runningTaskCount = 0, pos = count - images.Count; i < images.Count; i++)
             {
+                if (ct.IsCancellationRequested)
+                    break;
                 Image image = images[i];
-                ct.ThrowIfCancellationRequested();
                 if (runningTaskCount >= _config.MaxConnections)
+                {
                     await Task.WhenAny(downloadTasks);
-
+                    continue;
+                }
                 Task downloadTask = Task.Run(async () =>
                 {
+                    if (ct.IsCancellationRequested)
+                        return;
                     runningTaskCount++;
                     byte[] buff = await _client.GetImageFileAsync(image);
                     string directory =
@@ -61,26 +66,25 @@ namespace NaverWebtoonDownloader.CoreLib
                     await File.WriteAllBytesAsync(
                             directory + "\\" +
                             $"{_config.NameFormat.BuildImageFileName(image)}",
-                            buff, ct);
+                            buff);
                     image.Size = buff.Length;
                     image.IsDownloaded = true;
                     progress.Report((++pos, count, image));
                     runningTaskCount--;
                 });
-
                 downloadTasks.Add(downloadTask);
             }
             await Task.WhenAll(downloadTasks);
             using (var context = new WebtoonDbContext())
             {
-
                 context.Images.UpdateRange(images);
-                await context.SaveChangesAsync(ct);
+                await context.SaveChangesAsync();
             }
+            ct.ThrowIfCancellationRequested();
         }
 
         public async Task<int> UpdateWebtoonDbAsync(Webtoon webtoon,
-                                                    IProgress<(int Pos, int Count, Episode Episode)> progress,
+                                                    IProgress<Episode> progress,
                                                     CancellationToken ct)
         {
             int lastEpisodeNo = await Task.Run(() =>
@@ -103,12 +107,13 @@ namespace NaverWebtoonDownloader.CoreLib
             List<Episode> episodes = new List<Episode>();
             foreach (int no in Enumerable.Range(lastEpisodeNo + 1, latestEpisodeNo - lastEpisodeNo))
             {
-                ct.ThrowIfCancellationRequested();
+                if (ct.IsCancellationRequested)
+                    break;
                 try
                 {
                     var episode = await _client.GetEpisodeAsync((int)webtoon.ID, no);
                     episodes.Add(episode);
-                    progress.Report((no, latestEpisodeNo, episode));
+                    progress.Report(episode);
                 }
                 catch (Exception e)
                 {
@@ -121,8 +126,9 @@ namespace NaverWebtoonDownloader.CoreLib
             using (var context = new WebtoonDbContext())
             {
                 await context.Episodes.AddRangeAsync(episodes);
-                await context.SaveChangesAsync(ct);
+                await context.SaveChangesAsync();
             }
+            ct.ThrowIfCancellationRequested();
             return episodes.Count;
         }
     }
