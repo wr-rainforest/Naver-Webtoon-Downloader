@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
     <RootNamespace>NaverWebtoonDownloader.CoreLib</RootNamespace>
-    <Version>3.0.0-Alpha4</Version>
+    <Version>3.0.0-Alpha6</Version>
     <Authors>wr-rainforest</Authors>
     <Company>wr-rainforest</Company>
     <Copyright>Copyright 2020. wr-rainforest all rights reserved</Copyright>

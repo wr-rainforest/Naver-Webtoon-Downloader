@@ -62,10 +62,20 @@ namespace NaverWebtoonDownloader.CoreLib
                 if (innerText.StartsWith("window.nmain.gv=isLogin"))
                 {
                     isLogin = innerText.Split(',')[0].Replace("window.nmain.gv=isLogin:", string.Empty);
-                    IsLogined = true;
                     break;
                 };
             };
+            if (isLogin == "false")
+            {
+                IsLogined = false;
+                return null;
+            }
+            else
+            {
+                IsLogined = true;
+                return isLogin;
+            }
+
             return isLogin == "false" ? null : isLogin;
         }
 
