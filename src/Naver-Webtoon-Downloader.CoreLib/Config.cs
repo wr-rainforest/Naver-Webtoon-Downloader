@@ -9,7 +9,7 @@ namespace NaverWebtoonDownloader
     {
         public int MaxConnections { get; set; } = 4;
 
-        public string DownloadFolder { get; set; } = "Downloads";
+        public string DownloadFolder { get; set; } = "Download";
 
         public NameFormat NameFormat { get; set; } = new NameFormat();
     }

@@ -6,6 +6,8 @@ using System.Text.Json.Serialization;
 using NaverWebtoonDownloader.CoreLib.Database;
 using System.Xml;
 using System.Xml.Serialization;
+using System.Web;
+
 namespace NaverWebtoonDownloader.CoreLib
 {
     public class NameFormat
@@ -19,10 +21,10 @@ namespace NaverWebtoonDownloader.CoreLib
         /// <code>{2} : 이미지 인덱스(imageIndex)입니다. / ":Dn" : n자리수가 되도록 0을 패딩합니다.(imageIndex = 3, n = 3 => ex:003)</code>
         /// <code>{3} : 웹툰 제목(title)입니다.</code>
         /// <code>{4} : 회차 제목(episodeTitle)입니다.</code>
-        /// /// <code>{5} : (episodeDate)입니다.</code>
+        /// <code>{5} : (episodeDate)입니다.</code>
         /// </summary>
         [JsonPropertyName("ImageFileNameFormat")]
-        public string ImageFileNameFormat { get; set; } = "[{5}] {3} - {4} ({2:D3}).jpg";
+        public string ImageFileNameFormat { get; set; } = "[{5:yyyy.MM.dd}] {3} - {4} ({2:D3}).jpg";
 
         public string BuildImageFileName(Image image)
         {
@@ -32,7 +34,7 @@ namespace NaverWebtoonDownloader.CoreLib
                 image.No,
                 image.Webtoon.Title,
                 image.Episode.Title,
-                image.Episode.Date.ToString("yyyy.MM.dd")));
+                image.Episode.Date));
         }
 
         /// <summary>
@@ -47,14 +49,14 @@ namespace NaverWebtoonDownloader.CoreLib
         /// <code>{5} : 작가 이름(WebtoonWriter)입니다.</code>
         /// </summary>
         [JsonPropertyName("EpisodeFolderNameFormat")]
-        public string EpisodeFolderNameFormat { get; set; } = "[{2}] {4}";
+        public string EpisodeFolderNameFormat { get; set; } = "[{2:yyyy.MM.dd}] {4}";
 
         public string BuildEpisodeFolderName(Episode episode)
         {
             return ReplaceFolderName(string.Format(EpisodeFolderNameFormat,
                 episode.WebtoonID,
                 episode.No,
-                episode.Date.ToString("yyyy.MM.dd"),
+                episode.Date,
                 episode.Webtoon.Title,
                 episode.Title,
                 episode.Webtoon.Writer));
@@ -82,12 +84,30 @@ namespace NaverWebtoonDownloader.CoreLib
         {
             if (name[name.Length - 1] == '.')
                 name = name.Substring(0, name.Length - 1) + "．";
-            return name.Replace('/', '／').Replace('\\', '＼').Replace('?', '？').Replace('*', '＊').Replace(':', '：').Replace('|', '｜').Replace('\"', '＂').Replace("&lt;", "＜").Replace("&gt;", "＞");
+            return HttpUtility.HtmlDecode(name)
+                              .TrimEnd()
+                              .Replace('/', '／')
+                              .Replace('?', '？')
+                              .Replace('*', '＊')
+                              .Replace(':', '：')
+                              .Replace('|', '｜')
+                              .Replace('\"', '＂')
+                              .Replace("<", "＜")
+                              .Replace(">", "＞");
         }
 
         private static string ReplaceFileName(string filename)
         {
-            return filename.Replace('/', '／').Replace('\\', '＼').Replace('?', '？').Replace('*', '＊').Replace(':', '：').Replace('|', '｜').Replace('\"', '＂').Replace("&lt;", "＜").Replace("&gt;", "＞");
+            return HttpUtility.HtmlDecode(filename)
+                              .TrimEnd()
+                              .Replace('/', '／')
+                              .Replace('?', '？')
+                              .Replace('*', '＊')
+                              .Replace(':', '：')
+                              .Replace('|', '｜')
+                              .Replace('\"', '＂')
+                              .Replace("<", "＜")
+                              .Replace(">", "＞");
         }
     }
 }
