@@ -7,6 +7,8 @@ namespace NaverWebtoonDownloader.CoreLib.Database
 {
     public class WebtoonDbContext : DbContext
     {
+        public static string WebtoonDatabaseFilePath { get; set; }
+
         public DbSet<Webtoon> Webtoons { get; set; }
 
         public DbSet<Episode> Episodes { get; set; }
@@ -20,7 +22,7 @@ namespace NaverWebtoonDownloader.CoreLib.Database
 
         protected override void OnConfiguring(DbContextOptionsBuilder options)
         {
-            options.UseSqlite($"Data Source = {GlobalStatic.WebtoonDatabaseFilePath}; Mode=ReadWriteCreate; Cache=Shared;");
+            options.UseSqlite($"Data Source = {WebtoonDatabaseFilePath}; Mode=ReadWriteCreate; Cache=Shared;");
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -32,7 +34,7 @@ namespace NaverWebtoonDownloader.CoreLib.Database
                 .HasKey(e => new { e.WebtoonID, e.No });
 
             modelBuilder.Entity<Image>()
-                .HasKey(i => new { i.WebtoonID, i.EpisodeNo, i.No });
+                .HasKey(i => new { i.WebtoonID, i.EpisodeNo, i.Index });
 
             modelBuilder.Entity<Episode>()
                         .HasOne(e => e.Webtoon)

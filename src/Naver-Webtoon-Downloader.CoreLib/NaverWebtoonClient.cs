@@ -1,9 +1,7 @@
 ﻿using HtmlAgilityPack;
-using NaverWebtoonDownloader.CoreLib.Database;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Reflection;
@@ -42,7 +40,7 @@ namespace NaverWebtoonDownloader.CoreLib
 
         public NaverWebtoonClient()
         {
-            
+
         }
 
         public async Task<string> SetCookieAsync(string nid_aut, string nid_ses)
@@ -53,7 +51,7 @@ namespace NaverWebtoonDownloader.CoreLib
             HtmlDocument document = new HtmlDocument();
             document.LoadHtml(responseString);
             string isLogin = null;
-            foreach(var x in document.DocumentNode.SelectNodes("//script"))
+            foreach (var x in document.DocumentNode.SelectNodes("//script"))
             {
                 var innerText = x.InnerText.Replace(" ", string.Empty)
                                            .Replace("\"", string.Empty)
@@ -75,29 +73,27 @@ namespace NaverWebtoonDownloader.CoreLib
                 IsLogined = true;
                 return isLogin;
             }
-
-            return isLogin == "false" ? null : isLogin;
         }
 
-        public async Task<Webtoon> GetWebtoonAsync(int titleID)
+        public async Task<Webtoon> GetWebtoonAsync(int webtoonId)
         {
-            var listPageDocument = await GetListPageDocumentAsync(titleID);
-            var detailPageDocument = await GetDetailPageDocumentAsync(titleID, 1);
+            var listPageDocument = await GetListPageDocumentAsync(webtoonId);
+            var detailPageDocument = await GetDetailPageDocumentAsync(webtoonId, 1);
             Webtoon webtoon = new Webtoon()
             {
-                ID = titleID,
+                ID = webtoonId,
                 Title = listPageDocument.DocumentNode.SelectSingleNode("//*[@property=\"og:title\"]").Attributes["content"].Value,
                 Writer = detailPageDocument.DocumentNode.SelectSingleNode("//*[@name=\"itemWriterId\"]").Attributes["value"].Value
             };
             return webtoon;
         }
 
-        public async Task<Episode> GetEpisodeAsync(int titleID, int episodeNo)
+        public async Task<Episode> GetEpisodeAsync(int webtoonId, int episodeNo)
         {
-            var detailPageDocument = await GetDetailPageDocumentAsync(titleID, episodeNo);
+            var detailPageDocument = await GetDetailPageDocumentAsync(webtoonId, episodeNo);
             Episode episode = new Episode()
             {
-                WebtoonID = titleID,
+                WebtoonID = webtoonId,
                 No = episodeNo,
                 Title = detailPageDocument.DocumentNode.SelectSingleNode("//*[@property=\"og:description\"]").Attributes["content"].Value,
                 Date = DateTime.ParseExact(detailPageDocument.DocumentNode.SelectSingleNode("//*[@class=\"date\"]").InnerText, "yyyy.MM.dd", new CultureInfo("ko-KR")),
@@ -108,10 +104,10 @@ namespace NaverWebtoonDownloader.CoreLib
             {
                 episode.Images.Add(new Image()
                 {
-                    WebtoonID = titleID,
+                    WebtoonID = webtoonId,
                     EpisodeNo = episodeNo,
                     IsDownloaded = false,
-                    No = i + 1,
+                    Index = i + 1,
                     Size = 0,
                     ImageUrl = nodes[i].Attributes["src"].Value
                 });
@@ -119,9 +115,9 @@ namespace NaverWebtoonDownloader.CoreLib
             return episode;
         }
 
-        public async Task<int> GetLatestEpisodeNoAsync(int titleId)
+        public async Task<int> GetLatestEpisodeNoAsync(int webtoonId)
         {
-            var document = await GetListPageDocumentAsync(titleId);
+            var document = await GetListPageDocumentAsync(webtoonId);
             var relativeUri = document.DocumentNode.SelectSingleNode("//td[@class=\"title\"]/a").Attributes["href"].Value;
             var absoluteUri = $"https://comic.naver.com{relativeUri}";
             return int.Parse(HttpUtility.ParseQueryString(new Uri(absoluteUri).Query).Get("no"));
@@ -133,9 +129,9 @@ namespace NaverWebtoonDownloader.CoreLib
             return buff;
         }
 
-        public async Task<HtmlDocument> GetListPageDocumentAsync(int titleID)
+        public async Task<HtmlDocument> GetListPageDocumentAsync(int webtoonId)
         {
-            var uri = $"https://comic.naver.com/webtoon/list.nhn?titleId={titleID}";
+            var uri = $"https://comic.naver.com/webtoon/list.nhn?titleId={webtoonId}";
             var response = await _client.GetAsync(uri);
             if (response.StatusCode == HttpStatusCode.Redirect && response.Headers.Location.OriginalString.Contains("main.nhn"))
             {

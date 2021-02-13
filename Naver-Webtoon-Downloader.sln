@@ -3,9 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.30309.148
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Naver-Webtoon-Downloader.CoreLib", "src\Naver-Webtoon-Downloader.CoreLib\Naver-Webtoon-Downloader.CoreLib.csproj", "{9C5C5C04-1BDD-4B15-AC8C-7C87A34A0E10}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Naver-Webtoon-Downloader", "src\Naver-Webtoon-Downloader\Naver-Webtoon-Downloader.csproj", "{59E19017-C818-4E26-A395-1C38F3E7DEE0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Naver-Webtoon-Downloader.CoreLib", "src\Naver-Webtoon-Downloader.CoreLib\Naver-Webtoon-Downloader.CoreLib.csproj", "{C2F326D1-93C3-444F-B42F-49C70C5ACA2D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -13,14 +13,14 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{9C5C5C04-1BDD-4B15-AC8C-7C87A34A0E10}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{9C5C5C04-1BDD-4B15-AC8C-7C87A34A0E10}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{9C5C5C04-1BDD-4B15-AC8C-7C87A34A0E10}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{9C5C5C04-1BDD-4B15-AC8C-7C87A34A0E10}.Release|Any CPU.Build.0 = Release|Any CPU
 		{59E19017-C818-4E26-A395-1C38F3E7DEE0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{59E19017-C818-4E26-A395-1C38F3E7DEE0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{59E19017-C818-4E26-A395-1C38F3E7DEE0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{59E19017-C818-4E26-A395-1C38F3E7DEE0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C2F326D1-93C3-444F-B42F-49C70C5ACA2D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C2F326D1-93C3-444F-B42F-49C70C5ACA2D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C2F326D1-93C3-444F-B42F-49C70C5ACA2D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C2F326D1-93C3-444F-B42F-49C70C5ACA2D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

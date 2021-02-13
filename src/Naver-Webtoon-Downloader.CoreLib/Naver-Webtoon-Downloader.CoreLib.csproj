@@ -1,38 +1,15 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net5.0</TargetFramework>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
     <RootNamespace>NaverWebtoonDownloader.CoreLib</RootNamespace>
-    <Version>3.0.0-Alpha9</Version>
-    <Authors>wr-rainforest</Authors>
-    <Company>wr-rainforest</Company>
-    <Copyright>Copyright 2020. wr-rainforest all rights reserved</Copyright>
-    <PackageLicenseExpression>MIT</PackageLicenseExpression>
-    <Description>Naver-Webtoon-Downloader Core Library</Description>
-    <PackageProjectUrl>https://github.com/wr-rainforest/Naver-Webtoon-Downloader</PackageProjectUrl>
-    <PackageIcon>nwd_logo.ico</PackageIcon>
-    <RepositoryUrl>https://github.com/wr-rainforest/Naver-Webtoon-Downloader</RepositoryUrl>
-    <OutputType>Library</OutputType>
   </PropertyGroup>
 
   <ItemGroup>
-    <None Include="..\..\nwd_logo.ico">
-      <Pack>True</Pack>
-      <PackagePath></PackagePath>
-    </None>
-  </ItemGroup>
-
-  <ItemGroup>
-    <PackageReference Include="HtmlAgilityPack" Version="1.11.28" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="5.0.1">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="5.0.1" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="5.0.1">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
+    <PackageReference Include="HtmlAgilityPack" Version="1.11.30" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="5.0.3" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="5.0.3" />
+    <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
   </ItemGroup>
 
 </Project>

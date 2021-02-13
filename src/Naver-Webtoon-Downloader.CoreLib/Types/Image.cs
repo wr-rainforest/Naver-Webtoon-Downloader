@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace NaverWebtoonDownloader.CoreLib.Database
+namespace NaverWebtoonDownloader.CoreLib
 {
     public class Image
     {
@@ -11,8 +11,8 @@ namespace NaverWebtoonDownloader.CoreLib.Database
 
         public Episode Episode { get; set; }
         public long EpisodeNo { get; set; }
-        
-        public long No { get; set; }
+
+        public long Index { get; set; }
 
         public string ImageUrl { get; set; }
 

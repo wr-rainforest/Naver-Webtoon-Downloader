@@ -2,10 +2,12 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace NaverWebtoonDownloader.CoreLib.Database
+namespace NaverWebtoonDownloader.CoreLib
 {
     public class Webtoon
     {
+        public string Platform { get; set; }
+
         public long ID { get; set; }
 
         public string Title { get; set; }
