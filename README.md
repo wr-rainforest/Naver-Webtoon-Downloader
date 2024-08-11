@@ -1,9 +1,12 @@
-## Naver-Webtoon-Downloader-GUI
-https://github.com/wr-rainforest/Naver-Webtoon-Downloader-GUI      
-GUI 버전을 개발중입니다.  
-     
-      
-![img](https://wr-rainforest.github.io/Naver-Webtoon-Downloader-GUI/Pages/Images/%EC%8A%A4%ED%81%AC%EB%A6%B0%EC%83%B7.png)
+## 프로젝트 이전
+https://github.com/woorim02/Naver-Webtoon-Downloader  
+
+    
+2024년 8월 11일에 새로운 네이버 웹툰 다운로드 프로젝트를 제작했습니다.  
+이번 프로젝트는 기존 프로젝트에서 발생했던 문제들을 해결하고, 성능과 사용성을 개선한 최신 버전입니다.
+기존 프로젝트는 더 이상 유지 관리되지 않습니다. 모든 새로운 개발 작업은 위 링크에 제공된 새 프로젝트에서 이루어질 예정입니다.
+
+
  
    
 ## Naver-Webtoon-Downloader  
